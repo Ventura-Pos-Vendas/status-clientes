@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Casos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .search-container {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-box button {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .search-box button:hover {
+            background: #2980b9;
+        }
+        
+        .cases-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .case-item {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        
+        .case-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .case-info {
+            flex: 1;
+        }
+        
+        .case-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .case-details {
+            display: flex;
+            gap: 15px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .case-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pendente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-andamento {
+            background-color: #cce7ff;
+            color: #004085;
+        }
+        
+        .status-concluido {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #3498db;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            margin: 20px;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        @media (max-width: 600px) {
+            .case-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .case-status {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+            
+            .case-details {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lista de Casos</h1>
+            <p>Encontre rapidamente os casos que procura</p>
+        </header>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar por caso, nome ou status...">
+                <button id="searchButton">Buscar</button>
+            </div>
+        </div>
+        
+        <div class="cases-container" id="casesContainer">
+            <div class="loading" id="loadingMessage">
+                Carregando dados...
+            </div>
+        </div>
+        
+        <footer>
+            Sistema de Gestão de Casos &copy; 2023
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const casesContainer = document.getElementById('casesContainer');
+            const loadingMessage = document.getElementById('loadingMessage');
+            
+            // ⭐⭐⭐ SUBSTITUA ESTA URL PELA URL DA SUA PLANILHA ⭐⭐⭐
+            const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTeUGAPcCVyCmHZWBLCkC6m0y2sN1yR7ngrw07nEx_Fie8C_90qT8jv1ki5FDd6qL0H8jDJqZV4H7gw/pub?output=csv";
+            
+            let allCases = [];
+            
+            // Carregar dados automaticamente ao abrir a página
+            loadCases();
+            
+            // Função para carregar os casos do Google Sheets
+            function loadCases() {
+                const csvUrl = convertToCsvUrl(SHEET_URL);
+                
+                fetch(csvUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao carregar dados');
+                        }
+                        return response.text();
+                    })
+                    .then(csvText => {
+                        allCases = parseCsvData(csvText);
+                        displayCases(allCases);
+                        loadingMessage.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Verifique a URL da planilha.</div>';
+                    });
+            }
+            
+            // Função para converter URL do Sheets para URL de CSV
+            function convertToCsvUrl(sheetUrl) {
+                const match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                if (match && match[1]) {
+                    const sheetId = match[1];
+                    return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+                }
+                return sheetUrl;
+            }
+            
+            // Função para processar dados CSV
+            function parseCsvData(csvText) {
+                const lines = csvText.split('\n');
+                const cases = [];
+                
+                // Pular a primeira linha (cabeçalhos)
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const values = parseCsvLine(line);
+                    
+                    if (values.length >= 4) {
+                        cases.push({
+                            data: values[0],
+                            caso: values[1],
+                            nome: values[2],
+                            status: values[3]
+                        });
+                    }
+                }
+                
+                return cases;
+            }
+            
+            // Função para processar uma linha CSV
+            function parseCsvLine(line) {
+                const values = [];
+                let currentValue = '';
+                let insideQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    
+                    if (char === '"') {
+                        insideQuotes = !insideQuotes;
+                    } else if (char === ',' && !insideQuotes) {
+                        values.push(currentValue.trim());
+                        currentValue = '';
+                    } else {
+                        currentValue += char;
+                    }
+                }
+                
+                values.push(currentValue.trim());
+                return values;
+            }
+            
+            // Função para exibir os casos
+            function displayCases(cases) {
+                if (cases.length === 0) {
+                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
+                    return;
+                }
+                
+                let html = '';
+                cases.forEach(item => {
+                    const statusClass = getStatusClass(item.status);
+                    
+                    html += `
+                        <div class="case-item">
+                            <div class="case-info">
+                                <div class="case-title">${item.caso}</div>
+                                <div class="case-details">
+                                    <span><strong>Data:</strong> ${formatDate(item.data)}</span>
+                                    <span><strong>Responsável:</strong> ${item.nome}</span>
+                                </div>
+                            </div>
+                            <div class="case-status ${statusClass}">${item.status}</div>
+                        </div>
+                    `;
+                });
+                
+                casesContainer.innerHTML = html;
+            }
+            
+            // Função para filtrar casos
+            function filterCases() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                if (!searchTerm) {
+                    displayCases(allCases);
+                    return;
+                }
+                
+                const filteredCases = allCases.filter(item => {
+                    return (
+                        item.caso.toLowerCase().includes(searchTerm) ||
+                        item.nome.toLowerCase().includes(searchTerm) ||
+                        item.status.toLowerCase().includes(searchTerm) ||
+                        item.data.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                displayCases(filteredCases);
+            }
+            
+            // Função para formatar data
+            function formatDate(dateString) {
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                    return dateString;
+                }
+                
+                const date = new Date(dateString);
+                if (!isNaN(date.getTime())) {
+                    return date.toLocaleDateString('pt-BR');
+                }
+                
+                return dateString;
+            }
+            
+            // Função para obter a classe CSS baseada no status
+            function getStatusClass(status) {
+                switch(status.toLowerCase()) {
+                    case 'pendente':
+                        return 'status-pendente';
+                    case 'em andamento':
+                    case 'andamento':
+                        return 'status-andamento';
+                    case 'concluído':
+                    case 'concluido':
+                        return 'status-concluido';
+                    default:
+                        return 'status-pendente';
+                }
+            }
+            
+            // Event Listeners
+            searchButton.addEventListener('click', filterCases);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    filterCases();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
