@@ -181,6 +181,11 @@
             color: #721c24;
         }
         
+        .status-bo {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
         .loading {
             text-align: center;
             padding: 40px;
@@ -269,6 +274,33 @@
             padding: 15px;
             border-radius: 5px;
             border-left: 4px solid #3498db;
+            white-space: pre-line; /* Isso faz as quebras de linha funcionarem */
+            line-height: 1.5;
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #128C7E;
+        }
+        
+        .whatsapp-btn i {
+            font-size: 18px;
         }
         
         footer {
@@ -307,6 +339,8 @@
             }
         }
     </style>
+    <!-- Ícone do WhatsApp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -365,6 +399,11 @@
                     Carregando descrição...
                 </div>
             </div>
+            <!-- Botão do WhatsApp (aparece apenas para status BO) -->
+            <button class="whatsapp-btn" id="whatsappBtn" style="display: none;">
+                <i class="fab fa-whatsapp"></i>
+                Abrir no WhatsApp
+            </button>
         </div>
     </div>
 
@@ -377,6 +416,7 @@
             const tabs = document.querySelectorAll('.tab');
             const caseModal = document.getElementById('caseModal');
             const closeModal = document.getElementById('closeModal');
+            const whatsappBtn = document.getElementById('whatsappBtn');
             
             // URL do Google Apps Script - SUBSTITUA pela sua URL
             const API_URL = "https://script.google.com/macros/s/AKfycby1Lq5buofyJXxZXIx5C4RXR8bfPJY_o_c5d13rrICtS1fuL3OLqJbDH1dlnvgsNUpY/exec";
@@ -386,6 +426,7 @@
                 vendas: [],
                 garantias: []
             };
+            let currentCaseData = null;
             
             // Carregar todos os dados de uma vez usando JSONP
             loadAllData();
@@ -417,6 +458,36 @@
                     caseModal.style.display = 'none';
                 }
             });
+            
+            // Event Listener para o botão do WhatsApp
+            whatsappBtn.addEventListener('click', function() {
+                if (currentCaseData) {
+                    openWhatsApp(currentCaseData);
+                }
+            });
+            
+            // Função para abrir WhatsApp
+            function openWhatsApp(caseData) {
+                // Número de telefone (substitua pelo número desejado)
+                const phoneNumber = "5516996174440"; // Formato: 55DDDNUMERO
+                
+                // Mensagem pré-pronta
+                const message = `Olá! Gostaria de mais informações sobre o caso:\n\n` +
+                               `*Caso:* ${caseData.caso || 'Sem título'}\n` +
+                               `*Data:* ${formatDate(caseData.data)}\n` +
+                               `*Status:* ${caseData.status || 'Pendente'}\n` +
+                               `*Descrição:* ${caseData.descricao || 'Sem descrição'}\n\n` +
+                               `Poderia me ajudar com esse BO?`;
+                
+                // Codificar a mensagem para URL
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Criar URL do WhatsApp
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                
+                // Abrir em nova aba
+                window.open(whatsappUrl, '_blank');
+            }
             
             // Função para carregar todos os dados usando JSONP
             function loadAllData() {
@@ -484,12 +555,23 @@
             
             // Função para mostrar detalhes do caso
             function showCaseDetails(caseData) {
+                currentCaseData = caseData;
+                
                 document.getElementById('modalTitle').textContent = caseData.caso || 'Sem título';
                 document.getElementById('modalDate').textContent = formatDate(caseData.data);
                 document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
                 document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
                 document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
+                
+                // Manter as quebras de linha da descrição
                 document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
+                
+                // Mostrar ou esconder botão do WhatsApp baseado no status
+                if (caseData.status && caseData.status.toUpperCase() === 'BO') {
+                    whatsappBtn.style.display = 'block';
+                } else {
+                    whatsappBtn.style.display = 'none';
+                }
                 
                 caseModal.style.display = 'flex';
             }
@@ -537,7 +619,9 @@
             function getStatusClass(status) {
                 if (!status) return 'status-pendente';
                 
-                switch(status.toLowerCase()) {
+                const statusLower = status.toLowerCase();
+                
+                switch(statusLower) {
                     case 'pendente':
                         return 'status-pendente';
                     case 'em andamento':
@@ -548,6 +632,8 @@
                         return 'status-concluido';
                     case 'cancelado':
                         return 'status-cancelado';
+                    case 'bo':
+                        return 'status-bo';
                     default:
                         return 'status-pendente';
                 }
