@@ -531,7 +531,7 @@
                     html += `
                         <div class="case-item" data-index="${index}">
                             <div class="case-info">
-                                <div class="case-title">${item.caso || 'Sem título'}</div>
+                                <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
                                 <div class="case-details">
                                     <span><strong>Data:</strong> ${formatDate(item.data)}</span>
                                     <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
@@ -557,7 +557,7 @@
             function showCaseDetails(caseData) {
                 currentCaseData = caseData;
                 
-                document.getElementById('modalTitle').textContent = caseData.caso || 'Sem título';
+                document.getElementById('modalTitle').textContent = `CASO: ${caseData.caso || 'Sem título'}`;
                 document.getElementById('modalDate').textContent = formatDate(caseData.data);
                 document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
                 document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
