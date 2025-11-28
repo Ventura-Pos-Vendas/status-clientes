@@ -57,24 +57,14 @@
             flex: 1;
             padding: 12px 15px;
             border: 2px solid #3498db;
-            border-radius: 8px 0 0 8px;
+            border-radius: 8px;
             font-size: 16px;
             outline: none;
+            transition: border-color 0.3s;
         }
         
-        .search-box button {
-            padding: 12px 20px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 0 8px 8px 0;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .search-box button:hover {
-            background: #2980b9;
+        .search-box input:focus {
+            border-color: #2980b9;
         }
         
         .cases-container {
@@ -195,7 +185,6 @@
         <div class="search-container">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Buscar por caso, nome ou status...">
-                <button id="searchButton">Buscar</button>
             </div>
         </div>
         
@@ -206,18 +195,17 @@
         </div>
         
         <footer>
-            Sistema de Gestão de Casos &copy; 2023
+            Sistema de Gestão de Casos
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
             const casesContainer = document.getElementById('casesContainer');
             const loadingMessage = document.getElementById('loadingMessage');
             
-            // ⭐⭐⭐ SUBSTITUA ESTA URL PELA URL DA SUA PLANILHA ⭐⭐⭐
+            // URL fixa da planilha - SUBSTITUA pela sua URL
             const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTeUGAPcCVyCmHZWBLCkC6m0y2sN1yR7ngrw07nEx_Fie8C_90qT8jv1ki5FDd6qL0H8jDJqZV4H7gw/pub?output=csv";
             
             let allCases = [];
@@ -227,9 +215,11 @@
             
             // Função para carregar os casos do Google Sheets
             function loadCases() {
-                const csvUrl = convertToCsvUrl(SHEET_URL);
+                // Usando proxy CORS para evitar bloqueios
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const encodedUrl = encodeURIComponent(SHEET_URL);
                 
-                fetch(csvUrl)
+                fetch(proxyUrl + encodedUrl)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Erro ao carregar dados');
@@ -243,18 +233,8 @@
                     })
                     .catch(error => {
                         console.error('Erro:', error);
-                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Verifique a URL da planilha.</div>';
+                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados da planilha.</div>';
                     });
-            }
-            
-            // Função para converter URL do Sheets para URL de CSV
-            function convertToCsvUrl(sheetUrl) {
-                const match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-                if (match && match[1]) {
-                    const sheetId = match[1];
-                    return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-                }
-                return sheetUrl;
             }
             
             // Função para processar dados CSV
@@ -333,7 +313,7 @@
                 casesContainer.innerHTML = html;
             }
             
-            // Função para filtrar casos
+            // Função para filtrar casos em tempo real
             function filterCases() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 
@@ -384,13 +364,8 @@
                 }
             }
             
-            // Event Listeners
-            searchButton.addEventListener('click', filterCases);
-            searchInput.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    filterCases();
-                }
-            });
+            // Event Listener para filtro em tempo real
+            searchInput.addEventListener('input', filterCases);
         });
     </script>
 </body>
