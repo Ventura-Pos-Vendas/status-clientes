@@ -18,7 +18,7 @@
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
-            overflow: hidden; /* Remove scroll da página */
+            overflow: hidden;
         }
         
         .container {
@@ -28,7 +28,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            height: calc(100vh - 40px); /* Altura total sem scroll */
+            height: calc(100vh - 40px);
             display: flex;
             flex-direction: column;
         }
@@ -118,7 +118,7 @@
         
         .cases-container {
             flex: 1;
-            overflow-y: auto; /* Apenas a lista tem scroll */
+            overflow-y: auto;
             padding: 0;
         }
         
@@ -329,12 +329,12 @@
         
         <div class="cases-container" id="casesContainer">
             <div class="loading" id="loadingMessage">
-                Carregando dados de Vendas...
+                Carregando dados...
             </div>
         </div>
         
         <footer>
-            Sistema de Gestão - Atualizado automaticamente
+            Sistema de Gestão - Carregamento Instantâneo
         </footer>
     </div>
 
@@ -378,20 +378,17 @@
             const caseModal = document.getElementById('caseModal');
             const closeModal = document.getElementById('closeModal');
             
-            // IDs das planilhas
-            const SHEET_IDS = {
-                vendas: "1f2d7ZWaYLcGTEAU_RIzawICGZE6rTMIX-QXpcQ54IW8",
-                garantias: "1f2d7ZWaYLcGTEAU_RIzawICGZE6rTMIX-QXpcQ54IW8"
-            };
+            // URL do Google Apps Script - SUBSTITUA pela sua URL
+            const API_URL = "https://script.google.com/macros/s/AKfycby1Lq5buofyJXxZXIx5C4RXR8bfPJY_o_c5d13rrICtS1fuL3OLqJbDH1dlnvgsNUpY/exec";
             
             let currentTab = 'vendas';
-            let allCases = {
+            let allData = {
                 vendas: [],
                 garantias: []
             };
             
-            // Carregar dados da aba atual SEM CACHE
-            loadCurrentTab();
+            // Carregar todos os dados de uma vez usando JSONP
+            loadAllData();
             
             // Event Listeners para as abas
             tabs.forEach(tab => {
@@ -399,17 +396,15 @@
                     tabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     currentTab = this.dataset.tab;
-                    loadingMessage.textContent = `Carregando dados de ${currentTab === 'vendas' ? 'Vendas' : 'Garantias'}...`;
-                    loadingMessage.style.display = 'block';
-                    loadCurrentTab();
+                    displayCases(allData[currentTab]);
                 });
             });
             
-            // Event Listener para atualizar - SEMPRE busca dados novos
+            // Event Listener para atualizar
             refreshBtn.addEventListener('click', function() {
-                loadingMessage.textContent = `Atualizando dados de ${currentTab === 'vendas' ? 'Vendas' : 'Garantias'}...`;
+                loadingMessage.textContent = 'Atualizando dados...';
                 loadingMessage.style.display = 'block';
-                loadCurrentTab();
+                loadAllData();
             });
             
             // Event Listeners para o modal
@@ -423,93 +418,37 @@
                 }
             });
             
-            // Função para carregar a aba atual - SEMPRE busca dados novos
-            function loadCurrentTab() {
-                loadingMessage.style.display = 'block';
-                loadCases(currentTab);
-            }
-            
-            // Função para carregar os casos - SEM CACHE
-            function loadCases(tab) {
-                const sheetId = SHEET_IDS[tab];
-                // Adicionando timestamp para evitar cache
+            // Função para carregar todos os dados usando JSONP
+            function loadAllData() {
                 const timestamp = new Date().getTime();
-                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${tab}&t=${timestamp}`;
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const encodedUrl = encodeURIComponent(csvUrl);
+                const callbackName = 'jsonpCallback_' + timestamp;
                 
-                fetch(proxyUrl + encodedUrl)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro ao carregar dados');
-                        }
-                        return response.text();
-                    })
-                    .then(csvText => {
-                        allCases[tab] = parseCsvData(csvText);
-                        if (tab === currentTab) {
-                            displayCases(allCases[tab]);
-                            loadingMessage.style.display = 'none';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
-                    });
-            }
-            
-            // Função para processar dados CSV
-            function parseCsvData(csvText) {
-                const lines = csvText.split('\n');
-                const cases = [];
-                
-                // Pular a primeira linha (cabeçalhos)
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
+                // Criar função global de callback
+                window[callbackName] = function(data) {
+                    allData.vendas = data.vendas || [];
+                    allData.garantias = data.garantias || [];
                     
-                    const values = parseCsvLine(line);
+                    displayCases(allData[currentTab]);
+                    loadingMessage.style.display = 'none';
                     
-                    if (values.length >= 5) {
-                        cases.push({
-                            data: values[0],
-                            caso: values[1],
-                            nome: values[2],
-                            status: values[3],
-                            descricao: values[4] || 'Sem descrição'
-                        });
-                    }
-                }
+                    // Limpar a função global
+                    delete window[callbackName];
+                };
                 
-                return cases;
-            }
-            
-            // Função para processar uma linha CSV
-            function parseCsvLine(line) {
-                const values = [];
-                let currentValue = '';
-                let insideQuotes = false;
+                // Criar script para JSONP
+                const script = document.createElement('script');
+                script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
+                script.onerror = function() {
+                    loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
+                    delete window[callbackName];
+                };
                 
-                for (let i = 0; i < line.length; i++) {
-                    const char = line[i];
-                    
-                    if (char === '"') {
-                        insideQuotes = !insideQuotes;
-                    } else if (char === ',' && !insideQuotes) {
-                        values.push(currentValue.trim());
-                        currentValue = '';
-                    } else {
-                        currentValue += char;
-                    }
-                }
-                
-                values.push(currentValue.trim());
-                return values;
+                document.head.appendChild(script);
             }
             
             // Função para exibir os casos
             function displayCases(cases) {
-                if (cases.length === 0) {
+                if (!cases || cases.length === 0) {
                     casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
                     return;
                 }
@@ -521,13 +460,13 @@
                     html += `
                         <div class="case-item" data-index="${index}">
                             <div class="case-info">
-                                <div class="case-title">${item.caso}</div>
+                                <div class="case-title">${item.caso || 'Sem título'}</div>
                                 <div class="case-details">
                                     <span><strong>Data:</strong> ${formatDate(item.data)}</span>
-                                    <span><strong>Responsável:</strong> ${item.nome}</span>
+                                    <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
                                 </div>
                             </div>
-                            <div class="case-status ${statusClass}">${item.status}</div>
+                            <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
                         </div>
                     `;
                 });
@@ -545,12 +484,12 @@
             
             // Função para mostrar detalhes do caso
             function showCaseDetails(caseData) {
-                document.getElementById('modalTitle').textContent = caseData.caso;
+                document.getElementById('modalTitle').textContent = caseData.caso || 'Sem título';
                 document.getElementById('modalDate').textContent = formatDate(caseData.data);
-                document.getElementById('modalName').textContent = caseData.nome;
-                document.getElementById('modalStatus').textContent = caseData.status;
+                document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
+                document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
                 document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
-                document.getElementById('modalDescription').textContent = caseData.descricao;
+                document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
                 
                 caseModal.style.display = 'flex';
             }
@@ -558,7 +497,7 @@
             // Função para filtrar casos em tempo real
             function filterCases() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
-                const cases = allCases[currentTab];
+                const cases = allData[currentTab];
                 
                 if (!searchTerm) {
                     displayCases(cases);
@@ -567,10 +506,10 @@
                 
                 const filteredCases = cases.filter(item => {
                     return (
-                        item.caso.toLowerCase().includes(searchTerm) ||
-                        item.nome.toLowerCase().includes(searchTerm) ||
-                        item.status.toLowerCase().includes(searchTerm) ||
-                        item.data.toLowerCase().includes(searchTerm) ||
+                        (item.caso && item.caso.toLowerCase().includes(searchTerm)) ||
+                        (item.nome && item.nome.toLowerCase().includes(searchTerm)) ||
+                        (item.status && item.status.toLowerCase().includes(searchTerm)) ||
+                        (item.data && item.data.toString().toLowerCase().includes(searchTerm)) ||
                         (item.descricao && item.descricao.toLowerCase().includes(searchTerm))
                     );
                 });
@@ -580,6 +519,8 @@
             
             // Função para formatar data
             function formatDate(dateString) {
+                if (!dateString) return 'Não informada';
+                
                 if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
                     return dateString;
                 }
