@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Casos</title>
+    <title>Sistema de Vendas e Garantias</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,15 +18,19 @@
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
+            overflow: hidden; /* Remove scroll da página */
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             background-color: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            height: calc(100vh - 40px); /* Altura total sem scroll */
+            display: flex;
+            flex-direction: column;
         }
         
         header {
@@ -34,6 +38,7 @@
             color: white;
             padding: 25px;
             text-align: center;
+            flex-shrink: 0;
         }
         
         h1 {
@@ -41,10 +46,38 @@
             margin-bottom: 10px;
         }
         
+        .tabs {
+            display: flex;
+            background: #34495e;
+            flex-shrink: 0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .tab:hover {
+            background: #3c556d;
+        }
+        
+        .tab.active {
+            background: #3498db;
+        }
+        
         .search-container {
             padding: 20px;
             background: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
+            flex-shrink: 0;
         }
         
         .search-box {
@@ -67,9 +100,26 @@
             border-color: #2980b9;
         }
         
+        .refresh-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #219a52;
+        }
+        
         .cases-container {
-            max-height: 600px;
-            overflow-y: auto;
+            flex: 1;
+            overflow-y: auto; /* Apenas a lista tem scroll */
+            padding: 0;
         }
         
         .case-item {
@@ -79,6 +129,7 @@
             justify-content: space-between;
             align-items: center;
             transition: background 0.2s;
+            cursor: pointer;
         }
         
         .case-item:hover {
@@ -125,6 +176,11 @@
             color: #155724;
         }
         
+        .status-cancelado {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
         .loading {
             text-align: center;
             padding: 40px;
@@ -148,6 +204,73 @@
             font-style: italic;
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        .modal-details {
+            margin-bottom: 20px;
+        }
+        
+        .modal-detail {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .modal-detail strong {
+            width: 100px;
+            color: #495057;
+        }
+        
+        .modal-description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
         footer {
             text-align: center;
             padding: 15px;
@@ -155,6 +278,7 @@
             color: #6c757d;
             font-size: 14px;
             border-top: 1px solid #e9ecef;
+            flex-shrink: 0;
         }
         
         @media (max-width: 600px) {
@@ -172,31 +296,76 @@
                 flex-direction: column;
                 gap: 5px;
             }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .refresh-btn {
+                margin-left: 0;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Lista de Casos</h1>
-            <p>Encontre rapidamente os casos que procura</p>
+            <h1>Sistema de Vendas e Garantias</h1>
+            <p>Gerencie seus casos de forma eficiente</p>
         </header>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="vendas">Vendas</button>
+            <button class="tab" data-tab="garantias">Garantias</button>
+        </div>
         
         <div class="search-container">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Buscar por caso, nome ou status...">
+                <button class="refresh-btn" id="refreshBtn">Atualizar</button>
             </div>
         </div>
         
         <div class="cases-container" id="casesContainer">
             <div class="loading" id="loadingMessage">
-                Carregando dados...
+                Carregando dados de Vendas...
             </div>
         </div>
         
         <footer>
-            Sistema de Gestão de Casos
+            Sistema de Gestão - Atualizado automaticamente
         </footer>
+    </div>
+
+    <!-- Modal para mostrar detalhes -->
+    <div class="modal" id="caseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Detalhes do Caso</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-details">
+                <div class="modal-detail">
+                    <strong>Data:</strong>
+                    <span id="modalDate"></span>
+                </div>
+                <div class="modal-detail">
+                    <strong>Responsável:</strong>
+                    <span id="modalName"></span>
+                </div>
+                <div class="modal-detail">
+                    <strong>Status:</strong>
+                    <span id="modalStatus"></span>
+                </div>
+            </div>
+            <div>
+                <strong>Descrição:</strong>
+                <div class="modal-description" id="modalDescription">
+                    Carregando descrição...
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -204,20 +373,70 @@
             const searchInput = document.getElementById('searchInput');
             const casesContainer = document.getElementById('casesContainer');
             const loadingMessage = document.getElementById('loadingMessage');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const tabs = document.querySelectorAll('.tab');
+            const caseModal = document.getElementById('caseModal');
+            const closeModal = document.getElementById('closeModal');
             
-            // URL fixa da planilha - SUBSTITUA pela sua URL
-            const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTeUGAPcCVyCmHZWBLCkC6m0y2sN1yR7ngrw07nEx_Fie8C_90qT8jv1ki5FDd6qL0H8jDJqZV4H7gw/pub?output=csv";
+            // IDs das planilhas
+            const SHEET_IDS = {
+                vendas: "1f2d7ZWaYLcGTEAU_RIzawICGZE6rTMIX-QXpcQ54IW8",
+                garantias: "1f2d7ZWaYLcGTEAU_RIzawICGZE6rTMIX-QXpcQ54IW8"
+            };
             
-            let allCases = [];
+            let currentTab = 'vendas';
+            let allCases = {
+                vendas: [],
+                garantias: []
+            };
             
-            // Carregar dados automaticamente ao abrir a página
-            loadCases();
+            // Carregar dados da aba atual SEM CACHE
+            loadCurrentTab();
             
-            // Função para carregar os casos do Google Sheets
-            function loadCases() {
-                // Usando proxy CORS para evitar bloqueios
+            // Event Listeners para as abas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTab = this.dataset.tab;
+                    loadingMessage.textContent = `Carregando dados de ${currentTab === 'vendas' ? 'Vendas' : 'Garantias'}...`;
+                    loadingMessage.style.display = 'block';
+                    loadCurrentTab();
+                });
+            });
+            
+            // Event Listener para atualizar - SEMPRE busca dados novos
+            refreshBtn.addEventListener('click', function() {
+                loadingMessage.textContent = `Atualizando dados de ${currentTab === 'vendas' ? 'Vendas' : 'Garantias'}...`;
+                loadingMessage.style.display = 'block';
+                loadCurrentTab();
+            });
+            
+            // Event Listeners para o modal
+            closeModal.addEventListener('click', function() {
+                caseModal.style.display = 'none';
+            });
+            
+            caseModal.addEventListener('click', function(e) {
+                if (e.target === caseModal) {
+                    caseModal.style.display = 'none';
+                }
+            });
+            
+            // Função para carregar a aba atual - SEMPRE busca dados novos
+            function loadCurrentTab() {
+                loadingMessage.style.display = 'block';
+                loadCases(currentTab);
+            }
+            
+            // Função para carregar os casos - SEM CACHE
+            function loadCases(tab) {
+                const sheetId = SHEET_IDS[tab];
+                // Adicionando timestamp para evitar cache
+                const timestamp = new Date().getTime();
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${tab}&t=${timestamp}`;
                 const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const encodedUrl = encodeURIComponent(SHEET_URL);
+                const encodedUrl = encodeURIComponent(csvUrl);
                 
                 fetch(proxyUrl + encodedUrl)
                     .then(response => {
@@ -227,13 +446,15 @@
                         return response.text();
                     })
                     .then(csvText => {
-                        allCases = parseCsvData(csvText);
-                        displayCases(allCases);
-                        loadingMessage.style.display = 'none';
+                        allCases[tab] = parseCsvData(csvText);
+                        if (tab === currentTab) {
+                            displayCases(allCases[tab]);
+                            loadingMessage.style.display = 'none';
+                        }
                     })
                     .catch(error => {
                         console.error('Erro:', error);
-                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados da planilha.</div>';
+                        loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
                     });
             }
             
@@ -249,12 +470,13 @@
                     
                     const values = parseCsvLine(line);
                     
-                    if (values.length >= 4) {
+                    if (values.length >= 5) {
                         cases.push({
                             data: values[0],
                             caso: values[1],
                             nome: values[2],
-                            status: values[3]
+                            status: values[3],
+                            descricao: values[4] || 'Sem descrição'
                         });
                     }
                 }
@@ -293,11 +515,11 @@
                 }
                 
                 let html = '';
-                cases.forEach(item => {
+                cases.forEach((item, index) => {
                     const statusClass = getStatusClass(item.status);
                     
                     html += `
-                        <div class="case-item">
+                        <div class="case-item" data-index="${index}">
                             <div class="case-info">
                                 <div class="case-title">${item.caso}</div>
                                 <div class="case-details">
@@ -311,23 +533,45 @@
                 });
                 
                 casesContainer.innerHTML = html;
+                
+                // Adicionar event listeners para os casos
+                document.querySelectorAll('.case-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const index = this.dataset.index;
+                        showCaseDetails(cases[index]);
+                    });
+                });
+            }
+            
+            // Função para mostrar detalhes do caso
+            function showCaseDetails(caseData) {
+                document.getElementById('modalTitle').textContent = caseData.caso;
+                document.getElementById('modalDate').textContent = formatDate(caseData.data);
+                document.getElementById('modalName').textContent = caseData.nome;
+                document.getElementById('modalStatus').textContent = caseData.status;
+                document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
+                document.getElementById('modalDescription').textContent = caseData.descricao;
+                
+                caseModal.style.display = 'flex';
             }
             
             // Função para filtrar casos em tempo real
             function filterCases() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
+                const cases = allCases[currentTab];
                 
                 if (!searchTerm) {
-                    displayCases(allCases);
+                    displayCases(cases);
                     return;
                 }
                 
-                const filteredCases = allCases.filter(item => {
+                const filteredCases = cases.filter(item => {
                     return (
                         item.caso.toLowerCase().includes(searchTerm) ||
                         item.nome.toLowerCase().includes(searchTerm) ||
                         item.status.toLowerCase().includes(searchTerm) ||
-                        item.data.toLowerCase().includes(searchTerm)
+                        item.data.toLowerCase().includes(searchTerm) ||
+                        (item.descricao && item.descricao.toLowerCase().includes(searchTerm))
                     );
                 });
                 
@@ -350,6 +594,8 @@
             
             // Função para obter a classe CSS baseada no status
             function getStatusClass(status) {
+                if (!status) return 'status-pendente';
+                
                 switch(status.toLowerCase()) {
                     case 'pendente':
                         return 'status-pendente';
@@ -359,6 +605,8 @@
                     case 'concluído':
                     case 'concluido':
                         return 'status-concluido';
+                    case 'cancelado':
+                        return 'status-cancelado';
                     default:
                         return 'status-pendente';
                 }
