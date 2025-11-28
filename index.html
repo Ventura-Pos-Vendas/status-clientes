@@ -3,8 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Vendas e Garantias</title>
+    <title>Sistema de Casos - Login</title>
     <style>
+        /* Estilos do Login */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .login-container h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-container p {
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .login-input:focus {
+            border-color: #2980b9;
+        }
+        
+        .login-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #219a52;
+        }
+        
+        .login-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Estilos existentes do sistema */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -274,7 +353,7 @@
             padding: 15px;
             border-radius: 5px;
             border-left: 4px solid #3498db;
-            white-space: pre-line; /* Isso faz as quebras de linha funcionarem */
+            white-space: pre-line;
             line-height: 1.5;
         }
         
@@ -313,6 +392,17 @@
             flex-shrink: 0;
         }
         
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
         @media (max-width: 600px) {
             .case-item {
                 flex-direction: column;
@@ -339,14 +429,32 @@
             }
         }
     </style>
-    <!-- Ícone do WhatsApp -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Tela de Login -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <h2>Acesso do Cliente</h2>
+            <p>Digite seu login para visualizar seus casos</p>
+            
+            <input type="text" id="loginInput" class="login-input" placeholder="Digite seu login" autocomplete="off">
+            
+            <button id="loginBtn" class="login-btn">
+                Acessar Meus Casos
+            </button>
+            
+            <div id="loginError" class="error-message">
+                Login não encontrado. Verifique se digitou corretamente.
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema Principal (inicialmente escondido) -->
+    <div class="container" id="mainContainer" style="display: none;">
         <header>
-            <h1>Sistema de Vendas e Garantias</h1>
-            <p>Gerencie seus casos de forma eficiente</p>
+            <h1 id="headerTitle">Sistema de Vendas e Garantias</h1>
+            <p id="headerSubtitle">Gerencie seus casos de forma eficiente</p>
         </header>
         
         <div class="tabs">
@@ -367,7 +475,7 @@
             </div>
         </div>
         
-        <footer>
+        <footer id="mainFooter">
             Sistema de Gestão - Carregamento Instantâneo
         </footer>
     </div>
@@ -399,7 +507,6 @@
                     Carregando descrição...
                 </div>
             </div>
-            <!-- Botão do WhatsApp (aparece apenas para status BO) -->
             <button class="whatsapp-btn" id="whatsappBtn" style="display: none;">
                 <i class="fab fa-whatsapp"></i>
                 Abrir no WhatsApp
@@ -408,240 +515,380 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const casesContainer = document.getElementById('casesContainer');
-            const loadingMessage = document.getElementById('loadingMessage');
-            const refreshBtn = document.getElementById('refreshBtn');
-            const tabs = document.querySelectorAll('.tab');
-            const caseModal = document.getElementById('caseModal');
-            const closeModal = document.getElementById('closeModal');
-            const whatsappBtn = document.getElementById('whatsappBtn');
-            
-            // URL do Google Apps Script - SUBSTITUA pela sua URL
-            const API_URL = "https://script.google.com/macros/s/AKfycby1Lq5buofyJXxZXIx5C4RXR8bfPJY_o_c5d13rrICtS1fuL3OLqJbDH1dlnvgsNUpY/exec";
-            
-            let currentTab = 'vendas';
-            let allData = {
-                vendas: [],
-                garantias: []
-            };
-            let currentCaseData = null;
-            
-            // Carregar todos os dados de uma vez usando JSONP
-            loadAllData();
-            
-            // Event Listeners para as abas
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    currentTab = this.dataset.tab;
-                    displayCases(allData[currentTab]);
-                });
-            });
-            
-            // Event Listener para atualizar
-            refreshBtn.addEventListener('click', function() {
-                loadingMessage.textContent = 'Atualizando dados...';
-                loadingMessage.style.display = 'block';
-                loadAllData();
-            });
-            
-            // Event Listeners para o modal
-            closeModal.addEventListener('click', function() {
-                caseModal.style.display = 'none';
-            });
-            
-            caseModal.addEventListener('click', function(e) {
-                if (e.target === caseModal) {
-                    caseModal.style.display = 'none';
-                }
-            });
-            
-            // Event Listener para o botão do WhatsApp
-            whatsappBtn.addEventListener('click', function() {
-                if (currentCaseData) {
-                    openWhatsApp(currentCaseData);
-                }
-            });
-            
-            // Função para abrir WhatsApp
-            function openWhatsApp(caseData) {
-                // Número de telefone (substitua pelo número desejado)
-                const phoneNumber = "5516996174440"; // Formato: 55DDDNUMERO
-                
-                // Mensagem pré-pronta
-                const message = `Olá! Gostaria de mais informações sobre o caso:\n\n` +
-                               `*Caso:* ${caseData.caso || 'Sem título'}\n` +
-                               `*Data:* ${formatDate(caseData.data)}\n` +
-                               `*Status:* ${caseData.status || 'Pendente'}\n` +
-                               `*Descrição:* ${caseData.descricao || 'Sem descrição'}\n\n` +
-                               `Poderia me ajudar com esse BO?`;
-                
-                // Codificar a mensagem para URL
-                const encodedMessage = encodeURIComponent(message);
-                
-                // Criar URL do WhatsApp
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-                
-                // Abrir em nova aba
-                window.open(whatsappUrl, '_blank');
-            }
-            
-            // Função para carregar todos os dados usando JSONP
-            function loadAllData() {
-                const timestamp = new Date().getTime();
-                const callbackName = 'jsonpCallback_' + timestamp;
-                
-                // Criar função global de callback
-                window[callbackName] = function(data) {
-                    allData.vendas = data.vendas || [];
-                    allData.garantias = data.garantias || [];
-                    
-                    displayCases(allData[currentTab]);
-                    loadingMessage.style.display = 'none';
-                    
-                    // Limpar a função global
-                    delete window[callbackName];
-                };
-                
-                // Criar script para JSONP
-                const script = document.createElement('script');
-                script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
-                script.onerror = function() {
-                    loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
-                    delete window[callbackName];
-                };
-                
-                document.head.appendChild(script);
-            }
-            
-            // Função para exibir os casos
-            function displayCases(cases) {
-                if (!cases || cases.length === 0) {
-                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
-                    return;
-                }
-                
-                let html = '';
-                cases.forEach((item, index) => {
-                    const statusClass = getStatusClass(item.status);
-                    
-                    html += `
-                        <div class="case-item" data-index="${index}">
-                            <div class="case-info">
-                                <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
-                                <div class="case-details">
-                                    <span><strong>Data:</strong> ${formatDate(item.data)}</span>
-                                    <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
-                                </div>
-                            </div>
-                            <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
-                        </div>
-                    `;
-                });
-                
-                casesContainer.innerHTML = html;
-                
-                // Adicionar event listeners para os casos
-                document.querySelectorAll('.case-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        const index = this.dataset.index;
-                        showCaseDetails(cases[index]);
-                    });
-                });
-            }
-            
-            // Função para mostrar detalhes do caso
-            function showCaseDetails(caseData) {
-                currentCaseData = caseData;
-                
-                document.getElementById('modalTitle').textContent = `CASO: ${caseData.caso || 'Sem título'}`;
-                document.getElementById('modalDate').textContent = formatDate(caseData.data);
-                document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
-                document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
-                document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
-                
-                // Manter as quebras de linha da descrição
-                document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
-                
-                // Mostrar ou esconder botão do WhatsApp baseado no status
-                if (caseData.status && caseData.status.toUpperCase() === 'BO') {
-                    whatsappBtn.style.display = 'block';
-                } else {
-                    whatsappBtn.style.display = 'none';
-                }
-                
-                caseModal.style.display = 'flex';
-            }
-            
-            // Função para filtrar casos em tempo real
-            function filterCases() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                const cases = allData[currentTab];
-                
-                if (!searchTerm) {
-                    displayCases(cases);
-                    return;
-                }
-                
-                const filteredCases = cases.filter(item => {
-                    return (
-                        (item.caso && item.caso.toLowerCase().includes(searchTerm)) ||
-                        (item.nome && item.nome.toLowerCase().includes(searchTerm)) ||
-                        (item.status && item.status.toLowerCase().includes(searchTerm)) ||
-                        (item.data && item.data.toString().toLowerCase().includes(searchTerm)) ||
-                        (item.descricao && item.descricao.toLowerCase().includes(searchTerm))
-                    );
-                });
-                
-                displayCases(filteredCases);
-            }
-            
-            // Função para formatar data
-            function formatDate(dateString) {
-                if (!dateString) return 'Não informada';
-                
-                if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-                    return dateString;
-                }
-                
-                const date = new Date(dateString);
-                if (!isNaN(date.getTime())) {
-                    return date.toLocaleDateString('pt-BR');
-                }
-                
-                return dateString;
-            }
-            
-            // Função para obter a classe CSS baseada no status
-            function getStatusClass(status) {
-                if (!status) return 'status-pendente';
-                
-                const statusLower = status.toLowerCase();
-                
-                switch(statusLower) {
-                    case 'pendente':
-                        return 'status-pendente';
-                    case 'em andamento':
-                    case 'andamento':
-                        return 'status-andamento';
-                    case 'concluído':
-                    case 'concluido':
-                        return 'status-concluido';
-                    case 'cancelado':
-                        return 'status-cancelado';
-                    case 'bo':
-                        return 'status-bo';
-                    default:
-                        return 'status-pendente';
-                }
-            }
-            
-            // Event Listener para filtro em tempo real
-            searchInput.addEventListener('input', filterCases);
+        // Variáveis globais
+        let currentTab = 'vendas';
+        let allData = { vendas: [], garantias: [] };
+        let currentCaseData = null;
+        let clienteLogado = null;
+
+        // Elementos
+        const loginOverlay = document.getElementById('loginOverlay');
+        const mainContainer = document.getElementById('mainContainer');
+        const loginInput = document.getElementById('loginInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const headerTitle = document.getElementById('headerTitle');
+        const headerSubtitle = document.getElementById('headerSubtitle');
+        const mainFooter = document.getElementById('mainFooter');
+        const searchInput = document.getElementById('searchInput');
+        const casesContainer = document.getElementById('casesContainer');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const tabs = document.querySelectorAll('.tab');
+        const caseModal = document.getElementById('caseModal');
+        const closeModal = document.getElementById('closeModal');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+
+        // URL do Google Apps Script
+        const API_URL = "https://script.google.com/macros/s/AKfycbzk9mAUQgUd65R_lmMNLvFgRPY42UUaBJVmqHw7fQO_mQ1BCcF7nPABMsZjG5pHQMij/exec";
+
+        // Event Listeners
+        loginBtn.addEventListener('click', handleLogin);
+        loginInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
         });
+
+        // Função de login
+        function handleLogin() {
+            const login = loginInput.value.trim();
+            
+            if (!login) {
+                showLoginError('Por favor, digite seu login');
+                return;
+            }
+            
+            // Verificar se os dados já foram carregados
+            if (allData.vendas.length === 0 && allData.garantias.length === 0) {
+                loadAllData(login);
+            } else {
+                verifyLogin(login);
+            }
+        }
+
+        // Função para verificar login
+        function verifyLogin(login) {
+            const allCases = [...allData.vendas, ...allData.garantias];
+            
+            // Debug: verificar o que tem nos dados
+            console.log('Todos os casos:', allCases);
+            console.log('Login procurado:', login);
+            
+            const clienteValido = allCases.some(caso => {
+                // Verificar se caso.login existe e é uma string
+                if (!caso.login || typeof caso.login !== 'string') {
+                    console.log('Caso sem login válido:', caso);
+                    return false;
+                }
+                return caso.login.toLowerCase() === login.toLowerCase();
+            });
+            
+            console.log('Cliente válido:', clienteValido);
+            
+            if (clienteValido) {
+                loginSuccess(login);
+            } else {
+                showLoginError('Login não encontrado. Verifique se digitou corretamente.');
+            }
+        }
+
+        // Login bem-sucedido
+        function loginSuccess(login) {
+            clienteLogado = login;
+            loginOverlay.style.display = 'none';
+            mainContainer.style.display = 'flex';
+            
+            // Atualizar interface com nome do cliente
+            headerTitle.innerHTML = `Meus Casos`;
+            headerSubtitle.textContent = `Cliente: ${login}`;
+            mainFooter.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Sistema de Gestão - Cliente: ${login}</span>
+                    <button class="logout-btn" id="logoutBtn">Sair</button>
+                </div>
+            `;
+            
+            // Event listener para logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                clienteLogado = null;
+                mainContainer.style.display = 'none';
+                loginOverlay.style.display = 'flex';
+                loginInput.value = '';
+                loginError.style.display = 'none';
+            });
+            
+            // Mostrar casos do cliente
+            displayCases(allData[currentTab]);
+        }
+
+        // Mostrar erro de login
+        function showLoginError(message) {
+            loginError.textContent = message;
+            loginError.style.display = 'block';
+        }
+
+        // Função para carregar todos os dados usando JSONP
+        function loadAllData(login = null) {
+            loadingMessage.textContent = 'Carregando dados...';
+            loadingMessage.style.display = 'block';
+            
+            const timestamp = new Date().getTime();
+            const callbackName = 'jsonpCallback_' + timestamp;
+            
+            window[callbackName] = function(data) {
+                console.log('Dados recebidos:', data); // Debug
+                
+                allData.vendas = data.vendas || [];
+                allData.garantias = data.garantias || [];
+                
+                // Debug: verificar estrutura dos dados
+                console.log('Estrutura do primeiro caso de vendas:', allData.vendas[0]);
+                console.log('Estrutura do primeiro caso de garantias:', allData.garantias[0]);
+                
+                if (login) {
+                    verifyLogin(login);
+                } else {
+                    loadingMessage.style.display = 'none';
+                }
+                
+                delete window[callbackName];
+            };
+            
+            const script = document.createElement('script');
+            script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
+            script.onerror = function() {
+                loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
+                delete window[callbackName];
+            };
+            
+            document.head.appendChild(script);
+        }
+
+        // [AS DEMAIS FUNÇÕES PERMANECEM EXATAMENTE IGUAIS...]
+        // Event Listeners para as abas
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                displayCases(allData[currentTab]);
+            });
+        });
+
+        // Event Listener para atualizar
+        refreshBtn.addEventListener('click', function() {
+            loadingMessage.textContent = 'Atualizando dados...';
+            loadingMessage.style.display = 'block';
+            loadAllData();
+        });
+
+        // Event Listeners para o modal
+        closeModal.addEventListener('click', function() {
+            caseModal.style.display = 'none';
+        });
+
+        caseModal.addEventListener('click', function(e) {
+            if (e.target === caseModal) {
+                caseModal.style.display = 'none';
+            }
+        });
+
+        // Event Listener para o botão do WhatsApp
+        whatsappBtn.addEventListener('click', function() {
+            if (currentCaseData) {
+                openWhatsApp(currentCaseData);
+            }
+        });
+
+        // Função para abrir WhatsApp
+        function openWhatsApp(caseData) {
+            const phoneNumber = "5516996174440";
+            const message = `Olá! Gostaria de mais informações sobre o caso:\n\n` +
+                           `*Caso:* ${caseData.caso || 'Sem título'}\n` +
+                           `*Data:* ${formatDate(caseData.data)}\n` +
+                           `*Status:* ${caseData.status || 'Pendente'}\n` +
+                           `*Descrição:* ${caseData.descricao || 'Sem descrição'}\n\n` +
+                           `Poderia me ajudar com esse BO?`;
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Função para exibir os casos (FILTRADA POR LOGIN)
+        function displayCases(cases) {
+            if (!cases || cases.length === 0) {
+                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
+                return;
+            }
+            
+            // Filtrar casos apenas do cliente logado
+            let filteredCases = cases.filter(item => 
+                item.login && item.login.toLowerCase() === clienteLogado.toLowerCase()
+            );
+            
+            if (filteredCases.length === 0) {
+                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
+                return;
+            }
+            
+            let html = '';
+            filteredCases.forEach((item, index) => {
+                const statusClass = getStatusClass(item.status);
+                
+                html += `
+                    <div class="case-item" data-index="${index}">
+                        <div class="case-info">
+                            <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
+                            <div class="case-details">
+                                <span><strong>Data:</strong> ${formatDate(item.data)}</span>
+                                <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
+                            </div>
+                        </div>
+                        <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
+                    </div>
+                `;
+            });
+            
+            casesContainer.innerHTML = html;
+            
+            document.querySelectorAll('.case-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const index = this.dataset.index;
+                    showCaseDetails(filteredCases[index]);
+                });
+            });
+        }
+
+        // Função para mostrar detalhes do caso
+        function showCaseDetails(caseData) {
+            currentCaseData = caseData;
+            document.getElementById('modalTitle').textContent = `CASO: ${caseData.caso || 'Sem título'}`;
+            document.getElementById('modalDate').textContent = formatDate(caseData.data);
+            document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
+            document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
+            document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
+            document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
+            
+            if (caseData.status && caseData.status.toUpperCase() === 'BO') {
+                whatsappBtn.style.display = 'block';
+            } else {
+                whatsappBtn.style.display = 'none';
+            }
+            
+            caseModal.style.display = 'flex';
+        }
+
+  // Função para filtrar casos em tempo real
+function filterCases() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    
+    // Primeiro, obter todos os casos do cliente logado da aba atual
+    const allClientCases = allData[currentTab].filter(item => 
+        item.login && item.login.toLowerCase() === clienteLogado.toLowerCase()
+    );
+    
+    // Se não há termo de busca, mostrar todos os casos do cliente
+    if (!searchTerm) {
+        if (allClientCases.length === 0) {
+            casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
+        } else {
+            // Mostrar todos os casos do cliente
+            let html = '';
+            allClientCases.forEach((item, index) => {
+                const statusClass = getStatusClass(item.status);
+                html += `
+                    <div class="case-item" data-index="${index}">
+                        <div class="case-info">
+                            <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
+                            <div class="case-details">
+                                <span><strong>Data:</strong> ${formatDate(item.data)}</span>
+                                <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
+                            </div>
+                        </div>
+                        <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
+                    </div>
+                `;
+            });
+            casesContainer.innerHTML = html;
+            
+            document.querySelectorAll('.case-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const index = this.dataset.index;
+                    showCaseDetails(allClientCases[index]);
+                });
+            });
+        }
+        return;
+    }
+    
+    // Filtrar casos baseado no termo de busca
+    const filteredCases = allClientCases.filter(item => {
+        return (
+            (item.caso && item.caso.toLowerCase().includes(searchTerm)) ||
+            (item.nome && item.nome.toLowerCase().includes(searchTerm)) ||
+            (item.status && item.status.toLowerCase().includes(searchTerm)) ||
+            (item.data && item.data.toString().toLowerCase().includes(searchTerm)) ||
+            (item.descricao && item.descricao.toLowerCase().includes(searchTerm))
+        );
+    });
+    
+    // Mostrar resultados
+    if (filteredCases.length === 0) {
+        casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado com esses critérios</div>';
+    } else {
+        let html = '';
+        filteredCases.forEach((item, index) => {
+            const statusClass = getStatusClass(item.status);
+            html += `
+                <div class="case-item" data-index="${index}">
+                    <div class="case-info">
+                        <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
+                        <div class="case-details">
+                            <span><strong>Data:</strong> ${formatDate(item.data)}</span>
+                            <span><strong>Responsável:</strong> ${item.nome || 'Não informado'}</span>
+                        </div>
+                    </div>
+                    <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
+                </div>
+            `;
+        });
+        casesContainer.innerHTML = html;
+        
+        document.querySelectorAll('.case-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const index = this.dataset.index;
+                showCaseDetails(filteredCases[index]);
+            });
+        });
+    }
+}
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return 'Não informada';
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) return date.toLocaleDateString('pt-BR');
+            return dateString;
+        }
+
+        // Função para obter a classe CSS baseada no status
+        function getStatusClass(status) {
+            if (!status) return 'status-pendente';
+            const statusLower = status.toLowerCase();
+            switch(statusLower) {
+                case 'pendente': return 'status-pendente';
+                case 'em andamento': case 'andamento': return 'status-andamento';
+                case 'concluído': case 'concluido': return 'status-concluido';
+                case 'cancelado': return 'status-cancelado';
+                case 'bo': return 'status-bo';
+                default: return 'status-pendente';
+            }
+        }
+
+        // Event Listener para filtro em tempo real
+        searchInput.addEventListener('input', filterCases);
+
+        // Carregar dados ao iniciar (sem login ainda)
+        loadAllData();
     </script>
 </body>
 </html>
