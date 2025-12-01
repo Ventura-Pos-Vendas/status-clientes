@@ -421,12 +421,12 @@ h1 {
     width: 100%;
 }
 
-.action-faturar-encomendar {
+.action-outro-site {
     background: #28a745;
     color: white;
 }
 
-.action-faturar-encomendar:hover {
+.action-outro-site:hover {
     background: #218838;
 }
 
@@ -584,6 +584,14 @@ footer {
                     <strong>Nome:</strong>
                     <span id="modalName"></span>
                 </div>
+                <div class="modal-detail" id="chassiDetail" style="display: none;">
+                    <strong>Chassi:</strong>
+                    <span id="modalChassi"></span>
+                </div>
+                <div class="modal-detail" id="modeloDetail" style="display: none;">
+                    <strong>Modelo:</strong>
+                    <span id="modalModelo"></span>
+                </div>
                 <div class="modal-detail">
                     <strong>Status:</strong>
                     <span id="modalStatus"></span>
@@ -597,8 +605,8 @@ footer {
             </div>
             <!-- Botões específicos para status BO -->
             <div class="bo-actions" id="boActions" style="display: none;">
-                <button class="bo-action-btn action-faturar-encomendar" onclick="handleBoAction('faturar-encomendar')">
-                    <i class="fas fa-check-circle"></i>
+                <button class="bo-action-btn action-outro-site" onclick="openOtherSite()">
+                    <i class="fas fa-external-link-alt"></i>
                     FATURAR DISPONÍVEIS E ENCOMENDAR RESTANTE
                 </button>
                 <button class="bo-action-btn action-faturar-disponiveis" onclick="handleBoAction('faturar-disponiveis')">
@@ -637,14 +645,33 @@ footer {
         const caseModal = document.getElementById('caseModal');
         const closeModal = document.getElementById('closeModal');
         const boActions = document.getElementById('boActions');
+        
+        // Elementos para chassi e modelo (garantias)
+        const chassiDetail = document.getElementById('chassiDetail');
+        const modeloDetail = document.getElementById('modeloDetail');
+        const modalChassi = document.getElementById('modalChassi');
+        const modalModelo = document.getElementById('modalModelo');
 
         // URL do Google Apps Script
-        const API_URL = "https://script.google.com/macros/s/AKfycbzegei8cOB6IXOSNvOHVUotFItvLG4rwkN4Wmpj4mnUDHlZL_KwE97oazTExdOEseNLtg/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxhxEkSlgCYr-fUzZdpYXn08rcc5VSA1AWN9IaYuD_dkE7sZQR5P6ynEI5CnfxU9JT-/exec";
+        
+        // URL para o outro site (ALTERE AQUI COM SUA URL)
+        const OTHER_SITE_URL = "https://ventura-pos-vendas.github.io/Ventura-Pos-Vendas/";
 
         // Event Listeners
         loginBtn.addEventListener('click', handleLogin);
+        
+        // Enter no campo de login
         loginInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') handleLogin();
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleLogin();
+            }
+        });
+        
+        // Focar no campo de login ao carregar a página
+        window.addEventListener('load', function() {
+            loginInput.focus();
         });
 
         // Função de login
@@ -653,8 +680,13 @@ footer {
             
             if (!login) {
                 showLoginError('Por favor, digite seu login');
+                loginInput.focus();
                 return;
             }
+            
+            // Desabilitar botão durante o login
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
             
             // Verificar se os dados já foram carregados
             if (allData.logins.length === 0) {
@@ -664,20 +696,24 @@ footer {
             }
         }
 
-        // Função para verificar login e obter keys
+        // Função para verificar login APENAS na planilha de logins
         function verifyLogin(login) {
-            // Buscar o login na estrutura de dados
+            console.log('Verificando login:', login);
+            
+            // Buscar APENAS na planilha de logins
             const loginData = allData.logins.find(item => 
                 item.login && item.login.toLowerCase() === login.toLowerCase()
             );
             
-            console.log('Dados do login:', loginData);
-            
             if (loginData && loginData.keys && loginData.keys.length > 0) {
                 clienteKeys = loginData.keys;
+                console.log('Login encontrado! Keys:', clienteKeys);
                 loginSuccess(login);
             } else {
-                showLoginError('Login não encontrado ou sem keys vinculadas.');
+                showLoginError('Login não encontrado na base de dados.');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Acessar Meus Casos';
+                loginInput.focus();
             }
         }
 
@@ -693,29 +729,49 @@ footer {
             // Atualizar rodapé
             mainFooter.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Sistema de Gestão</span>
-                    <button class="logout-btn" id="logoutBtn">Sair</button>
+                    <span>Logado como: <strong>${login}</strong></span>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
                 </div>
             `;
             
             // Event listener para logout
             document.getElementById('logoutBtn').addEventListener('click', function() {
-                clienteLogado = null;
-                clienteKeys = [];
-                mainContainer.style.display = 'none';
-                loginOverlay.style.display = 'flex';
-                loginInput.value = '';
-                loginError.style.display = 'none';
+                if (confirm('Deseja realmente sair do sistema?')) {
+                    clienteLogado = null;
+                    clienteKeys = [];
+                    mainContainer.style.display = 'none';
+                    loginOverlay.style.display = 'flex';
+                    loginInput.value = '';
+                    loginError.style.display = 'none';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = 'Acessar Meus Casos';
+                    loginInput.focus();
+                    
+                    // Limpar container de casos
+                    casesContainer.innerHTML = '<div class="loading">Carregando dados...</div>';
+                }
             });
             
             // MOSTRAR CASOS IMEDIATAMENTE APÓS LOGIN
             displayCases(allData[currentTab]);
+            
+            // Focar no campo de busca após login
+            setTimeout(() => {
+                searchInput.focus();
+            }, 300);
         }
 
         // Mostrar erro de login
         function showLoginError(message) {
             loginError.textContent = message;
             loginError.style.display = 'block';
+            
+            // Esconder erro após 5 segundos
+            setTimeout(() => {
+                loginError.style.display = 'none';
+            }, 5000);
         }
 
         // Função para carregar todos os dados usando JSONP
@@ -733,14 +789,16 @@ footer {
                 allData.garantias = data.garantias || [];
                 allData.logins = data.logins || [];
                 
-                // Debug: verificar estrutura dos dados
-                console.log('Logins disponíveis:', allData.logins);
-                console.log('Estrutura do primeiro caso de vendas:', allData.vendas[0]);
+                console.log('Logins carregados:', allData.logins.length);
+                console.log('Vendas carregadas:', allData.vendas.length);
+                console.log('Garantias carregadas:', allData.garantias.length);
                 
                 if (login) {
                     verifyLogin(login);
                 } else {
                     loadingMessage.style.display = 'none';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = 'Acessar Meus Casos';
                 }
                 
                 delete window[callbackName];
@@ -750,6 +808,8 @@ footer {
             script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
             script.onerror = function() {
                 loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Acessar Meus Casos';
                 delete window[callbackName];
             };
             
@@ -763,6 +823,9 @@ footer {
                 this.classList.add('active');
                 currentTab = this.dataset.tab;
                 displayCases(allData[currentTab]);
+                
+                // Focar no campo de busca após trocar aba
+                searchInput.focus();
             });
         });
 
@@ -783,23 +846,26 @@ footer {
                 caseModal.style.display = 'none';
             }
         });
+        
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && caseModal.style.display === 'flex') {
+                caseModal.style.display = 'none';
+            }
+        });
 
-        // Função para lidar com ações do BO
+        // Função para abrir outro site
+        function openOtherSite() {
+            window.open(OTHER_SITE_URL, '_blank');
+        }
+
+        // Função para lidar com outras ações do BO
         function handleBoAction(action) {
             if (!currentCaseData) return;
             
             let message = '';
             
             switch(action) {
-                case 'faturar-encomendar':
-                    message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
-                             `*Solicito:* FATURAR DISPONÍVEIS E ENCOMENDAR RESTANTE\n\n` +
-                             `*Detalhes do caso:*\n` +
-                             `Data: ${formatDate(currentCaseData.data)}\n` +
-                             `Nome: ${currentCaseData.nome || 'Não informado'}\n` +
-                             `Descrição: ${currentCaseData.descricao || 'Sem descrição'}`;
-                    break;
-                    
                 case 'faturar-disponiveis':
                     message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
                              `*Solicito:* FATURAR SOMENTE DISPONÍVEIS\n` +
@@ -828,59 +894,85 @@ footer {
 
         // Função para obter casos do cliente baseado nas keys
         function getClientCases(cases) {
+            if (!clienteKeys || clienteKeys.length === 0) return [];
+            
             return cases.filter(item => {
                 const itemKey = item.key ? String(item.key).trim() : '';
+                if (!itemKey) return false;
+                
                 return clienteKeys.some(clientKey => 
                     clientKey.toLowerCase() === itemKey.toLowerCase()
                 );
             });
         }
 
-        // Função para exibir os casos (FILTRADA POR MULTIPLAS KEYS)
+        // Função para exibir os casos
         function displayCases(cases) {
-            if (!cases || cases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
-                return;
-            }
+            loadingMessage.style.display = 'block';
             
-            // Filtrar casos baseado nas keys do cliente
-            let filteredCases = getClientCases(cases);
-            
-            if (filteredCases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
-                return;
-            }
-            
-            renderCases(filteredCases);
+            setTimeout(() => {
+                if (!cases || cases.length === 0) {
+                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
+                    loadingMessage.style.display = 'none';
+                    return;
+                }
+                
+                // Filtrar casos baseado nas keys do cliente
+                let filteredCases = getClientCases(cases);
+                
+                if (filteredCases.length === 0) {
+                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
+                } else {
+                    renderCases(filteredCases);
+                }
+                
+                loadingMessage.style.display = 'none';
+            }, 100);
         }
 
         // Função para renderizar os casos na tela
         function renderCases(cases) {
             let html = '';
-            cases.forEach((item, index) => {
+            
+            // Ordenar casos por data (mais recente primeiro)
+            const sortedCases = cases.sort((a, b) => {
+                const dateA = new Date(a.data) || new Date(0);
+                const dateB = new Date(b.data) || new Date(0);
+                return dateB - dateA;
+            });
+            
+            sortedCases.forEach((item, index) => {
                 const statusClass = getStatusClass(item.status);
                 
                 html += `
-                    <div class="case-item" data-index="${index}">
+                    <div class="case-item" data-index="${index}" title="Clique para ver detalhes">
                         <div class="case-info">
                             <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
                             <div class="case-details">
-                                <span><strong>Data:</strong> ${formatDate(item.data)}</span>
-                                <span><strong>Nome:</strong> ${item.nome || 'Não informado'}</span>
+                                <span><i class="far fa-calendar"></i> ${formatDate(item.data)}</span>
+                                <span><i class="far fa-user"></i> ${item.nome || 'Não informado'}</span>
+                                ${currentTab === 'garantias' && item.chassi ? 
+                                    `<span><i class="fas fa-car"></i> ${item.chassi || 'Não informado'}</span>` : ''
+                                }
                             </div>
                         </div>
-                        <div class="case-status ${statusClass}">${item.status || 'Pendente'}</div>
+                        <div class="case-status ${statusClass}">
+                            <i class="fas fa-circle"></i> ${item.status || 'Pendente'}
+                        </div>
                     </div>
                 `;
             });
             
             casesContainer.innerHTML = html;
             
-            document.querySelectorAll('.case-item').forEach(item => {
+            // Adicionar event listeners aos casos
+            document.querySelectorAll('.case-item').forEach((item, index) => {
                 item.addEventListener('click', function() {
-                    const index = this.dataset.index;
-                    showCaseDetails(cases[index]);
+                    showCaseDetails(sortedCases[index]);
                 });
+                
+                // Tornar os casos focáveis para acessibilidade
+                item.setAttribute('tabindex', '0');
             });
         }
 
@@ -894,6 +986,17 @@ footer {
             document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
             document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
             
+            // Mostrar ou esconder chassi e modelo para garantias
+            if (currentTab === 'garantias') {
+                chassiDetail.style.display = 'flex';
+                modeloDetail.style.display = 'flex';
+                modalChassi.textContent = caseData.chassi || 'Não informado';
+                modalModelo.textContent = caseData.modelo || 'Não informado';
+            } else {
+                chassiDetail.style.display = 'none';
+                modeloDetail.style.display = 'none';
+            }
+            
             // Mostrar botões específicos para BO
             if (caseData.status && caseData.status.toUpperCase() === 'BO') {
                 boActions.style.display = 'flex';
@@ -902,19 +1005,22 @@ footer {
             }
             
             caseModal.style.display = 'flex';
+            
+            // Focar no botão de fechar modal para acessibilidade
+            setTimeout(() => {
+                closeModal.focus();
+            }, 100);
         }
 
-        // FUNÇÃO DE FILTRO CORRIGIDA - busca mais precisa
+        // Função de filtro
         function filterCases() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             
             if (!searchTerm) {
-                // Se não há termo de busca, mostrar todos os casos do cliente
                 displayCases(allData[currentTab]);
                 return;
             }
             
-            // Obter todos os casos do cliente
             const allClientCases = getClientCases(allData[currentTab]);
             
             if (allClientCases.length === 0) {
@@ -922,14 +1028,17 @@ footer {
                 return;
             }
             
-            // Filtrar casos baseado no termo de busca
             const filteredCases = allClientCases.filter(item => {
                 const searchableFields = [
                     item.caso || '',
                     item.nome || '',
                     item.status || '',
                     item.data ? formatDate(item.data) : '',
-                    item.descricao || ''
+                    item.descricao || '',
+                    ...(currentTab === 'garantias' ? [
+                        item.chassi || '',
+                        item.modelo || ''
+                    ] : [])
                 ];
                 
                 return searchableFields.some(field => 
@@ -937,7 +1046,6 @@ footer {
                 );
             });
             
-            // Mostrar resultados
             if (filteredCases.length === 0) {
                 casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado com esses critérios de busca</div>';
             } else {
@@ -948,9 +1056,23 @@ footer {
         // Função para formatar data
         function formatDate(dateString) {
             if (!dateString) return 'Não informada';
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
-            const date = new Date(dateString);
-            if (!isNaN(date.getTime())) return date.toLocaleDateString('pt-BR');
+            
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+            
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                const [year, month, day] = dateString.split('-');
+                return `${day}/${month}/${year}`;
+            }
+            
+            try {
+                const date = new Date(dateString);
+                if (!isNaN(date.getTime())) {
+                    return date.toLocaleDateString('pt-BR');
+                }
+            } catch (e) {
+                console.log('Erro ao formatar data:', e);
+            }
+            
             return dateString;
         }
 
@@ -959,7 +1081,6 @@ footer {
             if (!status) return 'status-default';
             const statusUpper = status.toUpperCase();
             
-            // Mapeamento dos status com cores
             const statusMap = {
                 'BO': 'status-bo',
                 'FATURADO': 'status-faturado',
@@ -978,12 +1099,10 @@ footer {
                 'AGUARDANDO': 'status-aguardando-envio'
             };
             
-            // Primeiro verifica se há correspondência exata
             if (statusMap[statusUpper]) {
                 return statusMap[statusUpper];
             }
             
-            // Se não houver correspondência exata, verifica se contém a palavra
             for (const [key, value] of Object.entries(statusMap)) {
                 if (statusUpper.includes(key)) {
                     return value;
@@ -996,8 +1115,13 @@ footer {
         // Event Listener para filtro em tempo real
         searchInput.addEventListener('input', filterCases);
 
-        // Carregar dados ao iniciar (sem login ainda)
+        // Carregar dados ao iniciar
         loadAllData();
+        
+        // Focar no campo de login
+        window.addEventListener('load', function() {
+            setTimeout(() => loginInput.focus(), 500);
+        });
     </script>
 </body>
 </html>
