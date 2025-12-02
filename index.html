@@ -406,7 +406,7 @@
         }
         .modal-content {
             background-color: white;
-            margin: 3% auto;
+            margin: 1% auto;
             padding: 25px;
             border-radius: 8px;
             width: 90%;
@@ -1431,7 +1431,6 @@
         <!-- Modal de Confirmação -->
         <div id="confirmationModal" class="modal">
             <div class="modal-content">
-                <i class="fa-solid fa-circle-info"></i>
                 <h2>Solicitação Enviada</h2>
                 <div id="protocoloInfo" class="protocolo-info" style="display: none;">
                     <h3><i class="fas fa-file-contract"></i> Protocolo Gerado</h3>
@@ -2407,18 +2406,18 @@
                             alert(resultado.message || 'Erro ao enviar documento');
                         }
 
-                    } catch (error) {
-                        alert('Erro ao processar solicitação: ' + error.message);
-                    } finally {
-                        if (tipoSolicitacao === 'encomenda') {
-                            encomendaLoading.style.display = 'none';
-                            exportEncomendaBtn.disabled = false;
-                            exportEncomendaBtn.innerHTML = '<i class="fas fa-envelope"></i> Enviar Encomenda';
-                        } else {
-                            saleLoading.style.display = 'none';
-                            exportSaleBtn.disabled = false;
-                        }
-                    }
+    } catch (error) {
+        alert('Erro ao processar solicitação: ' + error.message);
+    } finally {
+        // CORREÇÃO: Sempre esconder todos os loadings e reabilitar todos os botões
+        encomendaLoading.style.display = 'none';
+        exportEncomendaBtn.disabled = false;
+        exportEncomendaBtn.innerHTML = '<i class="fas fa-envelope"></i> Enviar Encomenda';
+        
+        saleLoading.style.display = 'none';
+        exportSaleBtn.disabled = false;
+        exportSaleBtn.innerHTML = '<i class="fas fa-envelope"></i> Enviar';
+    }
                 }
 
                 // ✅ CORREÇÃO: Gerar documento de Garantia
@@ -2980,7 +2979,7 @@
                 });
 
                 warrantyAddButton.addEventListener('click', function() {
-                    if (!validarQuantadadeAntesAdicionar(warrantyQuantityInput, 'garantia')) {
+                    if (!validarQuantidadeAntesAdicionar(warrantyQuantityInput, 'garantia')) {
                         return;
                     }
                     
