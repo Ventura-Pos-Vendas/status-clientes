@@ -1463,39 +1463,26 @@
                 'bruno.beltrame@venturamarine.com.br'
             ];
 
-            // ==================================================
-            // GERADOR DE NÚMEROS DE PROTOCOLO ÚNICOS
-            // ==================================================
-            function gerarNumeroProtocoloUnico(tipo) {
-                const data = new Date();
-                const ano = data.getFullYear().toString().substr(-2);
-                const mes = (data.getMonth() + 1).toString().padStart(2, '0');
-                const dia = data.getDate().toString().padStart(2, '0');
-                
-                // Gerar timestamp único
-                const timestamp = Date.now().toString().substr(-6);
-                
-                // Gerar parte aleatória para garantir unicidade
-                const aleatorio = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                
-                let prefixo = '';
-                switch(tipo) {
-                    case 'venda':
-                        prefixo = 'VEN';
-                        break;
-                    case 'garantia':
-                        prefixo = 'GAR';
-                        break;
-                    case 'encomenda':
-                        prefixo = 'ENC';
-                        break;
-                    default:
-                        prefixo = 'PRO';
-                }
-                
-                // Combinar para criar protocolo único
-                return `${prefixo}${ano}${mes}${dia}${timestamp}${aleatorio}`;
-            }
+        // ==================================================
+// GERADOR DE NÚMEROS DE PROTOCOLO ÚNICOS - VERSÃO SIMPLES
+// ==================================================
+function gerarNumeroProtocoloUnico(tipo) {
+    // ✅ GERADOR SIMPLES E ÚNICO
+    const data = new Date();
+    const timestamp = Date.now().toString().substr(-9);
+    const aleatorio = Math.floor(Math.random() * 999).toString().padStart(3, '0');
+    
+    let prefixo = 'PRO';
+    if (tipo === 'garantia') prefixo = 'GAR';
+    if (tipo === 'encomenda') prefixo = 'ENC';
+    if (tipo === 'venda') prefixo = 'VEN';
+    
+    // DATA + TIMESTAMP + ALEATÓRIO = ÚNICO
+    const protocolo = `${prefixo}${data.getFullYear()}${(data.getMonth()+1).toString().padStart(2,'0')}${timestamp}${aleatorio}`;
+    
+    console.log('✅ Protocolo gerado:', protocolo);
+    return protocolo;
+}
 
             // ==================================================
             // DADOS DAS PEÇAS
@@ -2142,8 +2129,8 @@
 
                             // PREPARAR DADOS PRINCIPAIS
                             const dadosParaEnvio = {
-                                tipo: dadosDocumento.tipo,
                                 numeroProtocolo: numeroProtocolo,
+                                tipo: dadosDocumento.tipo,
                                 revendedor: dadosDocumento.revendedor,
                                 cnpj: dadosDocumento.cnpj,
                                 email: dadosDocumento.email,
