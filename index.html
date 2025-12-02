@@ -3,1125 +3,3260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Casos</title>
+    <meta name="description" content="Garantias e Vendas de Peças">
+    <meta name="author" content="Lucas Bassi">
+    <title>Abertura de Chamados - Pós Vendas</title>
+    
     <style>
-/* Estilos do Login */
-.login-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
+        :root {
+            --primary: #606060;
+            --secondary: #878787;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --titulo: #ffffff;
+            --inactive: #a0a0a0;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 15px;
+            color: #333;
+            line-height: 1.6;
+            background-color: #424242;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80px;
+        }
+        .service-type {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .service-type button {
+            padding: 12px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 140px;
+        }
+        .service-type .sale-btn {
+            background-color: var(--warning);
+            color: white;
+        }
+        .service-type .warranty-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        .service-type .sale-btn:not(.active) {
+            background-color: var(--inactive);
+        }
+        .service-type .warranty-btn:not(.active) {
+            background-color: var(--inactive);
+        }
+        .service-type button.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .new-page-btn {
+            background-color: #007bff !important;
+            color: white !important;
+            border: 1px solid #007bff !important;
+            padding: 8px 16px !important;
+            font-size: 16px !important;
+            font-family: inherit !important;
+            font-weight: bold !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            text-align: center !important;
+            display: inline-block !important;
+            transition: none !important;
+            text-decoration: none !important;
+        }
+        .new-page-btn:hover,
+        .new-page-btn:active, 
+        .new-page-btn:focus,
+        .new-page-btn:visited {
+            background-color: #007bff !important;
+            color: white !important;
+            border-color: #007bff !important;
+            box-shadow: none !important;
+            outline: none !important;
+            transform: none !important;
+            text-decoration: none !important;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 8px;
+            background-color: rgb(248, 248, 248);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section h2 {
+            margin-top: 0;
+            color: var(--primary);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .section h2 i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        label.required::after {
+            content: " *";
+            color: var(--danger);
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .btn {
+            padding: 12px 20px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn i {
+            margin-right: 8px;
+        }
+        .btn-export {
+            background-color: var(--success);
+            margin-top: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .product-list, .selected-list {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            z-index: 1;
+        }
+        #searchInput, #warrantySearchInput, #encomendaSearchInput {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            font-size: 16px;
+        }
+        select {
+            width: 100%;
+            height: 200px;
+            margin: 15px 0;
+            padding: 10px;
+        }
+        .product-list {
+            position: relative;
+        }
+        #availableProducts, #warrantyAvailableProducts, #encomendaAvailableProducts {
+            overflow: auto;
+            white-space: nowrap;
+            width: 100%;
+        }
+        #availableProducts option, #warrantyAvailableProducts option, #encomendaAvailableProducts option {
+            white-space: nowrap;
+            padding: 8px 12px;
+            min-width: 100%;
+            font-size: 14px;
+        }
+        .product-header {
+            display: none;
+        }
+        .selected-items-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        .selected-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .selected-item:hover {
+            background-color: #f0f0f0;
+        }
+        .selected-item-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .selected-item-details {
+            flex: 1;
+        }
+        .selected-item-ref {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .selected-item-name {
+            font-weight: 600;
+        }
+        .selected-item-model {
+            color: #666;
+            font-size: 14px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+            gap: 8px;
+        }
+        .quantity-control button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 35px;
+        }
+        .quantity-control .btn-plus {
+            background-color: var(--success);
+            color: white;
+        }
+        .quantity-control .btn-minus {
+            background-color: var(--warning);
+            color: white;
+        }
+        .quantity-control .btn-remove {
+            background-color: var(--danger);
+            color: white;
+        }
+        .quantity-control button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        .quantity-display {
+            font-weight: bold;
+            margin: 0 5px;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-btn {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+        .category-selector {
+            margin-bottom: 20px;
+        }
+        .category-selector select {
+            height: auto;
+            padding: 12px;
+        }
+        .hidden {
+            display: none;
+        }
+        .review-section {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .attachments-preview {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .attachment-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            background: white;
+        }
+        .attachment-item img {
+            max-width: 100%;
+            max-height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .attachment-name {
+            font-size: 11px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        .remove-attachment {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 3% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.3s;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-content i {
+            font-size: 50px;
+            color: #001f3f;
+            margin-bottom: 20px;
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 20px;
+        }
+        .close-modal {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        input:invalid, textarea:invalid, select:invalid {
+            border-color: var(--danger);
+        }
+        input:valid, textarea:valid, select:valid {
+            border-color: #ddd;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .logo-container img {
+                max-width: 400px;
+                max-height: none;
+            }
+            .service-type button {
+                font-size: 16px;
+                padding: 12px 25px;
+                flex: initial;
+            }
+            .section {
+                padding: 25px;
+            }
+            .section h2 {
+                font-size: 20px;
+            }
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .container {
+                flex-direction: row;
+            }
+            .product-list, .selected-list {
+                flex: 1;
+            }
+            .product-header {
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr 120px;
+                font-weight: bold;
+                padding: 12px 10px;
+                background-color: var(--primary);
+                color: white;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            .selected-item {
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr 120px;
+                align-items: center;
+                flex-direction: row;
+                margin-bottom: 0;
+                background: transparent;
+            }
+            .selected-item-info, 
+            .selected-item-details {
+                display: none !important;
+            }
+            .quantity-control {
+                margin-top: 0 !important;
+                justify-content: flex-start !important;
+            }
+            .btn {
+                width: auto;
+            }
+            .close-modal {
+                width: auto;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .service-type {
+                flex-direction: column;
+            }
+            .service-type button {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .section {
+                padding: 15px;
+            }
+            .container {
+                gap: 15px;
+            }
+            .product-list, .selected-list {
+                padding: 10px;
+            }
+            #availableProducts, #warrantyAvailableProducts, #encomendaAvailableProducts {
+                height: 150px;
+                font-size: 14px;
+            }
+            .search-container input {
+                font-size: 16px;
+            }
+        }
+
+        .address-option {
+            margin-bottom: 20px;
+        }
+        .address-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        .address-option input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .alternate-address {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        .alternate-address.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        .section-spacing {
+            margin-top: 40px;
+        }
+        
+        #dealerState, #dealerCity, 
+        #warrantyDealerState, #warrantyDealerCity,
+        #saleAltState, #saleAltCity,
+        #warrantyAltState, #warrantyAltCity,
+        #reviewNumber {
+            height: 46px !important;
+            padding: 12px !important;
+            line-height: 20px !important;
+            margin: 0 !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            font-size: 15px !important;
+            font-family: inherit !important;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"] {
+            height: 46px;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 20px;
+        }
+
+        #availableProducts, #warrantyAvailableProducts, #encomendaAvailableProducts {
+            height: 200px !important;
+            padding: 10px !important;
+            line-height: normal !important;
+        }
+
+        .normal-select {
+            margin: 0;
+        }
+
+        .photo-required {
+            border-left: 4px solid var(--danger);
+            padding-left: 10px;
+        }
+
+        .invoice-required {
+            border-left: 4px solid var(--danger);
+            padding-left: 10px;
+            background-color: #fff8f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--success);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (min-width: 768px) {
+            .selected-item {
+                display: grid !important;
+                grid-template-columns: 1fr 2fr 1fr 120px !important;
+                align-items: center !important;
+                flex-direction: row !important;
+                margin-bottom: 0 !important;
+                background: transparent !important;
+            }
+            
+            .selected-item-info, 
+            .selected-item-details {
+                display: none !important;
+            }
+            
+            .quantity-control {
+                margin-top: 0 !important;
+                justify-content: flex-start !important;
+            }
+        }
+
+        .selected-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 120px;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+
+        .selected-item-info,
+        .selected-item-details {
+            display: none;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-header {
+            display: grid !important;
+            grid-template-columns: 1fr 2fr 1fr 120px;
+            font-weight: bold;
+            padding: 12px 10px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .conditional-field {
+            transition: all 0.3s ease;
+        }
+        
+        .conditional-field.hidden {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .selected-item {
+                display: grid !important;
+                grid-template-columns: 0.8fr 1.5fr 0.8fr 140px !important;
+                align-items: center !important;
+                margin-bottom: 0 !important;
+                background: transparent !important;
+                gap: 8px !important;
+                padding: 8px 5px !important;
+            }
+            
+            .selected-item-info, 
+            .selected-item-details {
+                display: none !important;
+            }
+            
+            .quantity-control {
+                margin-top: 0 !important;
+                justify-content: flex-start !important;
+                gap: 5px !important;
+            }
+
+            .quantity-control button {
+                padding: 6px 8px !important;
+                min-width: 30px !important;
+                font-size: 12px !important;
+            }
+
+            .quantity-display {
+                min-width: 25px !important;
+                font-size: 13px !important;
+            }
+        }
+
+        .selected-item {
+            display: grid;
+            grid-template-columns: 0.8fr 1.5fr 0.8fr 140px;
+            align-items: center;
+            padding: 8px 5px;
+            border-bottom: 1px solid #eee;
+            gap: 8px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-header {
+            display: grid !important;
+            grid-template-columns: 0.8fr 1.5fr 0.8fr 140px;
+            font-weight: bold;
+            padding: 10px 5px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .quantity-control button {
+            padding: 6px 8px;
+            min-width: 30px;
+            font-size: 12px;
+        }
+
+        .quantity-display {
+            min-width: 25px;
+            font-size: 13px;
+            margin: 0 3px;
+        }
+
+        .quantity-error {
+            border: 2px solid var(--danger) !important;
+            background-color: #fff8f8;
+        }
+
+        .quantity-error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+            font-weight: bold;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #vehicleModel {
+            height: 46px !important;
+            padding: 12px !important;
+        }
+
+        .anexo-error {
+            border: 2px solid var(--danger) !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .anexo-error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: bold;
+            padding: 8px;
+            background-color: #fff8f8;
+            border: 1px solid var(--danger);
+            border-radius: 4px;
+            white-space: pre-line;
+        }
+
+        .anexo-error {
+            animation: shake 0.5s;
+        }
+
+        .protocolo-info {
+            background-color: #f0f7ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .protocolo-info h3 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .protocolo-info p {
+            margin: 5px 0;
+            color: #333;
+        }
+        .protocolo-numero {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
 
-.login-container {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-}
-
-.login-container h2 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-    font-size: 28px;
-}
-
-.login-container p {
-    color: #6c757d;
-    margin-bottom: 30px;
-}
-
-.login-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-bottom: 20px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.login-input:focus {
-    border-color: #2980b9;
-}
-
-.login-btn {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.3s;
-}
-
-.login-btn:hover {
-    background: #219a52;
-}
-
-.login-btn:disabled {
-    background: #95a5a6;
-    cursor: not-allowed;
-}
-
-.error-message {
-    color: #e74c3c;
-    margin-top: 15px;
-    display: none;
-}
-
-/* Estilos existentes do sistema */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-    min-height: 100vh;
-    overflow: hidden;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    height: calc(100vh - 40px);
-    display: flex;
-    flex-direction: column;
-}
-
-header {
-    background: #2c3e50;
-    color: white;
-    padding: 25px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-h1 {
-    font-size: 28px;
-    margin-bottom: 0;
-}
-
-.tabs {
-    display: flex;
-    background: #34495e;
-    flex-shrink: 0;
-}
-
-.tab {
-    flex: 1;
-    padding: 15px;
-    text-align: center;
-    background: #34495e;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background 0.3s;
-}
-
-.tab:hover {
-    background: #3c556d;
-}
-
-.tab.active {
-    background: #3498db;
-}
-
-.search-container {
-    padding: 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    flex-shrink: 0;
-}
-
-.search-box {
-    display: flex;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.search-box input {
-    flex: 1;
-    padding: 12px 15px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.search-box input:focus {
-    border-color: #2980b9;
-}
-
-.refresh-btn {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin-left: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
-}
-
-.refresh-btn:hover {
-    background: #219a52;
-}
-
-.cases-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0;
-}
-
-.case-item {
-    padding: 18px 20px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s;
-    cursor: pointer;
-}
-
-.case-item:hover {
-    background: #f8f9fa;
-}
-
-.case-info {
-    flex: 1;
-}
-
-.case-title {
-    font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 5px;
-    color: #2c3e50;
-}
-
-.case-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    color: #6c757d;
-    font-size: 14px;
-}
-
-.case-details span {
-    white-space: nowrap;
-}
-
-.case-status {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* Status de cores */
-.status-bo {
-    background-color: #000000 !important;
-    color: white !important;
-}
-
-.status-faturado {
-    background-color: #28a745 !important;
-    color: white !important;
-}
-
-.status-encomendado {
-    background-color: #fd7e14 !important;
-    color: white !important;
-}
-
-.status-faturado-encomendado {
-    background-color: #007bff !important;
-    color: white !important;
-}
-
-.status-em-processamento {
-    background-color: #ffc107 !important;
-    color: #212529 !important;
-}
-
-.status-em-analise {
-    background-color: #ffc107 !important;
-    color: #212529 !important;
-}
-
-.status-aprovado {
-    background-color: #28a745 !important;
-    color: white !important;
-}
-
-.status-recusado {
-    background-color: #dc3545 !important;
-    color: white !important;
-}
-
-.status-aguardando-envio {
-    background-color: #6f42c1 !important;
-    color: white !important;
-}
-
-.status-default {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
-}
-
-.loading {
-    text-align: center;
-    padding: 40px;
-    font-size: 18px;
-    color: #3498db;
-}
-
-.error {
-    text-align: center;
-    padding: 40px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 8px;
-    margin: 20px;
-}
-
-.empty {
-    text-align: center;
-    padding: 40px;
-    color: #6c757d;
-    font-style: italic;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 700px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e9ecef;
-    padding-bottom: 15px;
-}
-
-.modal-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #6c757d;
-}
-
-.modal-details {
-    margin-bottom: 20px;
-}
-
-.modal-detail {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: flex-start;
-}
-
-.modal-detail strong {
-    width: 160px;
-    color: #495057;
-    flex-shrink: 0;
-    margin-right: 15px;
-}
-
-.modal-detail span {
-    flex: 1;
-    word-break: break-word;
-}
-
-.modal-description {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-    border-left: 4px solid #3498db;
-    white-space: pre-line;
-    line-height: 1.5;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* Estilos para os botões de ação do BO */
-.bo-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    width: 100%;
-}
-
-.bo-action-btn {
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s;
-    width: 100%;
-}
-
-.action-outro-site {
-    background: #28a745;
-    color: white;
-}
-
-.action-outro-site:hover {
-    background: #218838;
-}
-
-.action-faturar-disponiveis {
-    background: #007bff;
-    color: white;
-}
-
-.action-faturar-disponiveis:hover {
-    background: #0056b3;
-}
-
-.action-cancelar {
-    background: #dc3545;
-    color: white;
-}
-
-.action-cancelar:hover {
-    background: #c82333;
-}
-
-footer {
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    color: #6c757d;
-    font-size: 14px;
-    border-top: 1px solid #e9ecef;
-    flex-shrink: 0;
-}
-
-.logout-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-@media (max-width: 600px) {
-    .case-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .case-status {
-        margin-top: 10px;
-        align-self: flex-end;
-    }
-    
-    .case-details {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .search-box {
-        flex-direction: column;
-    }
-    
-    .refresh-btn {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-    
-    .modal-content {
-        padding: 20px;
-        margin: 20px;
-    }
-    
-    .modal-detail {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .modal-detail strong {
-        width: auto;
-        margin-right: 0;
-    }
-    
-    .modal-detail span {
-        width: 100%;
-    }
-    
-    .bo-actions {
-        flex-direction: column;
-    }
-}
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- Tela de Login -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-container">
-            <h2>Acesso do Cliente</h2>
-            <p>Digite seu login para visualizar seus casos</p>
-            
-            <input type="text" id="loginInput" class="login-input" placeholder="Digite seu login" autocomplete="off">
-            
-            <button id="loginBtn" class="login-btn">
-                Acessar Meus Casos
-            </button>
-            
-            <div id="loginError" class="error-message">
-                Login não encontrado. Verifique se digitou corretamente.
-            </div>
-        </div>
+    <div class="logo-container">
+        <!-- Logo será carregada via JavaScript -->
     </div>
-
-    <!-- Sistema Principal (inicialmente escondido) -->
-    <div class="container" id="mainContainer" style="display: none;">
-        <header>
-            <h1 id="headerTitle">Meus Casos</h1>
-        </header>
-        
-        <div class="tabs">
-            <button class="tab active" data-tab="vendas">Vendas</button>
-            <button class="tab" data-tab="garantias">Garantias</button>
-        </div>
-        
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar por caso, nome ou status...">
-                <button class="refresh-btn" id="refreshBtn">Atualizar</button>
-            </div>
-        </div>
-        
-        <div class="cases-container" id="casesContainer">
-            <div class="loading" id="loadingMessage">
-                Carregando dados...
-            </div>
-        </div>
-        
-        <footer id="mainFooter">
-            Sistema de Gestão
-        </footer>
+    
+    <div class="service-type">
+        <button id="saleBtn" class="sale-btn active"><i class="fas fa-shopping-cart"></i> ORÇAMENTOS</button>
+        <button id="warrantyBtn" class="warranty-btn"><i class="fas fa-shield-alt"></i> GARANTIAS</button>
+        <a href="https://ventura-pos-vendas.github.io/teste-status-clientes/" target="_blank" class="new-page-btn">
+            <i class="fas fa-shield-alt"></i> MEUS PROTOCOLOS
+        </a>
     </div>
+    
+    <!-- Seção de Venda -->
+    <div id="saleSection" class="section active">
+        <h2><i class="fas fa-store"></i> Dados do Revendedor/Oficina Autorizada</h2>
 
-    <!-- Modal para mostrar detalhes -->
-    <div class="modal" id="caseModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Detalhes do Caso</h3>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-details">
-                <div class="modal-detail">
-                    <strong>Data:</strong>
-                    <span id="modalDate"></span>
-                </div>
-                <div class="modal-detail">
-                    <strong>Nome:</strong>
-                    <span id="modalName"></span>
-                </div>
-                <div class="modal-detail" id="chassiDetail" style="display: none;">
-                    <strong>Chassi:</strong>
-                    <span id="modalChassi"></span>
-                </div>
-                <div class="modal-detail" id="modeloDetail" style="display: none;">
-                    <strong>Modelo:</strong>
-                    <span id="modalModelo"></span>
-                </div>
-                <div class="modal-detail">
-                    <strong>Status:</strong>
-                    <span id="modalStatus"></span>
-                </div>
-            </div>
-            <div>
-                <strong>Descrição:</strong>
-                <div class="modal-description" id="modalDescription">
-                    Carregando descrição...
-                </div>
-            </div>
-            <!-- Botões específicos para status BO -->
-            <div class="bo-actions" id="boActions" style="display: none;">
-                <button class="bo-action-btn action-outro-site" onclick="openOtherSite()">
-                    <i class="fas fa-external-link-alt"></i>
-                    FATURAR DISPONÍVEIS E ENCOMENDAR RESTANTE
-                </button>
-                <button class="bo-action-btn action-faturar-disponiveis" onclick="handleBoAction('faturar-disponiveis')">
-                    <i class="fas fa-check"></i>
-                    FATURAR SOMENTE DISPONÍVEIS
-                </button>
-                <button class="bo-action-btn action-cancelar" onclick="handleBoAction('cancelar')">
-                    <i class="fas fa-times-circle"></i>
-                    CANCELAR PEDIDO
-                </button>
-            </div>
+        <!-- Tipo de Solicitação -->
+        <div class="category-selector">
+            <label for="saleType" class="required">Tipo de Solicitação</label>
+            <select id="saleType" required>
+                <option value="">Selecione o tipo...</option>
+                <option value="consulta">Consulta de Valores</option>
+                <option value="faturamento">Solicitação de Faturamento</option>
+                <option value="encomenda">Encomenda</option>
+            </select>
+            <div class="error-message">Este campo é obrigatório</div>
         </div>
-    </div>
 
-    <script>
-        // Variáveis globais
-        let currentTab = 'vendas';
-        let allData = { vendas: [], garantias: [], logins: [] };
-        let currentCaseData = null;
-        let clienteLogado = null;
-        let clienteKeys = [];
-
-        // Elementos
-        const loginOverlay = document.getElementById('loginOverlay');
-        const mainContainer = document.getElementById('mainContainer');
-        const loginInput = document.getElementById('loginInput');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
-        const headerTitle = document.getElementById('headerTitle');
-        const mainFooter = document.getElementById('mainFooter');
-        const searchInput = document.getElementById('searchInput');
-        const casesContainer = document.getElementById('casesContainer');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const tabs = document.querySelectorAll('.tab');
-        const caseModal = document.getElementById('caseModal');
-        const closeModal = document.getElementById('closeModal');
-        const boActions = document.getElementById('boActions');
-        
-        // Elementos para chassi e modelo (garantias)
-        const chassiDetail = document.getElementById('chassiDetail');
-        const modeloDetail = document.getElementById('modeloDetail');
-        const modalChassi = document.getElementById('modalChassi');
-        const modalModelo = document.getElementById('modalModelo');
-
-        // URL do Google Apps Script
-        const API_URL = "https://script.google.com/macros/s/AKfycbxhxEkSlgCYr-fUzZdpYXn08rcc5VSA1AWN9IaYuD_dkE7sZQR5P6ynEI5CnfxU9JT-/exec";
-        
-        // URL para o outro site (ALTERE AQUI COM SUA URL)
-        const OTHER_SITE_URL = "https://ventura-pos-vendas.github.io/Ventura-Pos-Vendas/";
-
-        // Event Listeners
-        loginBtn.addEventListener('click', handleLogin);
-        
-        // Enter no campo de login
-        loginInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                handleLogin();
-            }
-        });
-        
-        // Focar no campo de login ao carregar a página
-        window.addEventListener('load', function() {
-            loginInput.focus();
-        });
-
-        // Função de login
-        function handleLogin() {
-            const login = loginInput.value.trim();
-            
-            if (!login) {
-                showLoginError('Por favor, digite seu login');
-                loginInput.focus();
-                return;
-            }
-            
-            // Desabilitar botão durante o login
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-            
-            // Verificar se os dados já foram carregados
-            if (allData.logins.length === 0) {
-                loadAllData(login);
-            } else {
-                verifyLogin(login);
-            }
-        }
-
-        // Função para verificar login APENAS na planilha de logins
-        function verifyLogin(login) {
-            console.log('Verificando login:', login);
-            
-            // Buscar APENAS na planilha de logins
-            const loginData = allData.logins.find(item => 
-                item.login && item.login.toLowerCase() === login.toLowerCase()
-            );
-            
-            if (loginData && loginData.keys && loginData.keys.length > 0) {
-                clienteKeys = loginData.keys;
-                console.log('Login encontrado! Keys:', clienteKeys);
-                loginSuccess(login);
-            } else {
-                showLoginError('Login não encontrado na base de dados.');
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = 'Acessar Meus Casos';
-                loginInput.focus();
-            }
-        }
-
-        // Login bem-sucedido
-        function loginSuccess(login) {
-            clienteLogado = login;
-            loginOverlay.style.display = 'none';
-            mainContainer.style.display = 'flex';
-            
-            // Deixar apenas "Meus Casos" no título
-            headerTitle.innerHTML = `Meus Casos`;
-            
-            // Atualizar rodapé
-            mainFooter.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Logado como: <strong>${login}</strong></span>
-                    <button class="logout-btn" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Sair
-                    </button>
+        <!-- Seção de Encomenda -->
+        <div id="encomendaSection" class="conditional-field hidden">
+            <h2><i class="fas fa-box"></i> Dados da Encomenda</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="encomendaRevenda" class="required">Nome da Revenda</label>
+                    <input type="text" id="encomendaRevenda" placeholder="Digite o nome da revenda">
+                    <div class="error-message">Este campo é obrigatório</div>
                 </div>
-            `;
+                <div class="form-group">
+                    <label for="encomendaEmail" class="required">E-mail</label>
+                    <input type="email" id="encomendaEmail" placeholder="email@revenda.com">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="encomendaCasoRelacionado" class="required">Protocolo Relacionado</label>
+                    <input type="text" id="encomendaCasoRelacionado" placeholder="Digite o número ou descrição do protocolo relacionado">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+            </div>
             
-            // Event listener para logout
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                if (confirm('Deseja realmente sair do sistema?')) {
-                    clienteLogado = null;
-                    clienteKeys = [];
-                    mainContainer.style.display = 'none';
-                    loginOverlay.style.display = 'flex';
-                    loginInput.value = '';
-                    loginError.style.display = 'none';
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'Acessar Meus Casos';
-                    loginInput.focus();
-                    
-                    // Limpar container de casos
-                    casesContainer.innerHTML = '<div class="loading">Carregando dados...</div>';
-                }
-            });
-            
-            // MOSTRAR CASOS IMEDIATAMENTE APÓS LOGIN
-            displayCases(allData[currentTab]);
-            
-            // Focar no campo de busca após login
-            setTimeout(() => {
-                searchInput.focus();
-            }, 300);
-        }
-
-        // Mostrar erro de login
-        function showLoginError(message) {
-            loginError.textContent = message;
-            loginError.style.display = 'block';
-            
-            // Esconder erro após 5 segundos
-            setTimeout(() => {
-                loginError.style.display = 'none';
-            }, 5000);
-        }
-
-        // Função para carregar todos os dados usando JSONP
-        function loadAllData(login = null) {
-            loadingMessage.textContent = 'Carregando dados...';
-            loadingMessage.style.display = 'block';
-            
-            const timestamp = new Date().getTime();
-            const callbackName = 'jsonpCallback_' + timestamp;
-            
-            window[callbackName] = function(data) {
-                console.log('Dados recebidos:', data);
-                
-                allData.vendas = data.vendas || [];
-                allData.garantias = data.garantias || [];
-                allData.logins = data.logins || [];
-                
-                console.log('Logins carregados:', allData.logins.length);
-                console.log('Vendas carregadas:', allData.vendas.length);
-                console.log('Garantias carregadas:', allData.garantias.length);
-                
-                if (login) {
-                    verifyLogin(login);
-                } else {
-                    loadingMessage.style.display = 'none';
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'Acessar Meus Casos';
-                }
-                
-                delete window[callbackName];
-            };
-            
-            const script = document.createElement('script');
-            script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
-            script.onerror = function() {
-                loadingMessage.innerHTML = '<div class="error">Erro ao carregar dados. Tente novamente.</div>';
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = 'Acessar Meus Casos';
-                delete window[callbackName];
-            };
-            
-            document.head.appendChild(script);
-        }
-
-        // Event Listeners para as abas
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                currentTab = this.dataset.tab;
-                displayCases(allData[currentTab]);
-                
-                // Focar no campo de busca após trocar aba
-                searchInput.focus();
-            });
-        });
-
-        // Event Listener para atualizar
-        refreshBtn.addEventListener('click', function() {
-            loadingMessage.textContent = 'Atualizando dados...';
-            loadingMessage.style.display = 'block';
-            loadAllData();
-        });
-
-        // Event Listeners para o modal
-        closeModal.addEventListener('click', function() {
-            caseModal.style.display = 'none';
-        });
-
-        caseModal.addEventListener('click', function(e) {
-            if (e.target === caseModal) {
-                caseModal.style.display = 'none';
-            }
-        });
-        
-        // Fechar modal com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && caseModal.style.display === 'flex') {
-                caseModal.style.display = 'none';
-            }
-        });
-
-        // Função para abrir outro site
-        function openOtherSite() {
-            window.open(OTHER_SITE_URL, '_blank');
-        }
-
-        // Função para lidar com outras ações do BO
-        function handleBoAction(action) {
-            if (!currentCaseData) return;
-            
-            let message = '';
-            
-            switch(action) {
-                case 'faturar-disponiveis':
-                    message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
-                             `*Solicito:* FATURAR SOMENTE DISPONÍVEIS\n` +
-                             `Os itens indisponíveis devem ser cancelados.\n\n` +
-                             `*Detalhes do caso:*\n` +
-                             `Data: ${formatDate(currentCaseData.data)}\n` +
-                             `Nome: ${currentCaseData.nome || 'Não informado'}\n` +
-                             `Descrição: ${currentCaseData.descricao || 'Sem descrição'}`;
-                    break;
-                    
-                case 'cancelar':
-                    message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
-                             `*Solicito:* CANCELAR PEDIDO\n\n` +
-                             `*Detalhes do caso:*\n` +
-                             `Data: ${formatDate(currentCaseData.data)}\n` +
-                             `Nome: ${currentCaseData.nome || 'Não informado'}\n` +
-                             `Descrição: ${currentCaseData.descricao || 'Sem descrição'}`;
-                    break;
-            }
-            
-            const phoneNumber = "5516996174440";
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Função para obter casos do cliente baseado nas keys
-        function getClientCases(cases) {
-            if (!clienteKeys || clienteKeys.length === 0) return [];
-            
-            return cases.filter(item => {
-                const itemKey = item.key ? String(item.key).trim() : '';
-                if (!itemKey) return false;
-                
-                return clienteKeys.some(clientKey => 
-                    clientKey.toLowerCase() === itemKey.toLowerCase()
-                );
-            });
-        }
-
-        // Função para exibir os casos
-        function displayCases(cases) {
-            loadingMessage.style.display = 'block';
-            
-            setTimeout(() => {
-                if (!cases || cases.length === 0) {
-                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
-                    loadingMessage.style.display = 'none';
-                    return;
-                }
-                
-                // Filtrar casos baseado nas keys do cliente
-                let filteredCases = getClientCases(cases);
-                
-                if (filteredCases.length === 0) {
-                    casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
-                } else {
-                    renderCases(filteredCases);
-                }
-                
-                loadingMessage.style.display = 'none';
-            }, 100);
-        }
-
-        // Função para renderizar os casos na tela
-        function renderCases(cases) {
-            let html = '';
-            
-            // Ordenar casos por data (mais recente primeiro)
-            const sortedCases = cases.sort((a, b) => {
-                const dateA = new Date(a.data) || new Date(0);
-                const dateB = new Date(b.data) || new Date(0);
-                return dateB - dateA;
-            });
-            
-            sortedCases.forEach((item, index) => {
-                const statusClass = getStatusClass(item.status);
-                
-                html += `
-                    <div class="case-item" data-index="${index}" title="Clique para ver detalhes">
-                        <div class="case-info">
-                            <div class="case-title">Caso: ${item.caso || 'Sem título'}</div>
-                            <div class="case-details">
-                                <span><i class="far fa-calendar"></i> ${formatDate(item.data)}</span>
-                                <span><i class="far fa-user"></i> ${item.nome || 'Não informado'}</span>
-                                ${currentTab === 'garantias' && item.chassi ? 
-                                    `<span><i class="fas fa-car"></i> ${item.chassi || 'Não informado'}</span>` : ''
-                                }
-                            </div>
-                        </div>
-                        <div class="case-status ${statusClass}">
-                            <i class="fas fa-circle"></i> ${item.status || 'Pendente'}
+            <!-- Lista de Peças para Encomenda -->
+            <h2 class="section-spacing"><i class="fas fa-boxes"></i> Peças para Encomenda</h2>
+            <div class="container">
+                <div class="product-list">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="encomendaSearchInput" placeholder="Pesquisar peças...">
+                    </div>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd</span>
+                    </div>
+                    <select id="encomendaAvailableProducts" multiple size="8"></select>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Quantidade:</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="number" id="encomendaQuantity" min="1" value="1" style="width: 80px; padding: 8px;">
+                            <button id="encomendaAddButton" class="btn" style="width: auto; flex: 1;"><i class="fas fa-plus"></i> Adicionar</button>
                         </div>
                     </div>
-                `;
-            });
-            
-            casesContainer.innerHTML = html;
-            
-            // Adicionar event listeners aos casos
-            document.querySelectorAll('.case-item').forEach((item, index) => {
-                item.addEventListener('click', function() {
-                    showCaseDetails(sortedCases[index]);
-                });
+                </div>
                 
-                // Tornar os casos focáveis para acessibilidade
-                item.setAttribute('tabindex', '0');
-            });
-        }
+                <div class="selected-list">
+                    <h3>Peças para Encomenda</h3>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd</span>
+                    </div>
+                    <div id="encomendaSelectedItemsContainer" class="selected-items-container">
+                        <div class="no-items">Nenhuma peça selecionada</div>
+                    </div>
+                    <button id="exportEncomendaBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar Encomenda</button>
+                    <div id="encomendaLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Enviando encomenda...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // Função para mostrar detalhes do caso
-        function showCaseDetails(caseData) {
-            currentCaseData = caseData;
-            document.getElementById('modalTitle').textContent = `CASO: ${caseData.caso || 'Sem título'}`;
-            document.getElementById('modalDate').textContent = formatDate(caseData.data);
-            document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
-            document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
-            document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
-            document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
-            
-            // Mostrar ou esconder chassi e modelo para garantias
-            if (currentTab === 'garantias') {
-                chassiDetail.style.display = 'flex';
-                modeloDetail.style.display = 'flex';
-                modalChassi.textContent = caseData.chassi || 'Não informado';
-                modalModelo.textContent = caseData.modelo || 'Não informado';
-            } else {
-                chassiDetail.style.display = 'none';
-                modeloDetail.style.display = 'none';
-            }
-            
-            // Mostrar botões específicos para BO
-            if (caseData.status && caseData.status.toUpperCase() === 'BO') {
-                boActions.style.display = 'flex';
-            } else {
-                boActions.style.display = 'none';
-            }
-            
-            caseModal.style.display = 'flex';
-            
-            // Focar no botão de fechar modal para acessibilidade
-            setTimeout(() => {
-                closeModal.focus();
-            }, 100);
-        }
-
-        // Função de filtro
-        function filterCases() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (!searchTerm) {
-                displayCases(allData[currentTab]);
-                return;
-            }
-            
-            const allClientCases = getClientCases(allData[currentTab]);
-            
-            if (allClientCases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
-                return;
-            }
-            
-            const filteredCases = allClientCases.filter(item => {
-                const searchableFields = [
-                    item.caso || '',
-                    item.nome || '',
-                    item.status || '',
-                    item.data ? formatDate(item.data) : '',
-                    item.descricao || '',
-                    ...(currentTab === 'garantias' ? [
-                        item.chassi || '',
-                        item.modelo || ''
-                    ] : [])
-                ];
+        <!-- Campos normais de venda -->
+        <div id="saleNormalFields" class="conditional-field">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="dealerName" class="required">Nome do Revendedor/Oficina Autorizada</label>
+                    <input type="text" id="dealerName" placeholder="Digite o nome do revendedor" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="dealerCnpj" class="required">CNPJ</label>
+                    <input type="text" id="dealerCnpj" placeholder="00.000.000/0000-00" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
                 
-                return searchableFields.some(field => 
-                    field.toString().toLowerCase().includes(searchTerm)
-                );
-            });
+                <div class="form-group">
+                    <label for="solicitanteName" class="required">Nome da Pessoa Solicitante</label>
+                    <input type="text" id="solicitanteName" placeholder="Digite o nome completo do solicitante" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                
+                <div class="form-group conditional-field" id="saleStreetField">
+                    <label for="dealerStreet" class="required">Rua</label>
+                    <input type="text" id="dealerStreet" placeholder="Nome da rua, avenida, etc.">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group conditional-field" id="saleNumberField">
+                    <label for="dealerNumber" class="required">Número</label>
+                    <input type="text" id="dealerNumber" placeholder="Número">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group conditional-field" id="saleNeighborhoodField">
+                    <label for="dealerNeighborhood" class="required">Bairro</label>
+                    <input type="text" id="dealerNeighborhood" placeholder="Bairro">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group conditional-field" id="saleStateField">
+                    <label for="dealerState" class="required">Estado</label>
+                    <select id="dealerState" class="normal-select">
+                        <option value="">Selecione o estado</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group conditional-field" id="saleCityField">
+                    <label for="dealerCity" class="required">Cidade</label>
+                    <select id="dealerCity" class="normal-select">
+                        <option value="">Primeiro selecione o estado</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group conditional-field" id="saleZipField">
+                    <label for="dealerZip" class="required">CEP Faturamento</label>
+                    <input type="text" id="dealerZip" placeholder="00000-000">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="dealerPhone" class="required">Telefone</label>
+                    <input type="tel" id="dealerPhone" placeholder="(00) 00000-0000" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="dealerEmail" class="required">E-mail</label>
+                    <input type="email" id="dealerEmail" placeholder="email@revendedor.com" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+            </div>
             
-            if (filteredCases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado com esses critérios de busca</div>';
-            } else {
-                renderCases(filteredCases);
-            }
-        }
+            <div id="saleAddressSection" class="conditional-field">
+                <h2 class="section-spacing"><i class="fas fa-truck"></i> Endereço de Entrega</h2>
+                <div class="form-grid">
+                    <div class="form-group address-option">
+                        <label>
+                            <input type="radio" name="saleAddressOption" value="billing" checked>
+                            Enviar para o endereço de faturamento
+                        </label>
+                        <label>
+                            <input type="radio" name="saleAddressOption" value="other">
+                            Enviar para outro endereço
+                        </label>
+                        <label>
+                            <input type="radio" name="saleAddressOption" value="factory">
+                            Retirada na Fábrica
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="saleAlternateAddress" class="alternate-address">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="saleAltStreet" class="required">Rua</label>
+                            <input type="text" id="saleAltStreet" placeholder="Nome da rua, avenida, etc.">
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleAltNumber" class="required">Número</label>
+                            <input type="text" id="saleAltNumber" placeholder="Número">
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleAltNeighborhood" class="required">Bairro</label>
+                            <input type="text" id="saleAltNeighborhood" placeholder="Bairro">
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleAltState" class="required">Estado</label>
+                            <select id="saleAltState" class="normal-select">
+                                <option value="">Selecione o estado</option>
+                            </select>
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleAltCity" class="required">Cidade</label>
+                            <select id="saleAltCity" class="normal-select">
+                                <option value="">Primeiro selecione o estado</option>
+                            </select>
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleAltZip" class="required">CEP Entrega</label>
+                            <input type="text" id="saleAltZip" placeholder="00000-000">
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        // Função para formatar data
-        function formatDate(dateString) {
-            if (!dateString) return 'Não informada';
+            <div id="saleObservationsSection" class="conditional-field">
+                <h2 class="section-spacing"><i class="fas fa-sticky-note"></i> Observações do Frete</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="saleFreightObservations">Observações sobre o Frete (OPCIONAL)</label>
+                        <textarea id="saleFreightObservations" placeholder="Observações sobre o frete..."></textarea>
+                    </div>
+                </div>
+            </div>
             
-            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+            <h2 class="section-spacing"><i class="fas fa-car"></i> Peças para Venda</h2>
+            <div class="container">
+                <div class="product-list">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Pesquisar peças...">
+                    </div>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd</span>
+                    </div>
+                    <select id="availableProducts" multiple size="8"></select>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Quantidade:</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="number" id="quantity" min="1" value="1" style="width: 80px; padding: 8px;">
+                            <button id="addButton" class="btn" style="width: auto; flex: 1;"><i class="fas fa-plus"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="selected-list">
+                    <h3>Peças Selecionadas</h3>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd</span>
+                    </div>
+                    <div id="selectedItemsContainer" class="selected-items-container">
+                        <div class="no-items">Nenhuma peça selecionada</div>
+                    </div>
+                    <button id="exportSaleBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar</button>
+                    <div id="saleLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Enviando e-mail...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Seção de Garantia -->
+    <div id="warrantySection" class="section">
+        <div class="category-selector">
+            <label for="warrantyCategory" class="required">Categoria</label>
+            <select id="warrantyCategory" required>
+                <option value="">Selecione a categoria...</option>
+                <option value="checklist">Check List</option>
+                <option value="concessionaria">Estoque Concessionária</option>
+                <option value="cliente-final">Cliente Final</option>
+                <option value="licitacao">Licitação</option>
+            </select>
+            <div class="error-message">Este campo é obrigatório</div>
+        </div>
+
+        <!-- Seção de Revisão -->
+        <div id="reviewSection" class="review-section hidden">
+            <h3><i class="fas fa-calendar-check"></i> Dados da Revisão</h3>
+            <div class="form-grid">
+                <div id="clientFinalNameField" class="form-group hidden">
+                    <label for="clientFinalName" class="required">Nome do Cliente Final</label>
+                    <input type="text" id="clientFinalName" placeholder="Digite o nome completo do cliente final">
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewNumber" class="required">Número da Revisão</label>
+                    <select id="reviewNumber" class="normal-select" required>
+                      <option value="1">1ª Revisão</option>
+                      <option value="2">2ª Revisão</option>
+                      <option value="3">3ª Revisão</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="reviewDate" class="required">Data da Revisão</label>
+                    <input type="date" id="reviewDate" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="reviewKm" class="required">Quilometragem</label>
+                    <input type="text" id="reviewKm" placeholder="Digite a quilometragem no momento da revisão" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="reviewHours" class="required">Horímetro (Revisão)</label>
+                    <input type="text" id="reviewHours" placeholder="Digite as horas no momento da revisão" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="osNumber">Número da O.S.</label>
+                    <input type="text" id="osNumber" placeholder="Digite o número da O.S. de revisão">
+                </div>
+            </div>
+        </div>
+
+        <h2><i class="fas fa-store"></i> Dados do Revendedor/Oficina Autorizada</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="warrantyDealerName" class="required">Nome do Revendedor/Oficina Autorizada</label>
+                <input type="text" id="warrantyDealerName" placeholder="Digite o nome do revendedor" required>
+                <div class="error-message">Este campo é obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label for="warrantyDealerCnpj" class="required">CNPJ</label>
+                <input type="text" id="warrantyDealerCnpj" placeholder="00.000.000/0000-00" required>
+                <div class="error-message">Este campo é obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label for="warrantyDealerStreet" class="required">Rua</label>
+                <input type="text" id="warrantyDealerStreet" placeholder="Nome da rua, avenida, etc." required>
+                <div class="error-message">Este campo é obrigatório</div>
+            </div>
+            <div class="form-group">
+                <label for="warrantyDealerNumber" class="required">Número</label>
+                    <input type="text" id="warrantyDealerNumber" placeholder="Número" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerNeighborhood" class="required">Bairro</label>
+                    <input type="text" id="warrantyDealerNeighborhood" placeholder="Bairro" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerState" class="required">Estado</label>
+                    <select id="warrantyDealerState" class="normal-select" required>
+                        <option value="">Selecione o estado</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerCity" class="required">Cidade</label>
+                    <select id="warrantyDealerCity" class="normal-select" required>
+                        <option value="">Primeiro selecione o estado</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerZip" class="required">CEP Faturamento</label>
+                    <input type="text" id="warrantyDealerZip" placeholder="00000-000" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerPhone" class="required">Telefone</label>
+                    <input type="tel" id="warrantyDealerPhone" placeholder="(00) 00000-0000" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="warrantyDealerEmail" class="required">E-mail</label>
+                    <input type="email" id="warrantyDealerEmail" placeholder="email@revendedor.com" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+            </div>
             
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-                const [year, month, day] = dateString.split('-');
-                return `${day}/${month}/${year}`;
-            }
+            <h2 class="section-spacing"><i class="fas fa-truck"></i> Endereço de Entrega</h2>
+            <div class="form-grid">
+                <div class="form-group address-option">
+                    <label>
+                        <input type="radio" name="warrantyAddressOption" value="billing" checked>
+                        Enviar para o endereço de faturamento
+                    </label>
+                    <label>
+                        <input type="radio" name="warrantyAddressOption" value="other">
+                        Enviar para outro endereço
+                    </label>
+                </div>
+            </div>
             
-            try {
-                const date = new Date(dateString);
-                if (!isNaN(date.getTime())) {
-                    return date.toLocaleDateString('pt-BR');
+            <div id="warrantyAlternateAddress" class="alternate-address">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="warrantyAltStreet" class="required">Rua</label>
+                        <input type="text" id="warrantyAltStreet" placeholder="Nome da rua, avenida, etc.">
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warrantyAltNumber" class="required">Número</label>
+                        <input type="text" id="warrantyAltNumber" placeholder="Número">
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warrantyAltNeighborhood" class="required">Bairro</label>
+                        <input type="text" id="warrantyAltNeighborhood" placeholder="Bairro">
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warrantyAltState" class="required">Estado</label>
+                        <select id="warrantyAltState" class="normal-select">
+                            <option value="">Selecione o estado</option>
+                        </select>
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warrantyAltCity" class="required">Cidade</label>
+                        <select id="warrantyAltCity" class="normal-select">
+                            <option value="">Primeiro selecione o estado</option>
+                        </select>
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warrantyAltZip" class="required">CEP Entrega</label>
+                        <input type="text" id="warrantyAltZip" placeholder="00000-000">
+                        <div class="error-message">Este campo é obrigatório</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-spacing"><i class="fas fa-sticky-note"></i> Observações do Frete</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="warrantyFreightObservations">Observações sobre o Frete (OPCIONAL)</label>
+                    <textarea id="warrantyFreightObservations" placeholder="Observações sobre o Frete..."></textarea>
+                </div>
+            </div>
+            
+            <h2 class="section-spacing"><i class="fas fa-car"></i> Dados do Veículo</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="vehicleSerial" class="required">Número de Série (CHASSI)</label>
+                    <input type="text" id="vehicleSerial" placeholder="Digite o número de série" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleColor" class="required">Cor</label>
+                    <input type="text" id="vehicleColor" placeholder="Digite a cor do veículo" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vehicleModel" class="required">Modelo do Veículo</label>
+                    <select id="vehicleModel" class="normal-select" required>
+                        <option value="">Selecione o modelo...</option>
+                        <option value="ATV - M550L">ATV - M550L</option>
+                        <option value="ATV - M400">ATV - M400</option>
+                        <option value="ATV - M420">ATV - M420</option>
+                        <option value="ATV - M250">ATV - M250</option>
+                        <option value="ATV - 500 PROMAX">ATV - 500 PROMAX</option>
+                        <option value="ATV - M570">ATV - M570</option>
+                        <option value="ATV - M650">ATV - M650</option>
+                        <option value="ATV - 550 LANDFORCE">ATV - 550 LANDFORCE</option>
+                        <option value="ATV - 650 LANDFORCE">ATV - 650 LANDFORCE</option>
+                        <option value="UTV - T-BOSS 550">UTV - T-BOSS 550</option>
+                        <option value="UTV - T-ARCHOON 450">UTV - T-ARCHOON 450</option>
+                        <option value="UTV - T-ARCHOON 550">UTV - T-ARCHOON 550</option>
+                        <option value="UTV - LH1100">UTV - LH1100</option>
+                        <option value="UTV - LH800">UTV - LH800</option>
+                        <option value="JET SKI (ORCA)">JET SKI (ORCA)</option>
+                        <option value="MOTO ELETRICA (GRUNT EVO)">MOTO ELETRICA (GRUNT EVO)</option>
+                        <option value="MOTO ELETRICA (BRAT)">MOTO ELETRICA (BRAT)</option>
+                    </select>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vehicleKm" class="required">Horímetro</label>
+                    <input type="text" id="vehicleKm" placeholder="Digite a quantidade de horas no painel" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+            </div>
+            
+            <h2 class="section-spacing"><i class="fas fa-clipboard-list"></i> Relatório Técnico</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="clientComplaint" class="required">Reclamação do Cliente</label>
+                    <textarea id="clientComplaint" placeholder="Descreva a reclamação do cliente" required></textarea>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                  <label for="failureAnalysis" class="required">Análise da Falha</label>
+                 <textarea id="failureAnalysis" placeholder="Descreva a análise técnica da falha identificada" required></textarea>
+                 <div class="error-message">Este campo é obrigatório</div>
+                </div>
+                <div class="form-group">
+                    <label for="repairDescription" class="required">Reparo a ser Executado</label>
+                    <textarea id="repairDescription" placeholder="Descreva o reparo que deve ser realizado" required></textarea>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
+            </div>
+
+            <div class="form-group photo-required">
+                <label for="technicalAttachments" class="required">Anexos Técnicos (Fotos e Vídeos) - OBRIGATÓRIO</label>
+                <input type="file" id="technicalAttachments" name="technicalAttachments" multiple accept="image/*,video/*" required onchange="validarTamanhoArquivos(this)">
+                <small>Formatos aceitos: JPG, PNG e VÍDEOS (Máx. 25MB por arquivo) - Campo obrigatório para garantias</small>
+                
+                <div id="attachmentsPreview" class="attachments-preview"></div>
+                <div class="error-message">É obrigatório anexar pelo menos uma foto</div>
+            </div>
+
+            <div class="form-group invoice-required">
+                <label for="invoiceAttachments" class="required">Notas Fiscais - OBRIGATÓRIO</label>
+                <input type="file" id="invoiceAttachments" name="invoiceAttachments" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <small>Formatos aceitos: PDF, JPG, PNG, DOC, DOCX (Máx. 10MB por arquivo) - Campo obrigatório para garantias</small>
+                
+                <div id="invoicesPreview" class="attachments-preview"></div>
+                <div class="error-message">É obrigatório anexar pelo menos uma nota fiscal</div>
+            </div>
+            
+            <h2 class="section-spacing"><i class="fas fa-cogs"></i> Peças/Serviços</h2>
+            <div class="container">
+                <div class="product-list">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="warrantySearchInput" placeholder="Pesquisar...">
+                    </div>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd/Min</span>
+                    </div>
+                    <select id="warrantyAvailableProducts" multiple size="8"></select>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Quantidade/Minutos:</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="number" id="warrantyQuantity" min="1" value="1" style="width: 80px; padding: 8px;">
+                            <button id="warrantyAddButton" class="btn" style="width: auto; flex: 1;"><i class="fas fa-plus"></i> Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="selected-list">
+                    <h3>Peças Utilizadas</h3>
+                    <div class="product-header">
+                        <span>Ref.</span>
+                        <span>Nome</span>
+                        <span>Modelo</span>
+                        <span>Qtd/Min</span>
+                    </div>
+                    <div id="warrantySelectedItemsContainer" class="selected-items-container">
+                        <div class="no-items">Nenhuma peça selecionada</div>
+                    </div>
+                    <button id="exportWarrantyBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar</button>
+                    <div id="warrantyLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Enviando e-mail...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <i class="fa-solid fa-circle-info"></i>
+                <h2>Solicitação Enviada</h2>
+                <div id="protocoloInfo" class="protocolo-info" style="display: none;">
+                    <h3><i class="fas fa-file-contract"></i> Protocolo Gerado</h3>
+                    <p><strong>Número do Protocolo:</strong> <span id="protocoloNumero" class="protocolo-numero"></span></p>
+                    <p><strong>Tipo:</strong> <span id="protocoloTipo"></span></p>
+                    <p>Uma cópia da solicitação foi gerada em seus downloads.</p>
+                </div>
+                <p id="modalMessage"></p>
+                <button id="closeModalBtn" class="close-modal">Fechar</button>
+            </div>
+        </div>
+
+        <script>
+            // ==================================================
+            // CONFIGURAÇÃO DO GOOGLE APPS SCRIPT
+            // ==================================================
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylL3iZpbop_pVh45ZKG28AajruWwZCEus4mbTsnSMH68lnfknxxP5ikuzxNrCDGDem/exec';
+
+            // ==================================================
+            // EMAILS DIFERENCIADOS POR TIPO
+            // ==================================================
+            const EMAIL_ORCAMENTOS = [
+                'vendas.pecas@venturamarine.com.br',
+                'bruno.beltrame@venturamarine.com.br'
+            ];
+
+            const EMAIL_GARANTIAS = [
+                'posvendasadventure@venturamarine.com.br',
+                'bruno.beltrame@venturamarine.com.br'
+            ];
+
+            // ==================================================
+            // GERADOR DE NÚMEROS DE PROTOCOLO ÚNICOS
+            // ==================================================
+            function gerarNumeroProtocoloUnico(tipo) {
+                const data = new Date();
+                const ano = data.getFullYear().toString().substr(-2);
+                const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+                const dia = data.getDate().toString().padStart(2, '0');
+                
+                // Gerar timestamp único
+                const timestamp = Date.now().toString().substr(-6);
+                
+                // Gerar parte aleatória para garantir unicidade
+                const aleatorio = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                
+                let prefixo = '';
+                switch(tipo) {
+                    case 'venda':
+                        prefixo = 'VEN';
+                        break;
+                    case 'garantia':
+                        prefixo = 'GAR';
+                        break;
+                    case 'encomenda':
+                        prefixo = 'ENC';
+                        break;
+                    default:
+                        prefixo = 'PRO';
                 }
-            } catch (e) {
-                console.log('Erro ao formatar data:', e);
+                
+                // Combinar para criar protocolo único
+                return `${prefixo}${ano}${mes}${dia}${timestamp}${aleatorio}`;
             }
-            
-            return dateString;
-        }
 
-        // Função para obter a classe CSS baseada no status
-        function getStatusClass(status) {
-            if (!status) return 'status-default';
-            const statusUpper = status.toUpperCase();
+            // ==================================================
+            // DADOS DAS PEÇAS
+            // ==================================================
+            const productsData = [
+                {"REFERÊNCIA":"35150","NOME":"Bolt M14×1.25×12","MODELO":"UTV - T-BOSS 550","VALOR":10.83},
+                {"REFERÊNCIA":"35154","NOME":"Timing Sprocket","MODELO":"UTV - T-BOSS 550","VALOR":184.37},
+                {"REFERÊNCIA":"VM001","NOME":"Motor Elétrico 1000W","MODELO":"ATV M400","VALOR":450.00},
+                {"REFERÊNCIA":"VM002","NOME":"Bateria 12V 20Ah","MODELO":"ATV M400","VALOR":120.00},
+                {"REFERÊNCIA":"VM003","NOME":"Pneu Dianteiro","MODELO":"UTV - T-BOSS 550","VALOR":85.00},
+                {"REFERÊNCIA":"VM004","NOME":"Pneu Traseiro","MODELO":"UTV - T-BOSS 550","VALOR":95.00},
+                {"REFERÊNCIA":"VM005","NOME":"Freio a Disco","MODELO":"ATV M550L","VALOR":65.00},
+                {"REFERÊNCIA":"VM006","NOME":"Suspensão Dianteira","MODELO":"ATV M570","VALOR":180.00},
+                {"REFERÊNCIA":"VM007","NOME":"Suspensão Traseira","MODELO":"ATV M570","VALOR":200.00},
+                {"REFERÊNCIA":"VM008","NOME":"Banco do Motorista","MODELO":"UTV - T-ARCHOON 550","VALOR":150.00},
+                {"REFERÊNCIA":"VM009","NOME":"Volante","MODELO":"UTV - LH1100","VALOR":75.00},
+                {"REFERÊNCIA":"VM010","NOME":"Farol Dianteiro","MODELO":"ATV M400","VALOR":45.00}
+            ];
             
-            const statusMap = {
-                'BO': 'status-bo',
-                'FATURADO': 'status-faturado',
-                'ENCOMENDADO': 'status-encomendado',
-                'FATURADO/ENCOMENDADO': 'status-faturado-encomendado',
-                'FATURADO ENCOMENDADO': 'status-faturado-encomendado',
-                'EM PROCESSAMENTO': 'status-em-processamento',
-                'EM PROCESSO': 'status-em-processamento',
-                'PROCESSANDO': 'status-em-processamento',
-                'EM ANÁLISE': 'status-em-analise',
-                'ANALISE': 'status-em-analise',
-                'ANÁLISE': 'status-em-analise',
-                'APROVADO': 'status-aprovado',
-                'RECUSADO': 'status-recusado',
-                'AGUARDANDO ENVIO': 'status-aguardando-envio',
-                'AGUARDANDO': 'status-aguardando-envio'
+            // DADOS DOS ESTADOS E CIDADES
+            const estadosCidades = {
+                "AC": ["Acrelândia", "Assis Brasil", "Brasiléia", "Bujari", "Capixaba", "Cruzeiro do Sul", "Epitaciolândia"],
+                "SP": ["São Paulo", "Campinas", "Santos", "Ribeirão Preto", "São José dos Campos"],
+                "RJ": ["Rio de Janeiro", "Niterói", "Petrópolis", "Volta Redonda"],
+                "MG": ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"],
+                "PR": ["Curitiba", "Londrina", "Maringá", "Ponta Grossa"]
             };
             
-            if (statusMap[statusUpper]) {
-                return statusMap[statusUpper];
-            }
-            
-            for (const [key, value] of Object.entries(statusMap)) {
-                if (statusUpper.includes(key)) {
-                    return value;
+            document.addEventListener('DOMContentLoaded', function() {
+                // Carrega a logo na página
+                const logoContainer = document.querySelector('.logo-container');
+                logoContainer.innerHTML = '<h1 style="color: white;">Ventura Marine - Sistema de Protocolos</h1>';
+
+                // Elementos da seção de VENDA
+                const saleBtn = document.getElementById('saleBtn');
+                const saleSection = document.getElementById('saleSection');
+                const availableProducts = document.getElementById('availableProducts');
+                const selectedItemsContainer = document.getElementById('selectedItemsContainer');
+                const addButton = document.getElementById('addButton');
+                const exportSaleBtn = document.getElementById('exportSaleBtn');
+                const quantityInput = document.getElementById('quantity');
+                const searchInput = document.getElementById('searchInput');
+                const saleFreightObservations = document.getElementById('saleFreightObservations');
+                const saleLoading = document.getElementById('saleLoading');
+                const saleType = document.getElementById('saleType');
+                const solicitanteName = document.getElementById('solicitanteName');
+                const encomendaSection = document.getElementById('encomendaSection');
+                const saleNormalFields = document.getElementById('saleNormalFields');
+                const encomendaRevenda = document.getElementById('encomendaRevenda');
+                const encomendaEmail = document.getElementById('encomendaEmail');
+                const encomendaCasoRelacionado = document.getElementById('encomendaCasoRelacionado');
+                
+                // Elementos para ENCOMENDA
+                const encomendaSearchInput = document.getElementById('encomendaSearchInput');
+                const encomendaAvailableProducts = document.getElementById('encomendaAvailableProducts');
+                const encomendaQuantity = document.getElementById('encomendaQuantity');
+                const encomendaAddButton = document.getElementById('encomendaAddButton');
+                const encomendaSelectedItemsContainer = document.getElementById('encomendaSelectedItemsContainer');
+                const exportEncomendaBtn = document.getElementById('exportEncomendaBtn');
+                const encomendaLoading = document.getElementById('encomendaLoading');
+                
+                quantityInput.value = '';
+                encomendaQuantity.value = '';
+                
+                // Elementos da seção de GARANTIA
+                const warrantyBtn = document.getElementById('warrantyBtn');
+                const warrantySection = document.getElementById('warrantySection');
+                const warrantyAvailableProducts = document.getElementById('warrantyAvailableProducts');
+                const warrantySelectedItemsContainer = document.getElementById('warrantySelectedItemsContainer');
+                const warrantyAddButton = document.getElementById('warrantyAddButton');
+                const exportWarrantyBtn = document.getElementById('exportWarrantyBtn');
+                const warrantyQuantityInput = document.getElementById('warrantyQuantity');
+                const warrantySearchInput = document.getElementById('warrantySearchInput');
+                const warrantyCategory = document.getElementById('warrantyCategory');
+                const reviewSection = document.getElementById('reviewSection');
+                const technicalAttachments = document.getElementById('technicalAttachments');
+                const attachmentsPreview = document.getElementById('attachmentsPreview');
+                const warrantyFreightObservations = document.getElementById('warrantyFreightObservations');
+                const warrantyLoading = document.getElementById('warrantyLoading');
+                const invoiceAttachments = document.getElementById('invoiceAttachments');
+                const invoicesPreview = document.getElementById('invoicesPreview');
+                warrantyQuantityInput.value = '';
+
+                // Elementos para CLIENTE FINAL
+                const clientFinalNameField = document.getElementById('clientFinalNameField');
+                const clientFinalName = document.getElementById('clientFinalName');
+                
+                // Elementos do modal
+                const confirmationModal = document.getElementById('confirmationModal');
+                const closeModalBtn = document.getElementById('closeModalBtn');
+                const modalMessage = document.getElementById('modalMessage');
+                const protocoloInfo = document.getElementById('protocoloInfo');
+                const protocoloNumero = document.getElementById('protocoloNumero');
+                const protocoloTipo = document.getElementById('protocoloTipo');
+                
+                // Elementos dos campos de endereço alternativo
+                const saleAddressOptions = document.querySelectorAll('input[name="saleAddressOption"]');
+                const saleAlternateAddress = document.getElementById('saleAlternateAddress');
+                const warrantyAddressOptions = document.querySelectorAll('input[name="warrantyAddressOption"]');
+                const warrantyAlternateAddress = document.getElementById('warrantyAlternateAddress');
+                
+                // Elementos dos dropdowns de estado e cidade
+                const dealerState = document.getElementById('dealerState');
+                const dealerCity = document.getElementById('dealerCity');
+                const warrantyDealerState = document.getElementById('warrantyDealerState');
+                const warrantyDealerCity = document.getElementById('warrantyDealerCity');
+                const saleAltState = document.getElementById('saleAltState');
+                const saleAltCity = document.getElementById('saleAltCity');
+                const warrantyAltState = document.getElementById('warrantyAltState');
+                const warrantyAltCity = document.getElementById('warrantyAltCity');
+                
+                // Campos condicionais para venda
+                const conditionalFields = [
+                    'saleStreetField', 'saleNumberField', 'saleNeighborhoodField', 
+                    'saleStateField', 'saleCityField', 'saleZipField',
+                    'saleAddressSection', 'saleObservationsSection'
+                ];
+                
+                let selectedProducts = [];
+                let warrantySelectedProducts = [];
+                let encomendaSelectedProducts = [];
+                let filteredProducts = [...productsData];
+                let warrantyFilteredProducts = [...productsData];
+                let encomendaFilteredProducts = [...productsData];
+                let warrantyAttachments = [];
+                let invoiceFiles = [];
+                
+                // FUNÇÃO PARA CARREGAR ESTADOS NOS DROPDOWNS
+                function loadEstados() {
+                    const estados = Object.keys(estadosCidades);
+                    const dropdowns = [dealerState, warrantyDealerState, saleAltState, warrantyAltState];
+                    
+                    dropdowns.forEach(dropdown => {
+                        dropdown.innerHTML = '<option value="">Selecione o estado</option>';
+                        estados.forEach(estado => {
+                            const option = document.createElement('option');
+                            option.value = estado;
+                            option.textContent = estado;
+                            dropdown.appendChild(option);
+                        });
+                    });
                 }
+                
+                // FUNÇÃO PARA CARREGAR CIDADES BASEADO NO ESTADO SELECIONADO
+                function loadCidades(stateSelect, citySelect) {
+                    const estado = stateSelect.value;
+                    citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
+                    
+                    if (estado && estadosCidades[estado]) {
+                        estadosCidades[estado].forEach(cidade => {
+                            const option = document.createElement('option');
+                            option.value = cidade;
+                            option.textContent = cidade;
+                            citySelect.appendChild(option);
+                        });
+                    }
+                }
+                
+                // Adicionar event listeners para os dropdowns de estado
+                dealerState.addEventListener('change', function() {
+                    loadCidades(dealerState, dealerCity);
+                });
+                
+                warrantyDealerState.addEventListener('change', function() {
+                    loadCidades(warrantyDealerState, warrantyDealerCity);
+                });
+                
+                saleAltState.addEventListener('change', function() {
+                    loadCidades(saleAltState, saleAltCity);
+                });
+                
+                warrantyAltState.addEventListener('change', function() {
+                    loadCidades(warrantyAltState, warrantyAltCity);
+                });
+                
+                // FUNÇÃO ATUALIZADA: CONTROLAR CAMPOS CONDICIONAIS DA VENDA COM ENCOMENDA
+                function toggleSaleFields() {
+                    const tipo = saleType.value;
+                    
+                    if (tipo === 'encomenda') {
+                        // Mostrar seção de encomenda
+                        encomendaSection.classList.remove('hidden');
+                        saleNormalFields.classList.add('hidden');
+                        
+                        // Remover required dos campos normais
+                        const normalFields = saleNormalFields.querySelectorAll('[required]');
+                        normalFields.forEach(field => {
+                            field.required = false;
+                        });
+                        
+                        // Adicionar required aos campos da encomenda
+                        const encomendaFields = encomendaSection.querySelectorAll('input');
+                        encomendaFields.forEach(field => {
+                            if (field.id.includes('encomenda')) {
+                                field.required = true;
+                            }
+                        });
+                        
+                    } else {
+                        // Mostrar campos normais
+                        encomendaSection.classList.add('hidden');
+                        saleNormalFields.classList.remove('hidden');
+                        
+                        // Remover required dos campos da encomenda
+                        const encomendaFields = encomendaSection.querySelectorAll('input');
+                        encomendaFields.forEach(field => {
+                            field.required = false;
+                        });
+                        
+                        // Controlar campos normais baseado no tipo
+                        conditionalFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (field) {
+                                if (tipo === 'consulta') {
+                                    field.classList.add('hidden');
+                                    // Remove required dos campos ocultos
+                                    const inputs = field.querySelectorAll('[required]');
+                                    inputs.forEach(input => {
+                                        input.required = false;
+                                    });
+                                } else {
+                                    field.classList.remove('hidden');
+                                    // Adiciona required nos campos visíveis
+                                    const inputs = field.querySelectorAll('[required]');
+                                    inputs.forEach(input => {
+                                        input.required = true;
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+                
+                // Event listener para tipo de solicitação
+                saleType.addEventListener('change', toggleSaleFields);
+                
+                // FUNÇÕES DE FORMATAÇÃO AUTOMÁTICA
+                function formatCNPJ(input) {
+                    let value = input.value.replace(/\D/g, '');
+                    if (value.length > 14) {
+                        value = value.substring(0, 14);
+                    }
+                    
+                    if (value.length <= 2) {
+                        input.value = value;
+                    } else if (value.length <= 5) {
+                        input.value = value.replace(/(\d{2})(\d{0,3})/, '$1.$2');
+                    } else if (value.length <= 8) {
+                        input.value = value.replace(/(\d{2})(\d{3})(\d{0,3})/, '$1.$2.$3');
+                    } else if (value.length <= 12) {
+                        input.value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4})/, '$1.$2.$3/$4');
+                    } else {
+                        input.value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+                    }
+                }
+
+                function formatPhone(input) {
+                    let value = input.value.replace(/\D/g, '');
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                    
+                    if (value.length <= 2) {
+                        input.value = value;
+                    } else if (value.length <= 6) {
+                        input.value = value.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+                    } else if (value.length <= 10) {
+                        input.value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                    } else {
+                        input.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+                    }
+                }
+
+                function formatCEP(input) {
+                    let value = input.value.replace(/\D/g, '');
+                    if (value.length > 8) {
+                        value = value.substring(0, 8);
+                    }
+                    
+                    if (value.length <= 5) {
+                        input.value = value;
+                    } else {
+                        input.value = value.replace(/(\d{5})(\d{0,3})/, '$1-$2');
+                    }
+                }
+
+                function allowOnlyNumbers(input) {
+                    input.value = input.value.replace(/\D/g, '');
+                }
+
+                // ADICIONAR EVENT LISTENERS PARA FORMATAÇÃO AUTOMÁTICA
+                function setupAutoFormatting() {
+                    // Campos CNPJ
+                    const cnpjFields = [
+                        document.getElementById('dealerCnpj'),
+                        document.getElementById('warrantyDealerCnpj')
+                    ];
+                    
+                    cnpjFields.forEach(field => {
+                        if (field) {
+                            field.addEventListener('input', function(e) {
+                                formatCNPJ(this);
+                            });
+                        }
+                    });
+
+                    // Campos Telefone
+                    const phoneFields = [
+                        document.getElementById('dealerPhone'),
+                        document.getElementById('warrantyDealerPhone')
+                    ];
+                    
+                    phoneFields.forEach(field => {
+                        if (field) {
+                            field.addEventListener('input', function(e) {
+                                formatPhone(this);
+                            });
+                        }
+                    });
+
+                    // Campos CEP
+                    const cepFields = [
+                        document.getElementById('dealerZip'),
+                        document.getElementById('saleAltZip'),
+                        document.getElementById('warrantyDealerZip'),
+                        document.getElementById('warrantyAltZip')
+                    ];
+                    
+                    cepFields.forEach(field => {
+                        if (field) {
+                            field.addEventListener('input', function(e) {
+                                formatCEP(this);
+                            });
+                        }
+                    });
+
+                    // Campos apenas números
+                    const numberOnlyFields = [
+                        document.getElementById('reviewKm'),
+                        document.getElementById('reviewHours'),
+                        document.getElementById('vehicleKm'),
+                        document.getElementById('osNumber')
+                    ];
+                    
+                    numberOnlyFields.forEach(field => {
+                        if (field) {
+                            field.addEventListener('input', function(e) {
+                                allowOnlyNumbers(this);
+                            });
+                        }
+                    });
+                }
+                
+                // Alternar entre Venda e Garantia
+                saleBtn.addEventListener('click', function() {
+                    saleBtn.classList.add('active');
+                    warrantyBtn.classList.remove('active');
+                    saleSection.classList.add('active');
+                    warrantySection.classList.remove('active');
+                });
+                
+                warrantyBtn.addEventListener('click', function() {
+                    warrantyBtn.classList.add('active');
+                    saleBtn.classList.remove('active');
+                    warrantySection.classList.add('active');
+                    saleSection.classList.remove('active');
+                });
+                
+                // Mostrar/ocultar seção de revisão baseado na categoria selecionada
+                warrantyCategory.addEventListener('change', function() {
+                    if (this.value === 'cliente-final' || this.value === 'licitacao') {
+                        reviewSection.classList.remove('hidden');
+                        
+                        // Mostrar campo do cliente final apenas se for "Cliente Final"
+                        if (this.value === 'cliente-final') {
+                            clientFinalNameField.classList.remove('hidden');
+                            clientFinalName.required = true;
+                        } else {
+                            clientFinalNameField.classList.add('hidden');
+                            clientFinalName.required = false;
+                            clientFinalName.value = '';
+                        }
+                    } else {
+                        reviewSection.classList.add('hidden');
+                        clientFinalNameField.classList.add('hidden');
+                        clientFinalName.required = false;
+                        clientFinalName.value = '';
+                    }
+                });
+
+                // Event listeners para anexos
+                technicalAttachments.addEventListener('change', function(e) {
+                    if (!validarTamanhoArquivos(this)) {
+                        return;
+                    }
+                    handleFileUpload(e, warrantyAttachments, attachmentsPreview, validateWarrantyAttachments);
+                });
+
+                invoiceAttachments.addEventListener('change', function(e) {
+                    if (!validarTamanhoArquivos(this)) {
+                        return;
+                    }
+                    handleFileUpload(e, invoiceFiles, invoicesPreview, validateInvoiceAttachments);
+                });
+
+                // Limpar erro dos anexos quando selecionar novos arquivos
+                technicalAttachments.addEventListener('click', function() {
+                    removerMensagemErroAnexo(this);
+                });
+
+                invoiceAttachments.addEventListener('click', function() {
+                    removerMensagemErroAnexo(this);
+                });
+
+                // Função genérica para upload de arquivos
+                function handleFileUpload(e, filesArray, previewContainer, validationCallback = null) {
+                    const files = Array.from(e.target.files);
+                    
+                    files.forEach(file => {
+                        if (!filesArray.some(att => att.name === file.name && att.size === file.size)) {
+                            filesArray.push(file);
+                            
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const attachmentItem = document.createElement('div');
+                                attachmentItem.className = 'attachment-item';
+                                
+                                let previewContent;
+                                if (file.type.startsWith('image/')) {
+                                    const img = document.createElement('img');
+                                    img.src = e.target.result;
+                                    img.alt = file.name;
+                                    previewContent = img;
+                                } else {
+                                    const icon = document.createElement('i');
+                                    icon.className = 'fas fa-file';
+                                    icon.style.fontSize = '40px';
+                                    icon.style.color = '#666';
+                                    previewContent = icon;
+                                }
+                                
+                                const nameSpan = document.createElement('div');
+                                nameSpan.className = 'attachment-name';
+                                nameSpan.textContent = file.name.length > 20 ? 
+                                    file.name.substring(0, 27) + '...' : file.name;
+                                
+                                const removeBtn = document.createElement('button');
+                                removeBtn.className = 'remove-attachment';
+                                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                                removeBtn.title = 'Remover anexo';
+                                removeBtn.onclick = function() {
+                                    const index = filesArray.findIndex(att => 
+                                        att.name === file.name && att.size === file.size
+                                    );
+                                    if (index > -1) {
+                                        filesArray.splice(index, 1);
+                                    }
+                                    attachmentItem.remove();
+                                    if (validationCallback) {
+                                        validationCallback();
+                                    }
+                                };
+                                
+                                attachmentItem.appendChild(previewContent);
+                                attachmentItem.appendChild(nameSpan);
+                                attachmentItem.appendChild(removeBtn);
+                                previewContainer.appendChild(attachmentItem);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                    
+                    if (validationCallback) {
+                        validationCallback();
+                    }
+                    
+                    e.target.value = '';
+                }
+
+                // Função para validar anexos de garantia
+                function validateWarrantyAttachments() {
+                    const errorMessage = technicalAttachments.parentNode.querySelector('.error-message');
+                    if (warrantyAttachments.length === 0) {
+                        errorMessage.style.display = 'block';
+                        return false;
+                    } else {
+                        errorMessage.style.display = 'none';
+                        return true;
+                    }
+                }
+
+                // Validar anexos de notas fiscais
+                function validateInvoiceAttachments() {
+                    const errorMessage = invoiceAttachments.parentNode.querySelector('.error-message');
+                    if (invoiceFiles.length === 0) {
+                        errorMessage.style.display = 'block';
+                        return false;
+                    } else {
+                        errorMessage.style.display = 'none';
+                        return true;
+                    }
+                }
+
+                // Funções para gerenciar endereços alternativos
+                function toggleAlternateAddress(option, addressContainer) {
+                    if (option.value === 'other') {
+                        addressContainer.classList.add('active');
+                    } else {
+                        addressContainer.classList.remove('active');
+                    }
+                }
+
+                // Adicionar event listeners para os campos de endereço alternativo
+                saleAddressOptions.forEach(option => {
+                    option.addEventListener('change', function() {
+                        toggleAlternateAddress(this, saleAlternateAddress);
+                    });
+                });
+
+                warrantyAddressOptions.forEach(option => {
+                    option.addEventListener('change', function() {
+                        toggleAlternateAddress(this, warrantyAlternateAddress);
+                    });
+                });
+
+                // ==================================================
+                // FUNÇÕES PRINCIPAIS DO SISTEMA
+                // ==================================================
+
+                // Função para converter arquivo para base64
+                function fileToBase64(file) {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            resolve(e.target.result);
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                }
+
+                // Coletar CEPs corretamente
+                function coletarCEPs(tipo) {
+                    let cepFaturamento = '';
+                    let cepEntrega = '';
+
+                    if (tipo === 'venda' || tipo === 'encomenda') {
+                        cepFaturamento = document.getElementById('dealerZip').value || '';
+                        
+                        const addressOption = document.querySelector('input[name="saleAddressOption"]:checked').value;
+                        
+                        if (addressOption === 'billing') {
+                            cepEntrega = cepFaturamento;
+                        } else if (addressOption === 'factory') {
+                            cepEntrega = 'RETIRADA NA FÁBRICA';
+                        } else {
+                            cepEntrega = document.getElementById('saleAltZip').value || '';
+                        }
+                        
+                    } else if (tipo === 'garantia') {
+                        cepFaturamento = document.getElementById('warrantyDealerZip').value || '';
+                        
+                        const addressOption = document.querySelector('input[name="warrantyAddressOption"]:checked').value;
+                        
+                        if (addressOption === 'billing') {
+                            cepEntrega = cepFaturamento;
+                        } else {
+                            cepEntrega = document.getElementById('warrantyAltZip').value || '';
+                        }
+                    }
+
+                    return {
+                        cep: cepFaturamento,
+                        cepEntrega: cepEntrega
+                    };
+                }
+
+                // Função para gerar documento local
+                function gerarDocumentoLocal(dadosDocumento) {
+                    return new Promise((resolve) => {
+                        try {
+                            const conteudoHTML = gerarConteudoHTMLCompleto(dadosDocumento);
+                            const blob = new Blob([conteudoHTML], { type: 'application/msword' });
+                            
+                            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                            const nomeArquivo = `${dadosDocumento.tipo.toUpperCase()}_${dadosDocumento.numeroProtocolo}_${timestamp}.doc`;
+                            
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = nomeArquivo;
+                            link.style.display = 'none';
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            
+                            setTimeout(() => {
+                                const clickEvent = new MouseEvent('click', {
+                                    view: window,
+                                    bubbles: true,
+                                    cancelable: true
+                                });
+                                link.dispatchEvent(clickEvent);
+                            }, 100);
+                            
+                            setTimeout(() => {
+                                URL.revokeObjectURL(url);
+                                document.body.removeChild(link);
+                            }, 5000);
+                            
+                            resolve(true);
+                            
+                        } catch (error) {
+                            console.error('Erro ao gerar documento local:', error);
+                            resolve(false);
+                        }
+                    });
+                }
+
+                // Enviar para Google Apps Script
+                async function enviarParaGoogle(dadosDocumento, anexos = []) {
+                    return new Promise(async (resolve) => {
+                        try {
+                            // GERAR NÚMERO DE PROTOCOLO ÚNICO
+                            let numeroProtocolo = '';
+                            if (dadosDocumento.tipo === 'garantia') {
+                                numeroProtocolo = gerarNumeroProtocoloUnico('garantia');
+                            } else if (dadosDocumento.tipo === 'venda') {
+                                if (dadosDocumento.tipoSolicitacao === 'SOLICITAÇÃO DE FATURAMENTO') {
+                                    numeroProtocolo = gerarNumeroProtocoloUnico('venda');
+                                } else {
+                                    numeroProtocolo = 'CONSULTA - SEM NÚMERO DE PROTOCOLO';
+                                }
+                            } else if (dadosDocumento.tipo === 'encomenda') {
+                                numeroProtocolo = gerarNumeroProtocoloUnico('encomenda');
+                            }
+                            
+                            dadosDocumento.numeroProtocolo = numeroProtocolo;
+                            
+                            // COLETAR CEPs CORRETAMENTE
+                            const ceps = coletarCEPs(dadosDocumento.tipo);
+                            dadosDocumento.cep = ceps.cep;
+                            dadosDocumento.cepEntrega = ceps.cepEntrega;
+
+                            // PREPARAR DADOS PRINCIPAIS
+                            const dadosParaEnvio = {
+                                tipo: dadosDocumento.tipo,
+                                numeroProtocolo: numeroProtocolo,
+                                revendedor: dadosDocumento.revendedor,
+                                cnpj: dadosDocumento.cnpj,
+                                email: dadosDocumento.email,
+                                telefone: dadosDocumento.telefone,
+                                endereco: dadosDocumento.endereco,
+                                enderecoEntrega: dadosDocumento.enderecoEntrega,
+                                pecas: dadosDocumento.pecas,
+                                observacoesFrete: dadosDocumento.observacoesFrete,
+                                solicitante: dadosDocumento.solicitante,
+                                tipoSolicitacao: dadosDocumento.tipoSolicitacao,
+                                cep: dadosDocumento.cep,
+                                cepEntrega: dadosDocumento.cepEntrega,
+                                emailCliente: dadosDocumento.email
+                            };
+
+                            // CAMPOS DE GARANTIA
+                            if (dadosDocumento.tipo === 'garantia') {
+                                dadosParaEnvio.categoria = dadosDocumento.categoria;
+                                dadosParaEnvio.clienteFinal = dadosDocumento.clienteFinal;
+                                dadosParaEnvio.dadosRevisao = dadosDocumento.dadosRevisao;
+                                dadosParaEnvio.veiculoModelo = dadosDocumento.veiculoModelo;
+                                dadosParaEnvio.veiculoSerie = dadosDocumento.veiculoSerie;
+                                dadosParaEnvio.veiculoCor = dadosDocumento.veiculoCor;
+                                dadosParaEnvio.veiculoKm = dadosDocumento.veiculoKm;
+                                dadosParaEnvio.reclamacao = dadosDocumento.reclamacao;
+                                dadosParaEnvio.analise = dadosDocumento.analise;
+                                dadosParaEnvio.reparo = dadosDocumento.reparo;
+                            }
+
+                            // CAMPOS DE ENCOMENDA
+                            if (dadosDocumento.tipo === 'encomenda') {
+                                dadosParaEnvio.encomendaRevenda = dadosDocumento.encomendaRevenda;
+                                dadosParaEnvio.encomendaCasoRelacionado = dadosDocumento.encomendaCasoRelacionado;
+                            }
+
+                            // CONVERTER ANEXOS PARA BASE64
+                            const anexosBase64 = [];
+                            if (anexos && anexos.length > 0) {
+                                const limiteAnexos = 5;
+                                const anexosParaProcessar = anexos.slice(0, limiteAnexos);
+                                
+                                for (let i = 0; i < anexosParaProcessar.length; i++) {
+                                    const anexo = anexosParaProcessar[i];
+                                    try {
+                                        if (anexo.size > 25 * 1024 * 1024) {
+                                            continue;
+                                        }
+                                        
+                                        const base64 = await fileToBase64(anexo);
+                                        
+                                        anexosBase64.push({
+                                            nome: anexo.name,
+                                            tipo: anexo.type,
+                                            conteudo: base64
+                                        });
+                                        
+                                    } catch (error) {
+                                        console.error(`Erro no anexo ${i + 1}:`, error);
+                                    }
+                                }
+                            }
+
+                            // ADICIONAR ANEXOS AOS DADOS
+                            if (anexosBase64.length > 0) {
+                                dadosParaEnvio.anexos = anexosBase64;
+                            }
+
+                            // ENVIAR VIA FETCH
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 90000);
+
+                            try {
+                                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                    },
+                                    body: 'dados=' + encodeURIComponent(JSON.stringify(dadosParaEnvio)),
+                                    signal: controller.signal
+                                });
+
+                                clearTimeout(timeoutId);
+
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    resolve(result);
+                                } else {
+                                    resolve({
+                                        success: true,
+                                        message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.'
+                                    });
+                                }
+
+                            } catch (fetchError) {
+                                clearTimeout(timeoutId);
+                                resolve({
+                                    success: true,
+                                    message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.'
+                                });
+                            }
+
+                        } catch (error) {
+                            console.error('Erro geral:', error);
+                            resolve({
+                                success: true,
+                                message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.'
+                            });
+                        }
+                    });
+                }
+
+                // Gerar documento de Venda
+                async function generateSaleWord() {
+                    if (!validateForm('saleSection')) return;
+                    
+                    const tipoSolicitacao = saleType.value;
+                    
+                    // Validação específica para encomenda
+                    if (tipoSolicitacao === 'encomenda') {
+                        if (!encomendaRevenda.value || !encomendaEmail.value || !encomendaCasoRelacionado.value) {
+                            alert('Por favor, preencha todos os campos obrigatórios da encomenda!');
+                            return;
+                        }
+                        
+                        if (encomendaSelectedProducts.length === 0) {
+                            alert('Nenhuma peça selecionada para a encomenda!');
+                            return;
+                        }
+
+                        encomendaLoading.style.display = 'block';
+                        exportEncomendaBtn.disabled = true;
+                        exportEncomendaBtn.innerHTML = 'Processando...';
+
+                    } else {
+                        if (selectedProducts.length === 0) {
+                            alert('Nenhuma peça selecionada para o relatório!');
+                            return;
+                        }
+                    }
+
+                    saleLoading.style.display = 'block';
+                    exportSaleBtn.disabled = true;
+
+                    try {
+                        let dadosVenda = {};
+                        let tipo = 'venda';
+                        
+                        if (tipoSolicitacao === 'encomenda') {
+                            tipo = 'encomenda';
+                            dadosVenda = {
+                                tipo: tipo,
+                                revendedor: encomendaRevenda.value,
+                                email: encomendaEmail.value,
+                                encomendaRevenda: encomendaRevenda.value,
+                                encomendaEmail: encomendaEmail.value,
+                                encomendaCasoRelacionado: encomendaCasoRelacionado.value,
+                                endereco: 'ENCOMENDA - RETIRADA NA FÁBRICA',
+                                enderecoEntrega: 'ENCOMENDA - RETIRADA NA FÁBRICA',
+                                tipoSolicitacao: 'ENCOMENDA',
+                                cep: 'ENCOMENDA',
+                                cepEntrega: 'ENCOMENDA',
+                                pecas: encomendaSelectedProducts,
+                                anexos: []
+                            };
+                        } else {
+                            let enderecoFaturamento = '';
+                            let enderecoEntrega = '';
+
+                            if (tipoSolicitacao === 'faturamento') {
+                                enderecoFaturamento = `${document.getElementById('dealerStreet').value}, ${document.getElementById('dealerNumber').value}, ${document.getElementById('dealerNeighborhood').value}, ${document.getElementById('dealerCity').value}/${document.getElementById('dealerState').value}`;
+                                
+                                const addressOption = document.querySelector('input[name="saleAddressOption"]:checked').value;
+                                if (addressOption === 'billing') {
+                                    enderecoEntrega = enderecoFaturamento;
+                                } else if (addressOption === 'factory') {
+                                    enderecoEntrega = 'RETIRADA NA FÁBRICA';
+                                } else {
+                                    enderecoEntrega = `${document.getElementById('saleAltStreet').value}, ${document.getElementById('saleAltNumber').value}, ${document.getElementById('saleAltNeighborhood').value}, ${document.getElementById('saleAltCity').value}/${document.getElementById('saleAltState').value}`;
+                                }
+                            } else {
+                                enderecoFaturamento = 'CONSULTA DE VALORES - SEM ENDEREÇO';
+                                enderecoEntrega = 'CONSULTA DE VALORES - SEM ENDEREÇO';
+                            }
+
+                            // COLETAR CEPs CORRETAMENTE PARA O DOCUMENTO LOCAL
+                            const ceps = coletarCEPs('venda');
+
+                            dadosVenda = {
+                                tipo: tipo,
+                                revendedor: document.getElementById('dealerName').value,
+                                cnpj: document.getElementById('dealerCnpj').value,
+                                endereco: enderecoFaturamento,
+                                telefone: document.getElementById('dealerPhone').value,
+                                email: document.getElementById('dealerEmail').value,
+                                pecas: selectedProducts,
+                                observacoesFrete: tipoSolicitacao === 'faturamento' ? document.getElementById('saleFreightObservations').value : '',
+                                enderecoEntrega: enderecoEntrega,
+                                solicitante: document.getElementById('solicitanteName').value,
+                                tipoSolicitacao: tipoSolicitacao === 'consulta' ? 'CONSULTA DE VALORES' : 'SOLICITAÇÃO DE FATURAMENTO',
+                                cep: ceps.cep,
+                                cepEntrega: ceps.cepEntrega,
+                                anexos: []
+                            };
+                        }
+
+                        // PRIMEIRO: Gerar e baixar documento LOCAL com CEPs
+                        await gerarDocumentoLocal(dadosVenda);
+                        
+                        // DEPOIS: Enviar para Google Script
+                        const resultado = await enviarParaGoogle(dadosVenda);
+
+                        if (resultado.success) {
+                            // Mostrar informações do protocolo no modal
+                            protocoloInfo.style.display = 'block';
+                            protocoloNumero.textContent = dadosVenda.numeroProtocolo || 'N/A';
+                            protocoloTipo.textContent = dadosVenda.tipoSolicitacao || dadosVenda.tipo.toUpperCase();
+                            
+                            if (tipoSolicitacao === 'consulta') {
+                                modalMessage.textContent = 'Sua solicitação de CONSULTA DE VALORES foi enviada.\n\nObs: Para faturamento, gere um novo pedido.';
+                            } else {
+                                modalMessage.textContent = 'Sua solicitação foi enviada com sucesso!';
+                            }
+                            
+                            showModal();
+                            limparFormularioVenda();
+                        } else {
+                            alert(resultado.message || 'Erro ao enviar documento');
+                        }
+
+                    } catch (error) {
+                        alert('Erro ao processar solicitação: ' + error.message);
+                    } finally {
+                        if (tipoSolicitacao === 'encomenda') {
+                            encomendaLoading.style.display = 'none';
+                            exportEncomendaBtn.disabled = false;
+                            exportEncomendaBtn.innerHTML = '<i class="fas fa-envelope"></i> Enviar Encomenda';
+                        } else {
+                            saleLoading.style.display = 'none';
+                            exportSaleBtn.disabled = false;
+                        }
+                    }
+                }
+
+                // Gerar documento de Garantia
+                async function generateWarrantyWord() {
+                    if (!validateForm('warrantySection')) return;
+                    if (warrantySelectedProducts.length === 0) {
+                        alert('Nenhuma peça selecionada para o relatório!');
+                        return;
+                    }
+
+                    // VALIDAÇÃO ESPECÍFICA PARA NOTAS FISCAIS
+                    if (invoiceFiles.length === 0) {
+                        alert('É obrigatório anexar pelo menos uma nota fiscal para garantias!');
+                        return;
+                    }
+
+                    warrantyLoading.style.display = 'block';
+                    exportWarrantyBtn.disabled = true;
+
+                    try {
+                        // DEFINIR ENDEREÇOS PARA GARANTIA
+                        let enderecoFaturamento = `${document.getElementById('warrantyDealerStreet').value}, ${document.getElementById('warrantyDealerNumber').value}, ${document.getElementById('warrantyDealerNeighborhood').value}, ${document.getElementById('warrantyDealerCity').value}/${document.getElementById('warrantyDealerState').value}`;
+                        
+                        let enderecoEntrega = '';
+                        const addressOption = document.querySelector('input[name="warrantyAddressOption"]:checked').value;
+                        if (addressOption === 'billing') {
+                            enderecoEntrega = enderecoFaturamento;
+                        } else {
+                            enderecoEntrega = `${document.getElementById('warrantyAltStreet').value}, ${document.getElementById('warrantyAltNumber').value}, ${document.getElementById('warrantyAltNeighborhood').value}, ${document.getElementById('warrantyAltCity').value}/${document.getElementById('warrantyAltState').value}`;
+                        }
+
+                        // VERIFICAR DADOS DE REVISÃO
+                        let dadosRevisao = null;
+                        if (warrantyCategory.value === 'cliente-final' || warrantyCategory.value === 'licitacao') {
+                            dadosRevisao = {
+                                numeroRevisao: document.getElementById('reviewNumber').value,
+                                dataRevisao: document.getElementById('reviewDate').value,
+                                quilometragem: document.getElementById('reviewKm').value,
+                                horimetro: document.getElementById('reviewHours').value,
+                                numeroOS: document.getElementById('osNumber').value
+                            };
+                        }
+
+                        // COLETAR CEPs CORRETAMENTE
+                        const ceps = coletarCEPs('garantia');
+
+                        const dadosGarantia = {
+                            tipo: 'garantia',
+                            revendedor: document.getElementById('warrantyDealerName').value,
+                            cnpj: document.getElementById('warrantyDealerCnpj').value,
+                            endereco: enderecoFaturamento,
+                            telefone: document.getElementById('warrantyDealerPhone').value,
+                            email: document.getElementById('warrantyDealerEmail').value,
+                            enderecoEntrega: enderecoEntrega,
+                            cep: ceps.cep,
+                            cepEntrega: ceps.cepEntrega,
+                            categoria: document.getElementById('warrantyCategory').options[document.getElementById('warrantyCategory').selectedIndex].text,
+                            clienteFinal: warrantyCategory.value === 'cliente-final' ? document.getElementById('clientFinalName').value : null,
+                            dadosRevisao: dadosRevisao,
+                            veiculoModelo: document.getElementById('vehicleModel').value,
+                            veiculoSerie: document.getElementById('vehicleSerial').value,
+                            veiculoCor: document.getElementById('vehicleColor').value,
+                            veiculoKm: document.getElementById('vehicleKm').value,
+                            reclamacao: document.getElementById('clientComplaint').value,
+                            analise: document.getElementById('failureAnalysis').value,
+                            reparo: document.getElementById('repairDescription').value,
+                            pecas: warrantySelectedProducts,
+                            observacoesFrete: document.getElementById('warrantyFreightObservations').value,
+                            anexos: warrantyAttachments.concat(invoiceFiles).map(file => ({ nome: file.name }))
+                        };
+                                                
+                        // PRIMEIRO: Gerar e baixar documento LOCAL
+                        await gerarDocumentoLocal(dadosGarantia);
+                        
+                        // Juntar todos os anexos
+                        const todosAnexos = [...warrantyAttachments, ...invoiceFiles];
+
+                        // DEPOIS: Enviar com anexos para Google Script
+                        const resultado = await enviarParaGoogle(dadosGarantia, todosAnexos);
+
+                        if (resultado.success) {
+                            // Mostrar informações do protocolo no modal
+                            protocoloInfo.style.display = 'block';
+                            protocoloNumero.textContent = dadosGarantia.numeroProtocolo || 'N/A';
+                            protocoloTipo.textContent = 'GARANTIA';
+                            modalMessage.textContent = 'Sua solicitação de garantia foi enviada com sucesso!';
+                            
+                            showModal();
+                            limparFormularioGarantia();
+                        } else {
+                            alert(resultado.message || 'Erro ao enviar documento');
+                        }
+
+                    } catch (error) {
+                        alert('Erro ao processar solicitação: ' + error.message);
+                    } finally {
+                        warrantyLoading.style.display = 'none';
+                        exportWarrantyBtn.disabled = false;
+                    }
+                }
+
+                // Função para limpar formulário de Venda
+                function limparFormularioVenda() {
+                    // Limpar campos de texto
+                    const camposVenda = [
+                        'dealerName', 'dealerCnpj', 'dealerStreet', 'dealerNumber', 
+                        'dealerNeighborhood', 'dealerZip', 'dealerPhone', 'dealerEmail',
+                        'saleAltStreet', 'saleAltNumber', 'saleAltNeighborhood', 'saleAltZip',
+                        'saleFreightObservations', 'solicitanteName',
+                        'encomendaRevenda', 'encomendaEmail', 'encomendaCasoRelacionado'
+                    ];
+                    
+                    camposVenda.forEach(id => {
+                        const campo = document.getElementById(id);
+                        if (campo) campo.value = '';
+                    });
+                    
+                    // Limpar selects
+                    const selectsVenda = ['dealerState', 'dealerCity', 'saleAltState', 'saleAltCity', 'saleType'];
+                    selectsVenda.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) select.selectedIndex = 0;
+                    });
+                    
+                    // Resetar opção de endereço
+                    document.querySelector('input[name="saleAddressOption"][value="billing"]').checked = true;
+                    saleAlternateAddress.classList.remove('active');
+                    
+                    // Mostrar todos os campos
+                    toggleSaleFields();
+                    
+                    // Limpar peças selecionadas
+                    selectedProducts = [];
+                    encomendaSelectedProducts = [];
+                    updateSelectedItemsDisplay(selectedProducts, selectedItemsContainer);
+                    updateSelectedItemsDisplay(encomendaSelectedProducts, encomendaSelectedItemsContainer);
+                }
+
+                // Função para limpar formulário de Garantia
+                function limparFormularioGarantia() {
+                    // Limpar campos de texto
+                    const camposGarantia = [
+                        'warrantyDealerName', 'warrantyDealerCnpj', 'warrantyDealerStreet', 
+                        'warrantyDealerNumber', 'warrantyDealerNeighborhood', 'warrantyDealerZip',
+                        'warrantyDealerPhone', 'warrantyDealerEmail', 'warrantyAltStreet',
+                        'warrantyAltNumber', 'warrantyAltNeighborhood', 'warrantyAltZip',
+                        'vehicleSerial', 'vehicleColor', 'vehicleModel', 'vehicleKm',
+                        'clientComplaint', 'failureAnalysis', 'repairDescription',
+                        'reviewDate', 'reviewKm', 'reviewHours', 'osNumber', 'clientFinalName',
+                        'warrantyFreightObservations'
+                    ];
+                    
+                    camposGarantia.forEach(id => {
+                        const campo = document.getElementById(id);
+                        if (campo) campo.value = '';
+                    });
+                    
+                    // Limpar selects
+                    const selectsGarantia = [
+                        'warrantyDealerState', 'warrantyDealerCity', 'warrantyAltState', 
+                        'warrantyAltCity', 'warrantyCategory', 'reviewNumber', 'vehicleModel'
+                    ];
+                    selectsGarantia.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) select.selectedIndex = 0;
+                    });
+                    
+                    // Resetar opção de endereço
+                    document.querySelector('input[name="warrantyAddressOption"][value="billing"]').checked = true;
+                    warrantyAlternateAddress.classList.remove('active');
+                    
+                    // Ocultar seção de revisão
+                    reviewSection.classList.add('hidden');
+                    clientFinalNameField.classList.add('hidden');
+                    
+                    // Limpar peças selecionadas
+                    warrantySelectedProducts = [];
+                    updateSelectedItemsDisplay(warrantySelectedProducts, warrantySelectedItemsContainer);
+                    
+                    // Limpar anexos
+                    warrantyAttachments = [];
+                    invoiceFiles = [];
+                    attachmentsPreview.innerHTML = '';
+                    invoicesPreview.innerHTML = '';
+                    
+                    // Limpar inputs de arquivo
+                    technicalAttachments.value = '';
+                    invoiceAttachments.value = '';
+                }
+
+                // Função para validar formulário
+                function validateForm(sectionId) {
+                    const section = document.getElementById(sectionId);
+                    let requiredFields = section.querySelectorAll('[required]');
+                    
+                    // Para venda, ajustar campos baseado no tipo de solicitação
+                    if (sectionId === 'saleSection') {
+                        const tipoSolicitacao = saleType.value;
+                        
+                        if (tipoSolicitacao === 'encomenda') {
+                            // Validar campos da encomenda
+                            if (!encomendaRevenda.value || !encomendaEmail.value || !encomendaCasoRelacionado.value) {
+                                alert('Por favor, preencha todos os campos obrigatórios da encomenda!');
+                                return false;
+                            }
+                            return true;
+                        }
+                        
+                        if (tipoSolicitacao === 'consulta') {
+                            // Para consulta, manter apenas campos básicos
+                            requiredFields = Array.from(requiredFields).filter(field => {
+                                return field.id !== 'dealerStreet' && field.id !== 'dealerNumber' && 
+                                       field.id !== 'dealerNeighborhood' && field.id !== 'dealerState' && 
+                                       field.id !== 'dealerCity' && field.id !== 'dealerZip';
+                            });
+                        }
+                    }
+                    
+                    // Para garantia, se a seção de revisão estiver oculta, remove os campos obrigatórios dela
+                    if (sectionId === 'warrantySection' && reviewSection.classList.contains('hidden')) {
+                        const reviewFields = reviewSection.querySelectorAll('[required]');
+                        requiredFields = Array.from(requiredFields).filter(field => {
+                            return !Array.from(reviewFields).includes(field);
+                        });
+                    }
+                    
+                    let isValid = true;
+                    let emptyFields = [];
+                    
+                    requiredFields.forEach(field => {
+                        const errorMessage = field.parentNode.querySelector('.error-message');
+                        
+                        if (!field.value.trim() && field.id !== 'technicalAttachments' && field.id !== 'invoiceAttachments') {
+                            errorMessage.style.display = 'block';
+                            isValid = false;
+                            const label = field.parentNode.querySelector('label');
+                            const fieldName = label ? label.textContent.replace(' *', '') : 'Campo obrigatório';
+                            emptyFields.push(fieldName);
+                        } else {
+                            errorMessage.style.display = 'none';
+                        }
+                    });
+                    
+                    // Validação especial para anexos de garantia
+                    if (sectionId === 'warrantySection') {
+                        if (!validateWarrantyAttachments()) {
+                            isValid = false;
+                            emptyFields.push('Anexos Técnicos (Fotos)');
+                        }
+                        
+                        // VALIDAÇÃO PARA NOTAS FISCAIS
+                        if (!validateInvoiceAttachments()) {
+                            isValid = false;
+                            emptyFields.push('Notas Fiscais');
+                        }
+
+                        // VALIDAÇÃO ESPECIAL PARA CLIENTE FINAL
+                        if (warrantyCategory.value === 'cliente-final' && !clientFinalName.value.trim()) {
+                            isValid = false;
+                            emptyFields.push('Nome do Cliente Final');
+                            const errorMessage = clientFinalName.parentNode.querySelector('.error-message');
+                            errorMessage.style.display = 'block';
+                        }
+                    }
+                    
+                    if (!isValid) {
+                        const message = `Por favor, preencha os seguintes campos obrigatórios:\n\n• ${emptyFields.join('\n• ')}`;
+                        alert(message);
+                    }
+                    
+                    return isValid;
+                }
+
+                // ==================================================
+                // FUNÇÕES COMPARTILHADAS
+                // ==================================================
+
+                // Validar quantidade antes de adicionar
+                function validarQuantidadeAntesAdicionar(quantidadeInput, tipo) {
+                    const quantidade = parseInt(quantidadeInput.value) || 0;
+                    
+                    quantidadeInput.classList.remove('quantity-error');
+                    
+                    let existingError = quantidadeInput.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                    
+                    if (!quantidadeInput.value.trim() || quantidade <= 0 || isNaN(quantidade)) {
+                        quantidadeInput.classList.add('quantity-error');
+                        
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'quantity-error-message';
+                        errorMessage.textContent = `❌ Informe uma quantidade válida (maior que zero)`;
+                        errorMessage.style.display = 'block';
+                        errorMessage.style.marginTop = '5px';
+                        
+                        quantidadeInput.parentNode.appendChild(errorMessage);
+                        quantidadeInput.focus();
+                        
+                        quantidadeInput.style.animation = 'shake 0.5s';
+                        setTimeout(() => {
+                            quantidadeInput.style.animation = '';
+                        }, 500);
+                        
+                        return false;
+                    }
+                    
+                    return true;
+                }
+
+                function loadProducts(selectElement, products) {
+                    selectElement.innerHTML = '';
+                    
+                    if (products.length === 0) {
+                        selectElement.innerHTML = '<option>Nenhum produto encontrado</option>';
+                        return;
+                    }
+                    
+                    products.forEach((product, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `${product.REFERÊNCIA} - ${product.NOME} (${product.MODELO})`;
+                        selectElement.appendChild(option);
+                    });
+                }
+                
+                function filterProducts(searchTerm, products, targetArray) {
+                    if (!searchTerm) {
+                        targetArray = [...products];
+                        return targetArray;
+                    }
+                    
+                    const term = searchTerm.toLowerCase();
+                    return products.filter(product => 
+                        product.REFERÊNCIA.toLowerCase().includes(term) ||
+                        product.NOME.toLowerCase().includes(term) ||
+                        product.MODELO.toLowerCase().includes(term)
+                    );
+                }
+                
+                function addSelectedProducts(selectElement, sourceArray, targetArray, quantity, container) {
+                    const selectedOptions = Array.from(selectElement.selectedOptions);
+                    
+                    if (selectedOptions.length === 0) {
+                        alert('Por favor, selecione pelo menos uma peça da lista!');
+                        return;
+                    }
+
+                    if (quantity <= 0 || isNaN(quantity)) {
+                        alert('Quantidade inválida! Por favor, informe uma quantidade maior que zero.');
+                        return;
+                    }
+
+                    selectedOptions.forEach(option => {
+                        const productIndex = option.value;
+                        const product = sourceArray[productIndex];
+                        
+                        const existingIndex = targetArray.findIndex(p => p.referencia === product.REFERÊNCIA);
+                        
+                        if (existingIndex >= 0) {
+                            targetArray[existingIndex].quantity += quantity;
+                        } else {
+                            targetArray.push({
+                                referencia: product.REFERÊNCIA,
+                                nome: product.NOME,
+                                modelo: product.MODELO,
+                                quantity: quantity,
+                                valor: product.VALOR
+                            });
+                        }
+                    });
+                    
+                    updateSelectedItemsDisplay(targetArray, container);
+                    selectElement.selectedIndex = -1;
+                }
+                
+                function updateSelectedItemsDisplay(productsArray, container) {
+                    container.innerHTML = '';
+                    
+                    if (productsArray.length === 0) {
+                        container.innerHTML = '<div class="no-items">Nenhuma peça selecionada</div>';
+                        return;
+                    }
+                    
+                    productsArray.forEach((product, index) => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'selected-item';
+                        
+                        if (window.innerWidth < 768) {
+                            const infoDiv = document.createElement('div');
+                            infoDiv.className = 'selected-item-info';
+                            
+                            const detailsDiv = document.createElement('div');
+                            detailsDiv.className = 'selected-item-details';
+                            
+                            const refSpan = document.createElement('span');
+                            refSpan.className = 'selected-item-ref';
+                            refSpan.textContent = product.referencia;
+                            
+                            const nameSpan = document.createElement('span');
+                            nameSpan.className = 'selected-item-name';
+                            nameSpan.textContent = product.nome;
+                            
+                            const modelSpan = document.createElement('span');
+                            modelSpan.className = 'selected-item-model';
+                            modelSpan.textContent = product.modelo;
+                            
+                            detailsDiv.appendChild(refSpan);
+                            detailsDiv.appendChild(document.createElement('br'));
+                            detailsDiv.appendChild(nameSpan);
+                            detailsDiv.appendChild(document.createElement('br'));
+                            detailsDiv.appendChild(modelSpan);
+                            
+                            infoDiv.appendChild(detailsDiv);
+                            itemDiv.appendChild(infoDiv);
+                        } else {
+                            const refSpan = document.createElement('span');
+                            refSpan.textContent = product.referencia;
+                            
+                            const nameSpan = document.createElement('span');
+                            nameSpan.textContent = product.nome;
+                            
+                            const modelSpan = document.createElement('span');
+                            modelSpan.textContent = product.modelo;
+                            
+                            itemDiv.appendChild(refSpan);
+                            itemDiv.appendChild(nameSpan);
+                            itemDiv.appendChild(modelSpan);
+                        }
+                        
+                        const quantityDiv = document.createElement('div');
+                        quantityDiv.className = 'quantity-control';
+                        
+                        const decreaseBtn = document.createElement('button');
+                        decreaseBtn.className = 'btn-minus';
+                        decreaseBtn.innerHTML = '<i class="fas fa-minus"></i>';
+                        decreaseBtn.onclick = () => {
+                            updateQuantity(index, -1, productsArray, container);
+                        };
+                        
+                        const quantitySpan = document.createElement('span');
+                        quantitySpan.className = 'quantity-display';
+                        quantitySpan.textContent = product.quantity;
+                        
+                        const increaseBtn = document.createElement('button');
+                        increaseBtn.className = 'btn-plus';
+                        increaseBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                        increaseBtn.onclick = () => {
+                            updateQuantity(index, 1, productsArray, container);
+                        };
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'btn-remove';
+                        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        removeBtn.onclick = () => {
+                            removeProduct(index, productsArray, container);
+                        };
+                        
+                        quantityDiv.appendChild(decreaseBtn);
+                        quantityDiv.appendChild(quantitySpan);
+                        quantityDiv.appendChild(increaseBtn);
+                        quantityDiv.appendChild(removeBtn);
+                        
+                        itemDiv.appendChild(quantityDiv);
+                        
+                        container.appendChild(itemDiv);
+                    });
+                }
+                
+                function updateQuantity(index, change, productsArray, container) {
+                    productsArray[index].quantity += change;
+                    
+                    if (productsArray[index].quantity < 1) {
+                        productsArray[index].quantity = 1;
+                    }
+                    
+                    updateSelectedItemsDisplay(productsArray, container);
+                }
+                
+                function removeProduct(index, productsArray, container) {
+                    productsArray.splice(index, 1);
+                    updateSelectedItemsDisplay(productsArray, container);
+                }
+                
+                function showModal() {
+                    confirmationModal.style.display = 'block';
+                }
+                
+                function closeModal() {
+                    confirmationModal.style.display = 'none';
+                    protocoloInfo.style.display = 'none';
+                }
+
+                // ==================================================
+                // EVENT LISTENERS
+                // ==================================================
+
+                // Eventos para VENDA
+                searchInput.addEventListener('input', function() {
+                    filteredProducts = filterProducts(this.value, productsData, filteredProducts);
+                    loadProducts(availableProducts, filteredProducts);
+                });
+
+                addButton.addEventListener('click', function() {
+                    if (!validarQuantidadeAntesAdicionar(quantityInput, 'venda')) {
+                        return;
+                    }
+                    
+                    const quantity = parseInt(quantityInput.value);
+                    addSelectedProducts(availableProducts, filteredProducts, selectedProducts, quantity, selectedItemsContainer);
+                    
+                    quantityInput.value = '';
+                    quantityInput.classList.remove('quantity-error');
+                    let existingError = quantityInput.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+                            
+                exportSaleBtn.addEventListener('click', function() {
+                    generateSaleWord();
+                });
+                
+                // Eventos para ENCOMENDA
+                encomendaSearchInput.addEventListener('input', function() {
+                    encomendaFilteredProducts = filterProducts(this.value, productsData, encomendaFilteredProducts);
+                    loadProducts(encomendaAvailableProducts, encomendaFilteredProducts);
+                });
+
+                encomendaAddButton.addEventListener('click', function() {
+                    if (!validarQuantidadeAntesAdicionar(encomendaQuantity, 'encomenda')) {
+                        return;
+                    }
+                    
+                    const quantity = parseInt(encomendaQuantity.value);
+                    addSelectedProducts(encomendaAvailableProducts, encomendaFilteredProducts, encomendaSelectedProducts, quantity, encomendaSelectedItemsContainer);
+                    
+                    encomendaQuantity.value = '';
+                    encomendaQuantity.classList.remove('quantity-error');
+                    let existingError = encomendaQuantity.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+
+                exportEncomendaBtn.addEventListener('click', function() {
+                    generateSaleWord();
+                });
+                
+                // Eventos para GARANTIA
+                warrantySearchInput.addEventListener('input', function() {
+                    warrantyFilteredProducts = filterProducts(this.value, productsData, warrantyFilteredProducts);
+                    loadProducts(warrantyAvailableProducts, warrantyFilteredProducts);
+                });
+
+                warrantyAddButton.addEventListener('click', function() {
+                    if (!validarQuantadaeAntesAdicionar(warrantyQuantityInput, 'garantia')) {
+                        return;
+                    }
+                    
+                    const quantity = parseInt(warrantyQuantityInput.value);
+                    addSelectedProducts(warrantyAvailableProducts, warrantyFilteredProducts, warrantySelectedProducts, quantity, warrantySelectedItemsContainer);
+                    
+                    warrantyQuantityInput.value = '';
+                    warrantyQuantityInput.classList.remove('quantity-error');
+                    let existingError = warrantyQuantityInput.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+
+                exportWarrantyBtn.addEventListener('click', function() {
+                    generateWarrantyWord();
+                });
+
+                // Limpar erro quando o usuário começar a digitar
+                quantityInput.addEventListener('input', function() {
+                    this.classList.remove('quantity-error');
+                    let existingError = this.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+
+                encomendaQuantity.addEventListener('input', function() {
+                    this.classList.remove('quantity-error');
+                    let existingError = this.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+
+                warrantyQuantityInput.addEventListener('input', function() {
+                    this.classList.remove('quantity-error');
+                    let existingError = this.parentNode.querySelector('.quantity-error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                });
+                            
+                // Evento para fechar o modal
+                closeModalBtn.addEventListener('click', closeModal);
+                
+                // ==================================================
+                // INICIALIZAÇÃO
+                // ==================================================
+
+                loadEstados();
+                setupAutoFormatting();
+                loadProducts(availableProducts, productsData);
+                loadProducts(warrantyAvailableProducts, productsData);
+                loadProducts(encomendaAvailableProducts, productsData);
+                updateSelectedItemsDisplay(selectedProducts, selectedItemsContainer);
+                updateSelectedItemsDisplay(warrantySelectedProducts, warrantySelectedItemsContainer);
+                updateSelectedItemsDisplay(encomendaSelectedProducts, encomendaSelectedItemsContainer);
+                toggleSaleFields();
+                
+                // Fechar modal ao clicar fora dele
+                window.onclick = function(event) {
+                    if (event.target === confirmationModal) {
+                        closeModal();
+                    }
+                };
+                
+                // Redesenhar elementos quando a janela for redimensionada
+                window.addEventListener('resize', function() {
+                    updateSelectedItemsDisplay(selectedProducts, selectedItemsContainer);
+                    updateSelectedItemsDisplay(warrantySelectedProducts, warrantySelectedItemsContainer);
+                    updateSelectedItemsDisplay(encomendaSelectedProducts, encomendaSelectedItemsContainer);
+                });
+            });
+
+            // GERAR CONTEÚDO HTML COMPLETO (COM VALORES E TOTAL)
+            function gerarConteudoHTMLCompleto(dados) {
+                const dataAtual = new Date().toLocaleString('pt-BR');
+                
+                // CALCULAR TOTAL
+                let totalGeral = 0;
+                if (dados.pecas && dados.pecas.length > 0) {
+                    dados.pecas.forEach(peca => {
+                        const valorUnitario = parseFloat(peca.valor) || 0;
+                        const quantidade = peca.quantity || 0;
+                        const valorTotal = valorUnitario * quantidade;
+                        totalGeral += valorTotal;
+                    });
+                }
+                
+                let conteudo = `
+                    <html>
+                    <head>
+                    <meta charset="utf-8">
+                    <title>Ventura Marine - ${dados.tipo.toUpperCase()}</title>
+                    <style>
+                    body { font-family: Arial, sans-serif; margin: 1.5cm 1.5cm 1.5cm 0.4cm; line-height: 1.4; font-size: 12px; }
+                    h1 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 8px; font-size: 20px; }
+                    h2 { color: #34495e; margin-top: 20px; font-size: 16px; }
+                    h3 { color: #2c3e50; margin-top: 15px; font-size: 14px; }
+                    table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11px; }
+                    th { background-color: #34495e; color: white; padding: 8px; text-align: left; }
+                    td { padding: 6px; border: 1px solid #ddd; }
+                    .header { background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+                    .section { margin-bottom: 20px; }
+                    .total-row { font-weight: bold; background-color: #f8f9fa; }
+                    .text-right { text-align: right; }
+                    </style>
+                    </head>
+                    <body>
+                    <div style="text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; margin-bottom: 25px;">
+                    <h1 style="color: #2c3e50; margin: 0; font-size: 22px;">VENTURA MARINE</h1>
+                    <h2 style="color: #7f8c8d; margin: 8px 0; font-size: 16px;">${dados.tipo.toUpperCase()}</h2>
+                    <p style="color: #95a5a6; margin: 0; font-size: 12px;">Gerado em: ${dataAtual}</p>
+                    ${dados.numeroProtocolo ? `<p style="color: #2c3e50; margin: 5px 0; font-weight: bold; font-size: 14px;">Número do Protocolo: ${dados.numeroProtocolo}</p>` : ''}
+                    </div>
+
+                    <div class="header">
+                    <h3 style="color: #2c3e50; margin-top: 0;">INFORMAÇÕES GERAIS</h3>
+                    <table>
+                        <tr><td style="width: 25%; font-weight: bold;">Número do Protocolo:</td><td>${dados.numeroProtocolo || 'N/A'}</td></tr>
+                        <tr><td style="font-weight: bold;">Revendedor:</td><td>${dados.revendedor || 'Não informado'}</td></tr>
+                        ${dados.cnpj ? `<tr><td style="font-weight: bold;">CNPJ:</td><td>${dados.cnpj || 'Não informado'}</td></tr>` : ''}
+                        ${dados.solicitante ? `<tr><td style="font-weight: bold;">Solicitante:</td><td>${dados.solicitante}</td></tr>` : ''}
+                        ${dados.tipoSolicitacao ? `<tr><td style="font-weight: bold;">Tipo:</td><td>${dados.tipoSolicitacao}</td></tr>` : ''}
+                        <tr><td style="font-weight: bold;">E-mail:</td><td>${dados.email || 'Não informado'}</td></tr>
+                        ${dados.telefone ? `<tr><td style="font-weight: bold;">Telefone:</td><td>${dados.telefone || 'Não informado'}</td></tr>` : ''}
+                        <tr><td style="font-weight: bold;">Endereço Faturamento:</td><td>${dados.endereco || 'Não informado'}</td></tr>
+                        <tr><td style="font-weight: bold;">Endereço Entrega:</td><td>${dados.enderecoEntrega || 'Não informado'}</td></tr>
+                        <tr><td style="font-weight: bold;">CEP Faturamento:</td><td>${dados.cep || 'Não informado'}</td></tr>
+                        <tr><td style="font-weight: bold;">CEP Entrega:</td><td>${dados.cepEntrega || 'Não informado'}</td></tr>
+                        ${dados.encomendaRevenda ? `<tr><td style="font-weight: bold;">Revenda:</td><td>${dados.encomendaRevenda}</td></tr>` : ''}
+                        ${dados.encomendaCasoRelacionado ? `<tr><td style="font-weight: bold;">Protocolo Relacionado:</td><td>${dados.encomendaCasoRelacionado}</td></tr>` : ''}
+                        <tr><td style="font-weight: bold;">Total de Anexos:</td><td>${(dados.anexos && Array.isArray(dados.anexos)) ? dados.anexos.length : 0} arquivos</td></tr>
+                    </table>
+                    </div>
+                `;
+
+                // SEÇÃO DE PEÇAS COM VALORES
+                if (dados.pecas && dados.pecas.length > 0) {
+                    conteudo += `
+                <div class="section">
+                <h3>PEÇAS ${dados.tipo === 'venda' ? 'SOLICITADAS' : 'UTILIZADAS'}</h3>
+                <table>
+                    <tr>
+                    <th>Referência</th>
+                    <th>Nome</th>
+                    <th>Modelo</th>
+                    <th>Quantidade</th>
+                    <th>Valor Unitário</th>
+                    <th>Valor Total</th>
+                    </tr>`;
+                                
+                                dados.pecas.forEach(peca => {
+                                    const valorUnitario = parseFloat(peca.valor) || 0;
+                                    const quantidade = peca.quantity || 0;
+                                    const valorTotal = valorUnitario * quantidade;
+                                    
+                                    conteudo += `
+                    <tr>
+                    <td>${peca.referencia}</td>
+                    <td>${peca.nome}</td>
+                    <td>${peca.modelo}</td>
+                    <td style="text-align: center;">${quantidade}</td>
+                    <td style="text-align: right;">R$ ${valorUnitario.toFixed(2)}</td>
+                    <td style="text-align: right;">R$ ${valorTotal.toFixed(2)}</td>
+                    </tr>`;
+                                });
+                                
+                                // LINHA DO TOTAL
+                                conteudo += `
+                    <tr class="total-row">
+                    <td colspan="5" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                    <td style="text-align: right; font-weight: bold;">R$ ${totalGeral.toFixed(2)}</td>
+                    </tr>
+                </table>
+                <p><strong>Total de peças: ${dados.pecas.length}</strong></p>
+                </div>`;
+                            } else if (dados.tipo === 'encomenda') {
+                                conteudo += `
+                <div class="section">
+                <h3>INFORMAÇÕES DA ENCOMENDA</h3>
+                <p>Este é um pedido de encomenda. As peças serão solicitadas separadamente.</p>
+                <p><strong>Protocolo Relacionado:</strong> ${dados.encomendaCasoRelacionado || 'Não informado'}</p>
+                </div>`;
+                            }
+
+                            // SEÇÃO DE OBSERVAÇÕES
+                            if (dados.observacoesFrete) {
+                                conteudo += `
+                <div class="section">
+                <h3>OBSERVAÇÕES DO FRETE</h3>
+                <p>${dados.observacoesFrete}</p>
+                </div>`;
+                            }
+
+                            // SEÇÃO DE GARANTIA (SE FOR GARANTIA)
+                            if (dados.tipo === 'garantia') {
+                                conteudo += `
+                <div class="section">
+                <h3>DADOS DA GARANTIA</h3>
+                <table>
+                    <tr><td style="font-weight: bold; width: 25%;">Categoria:</td><td>${dados.categoria || 'Não informado'}</td></tr>
+                    ${dados.clienteFinal ? `<tr><td style="font-weight: bold;">Cliente Final:</td><td>${dados.clienteFinal}</td></tr>` : ''}
+                </table>
+                </div>
+
+                <div class="section">
+                <h3>DADOS DO VEÍCULO</h3>
+                <table>
+                    <tr><td style="font-weight: bold; width: 25%;">Modelo:</td><td>${dados.veiculoModelo || 'Não informado'}</td></tr>
+                    <tr><td style="font-weight: bold;">Número de Série:</td><td>${dados.veiculoSerie || 'Não informado'}</td></tr>
+                    <tr><td style="font-weight: bold;">Cor:</td><td>${dados.veiculoCor || 'Não informado'}</td></tr>
+                    <tr><td style="font-weight: bold;">KM/Horas:</td><td>${dados.veiculoKm || 'Não informado'}</td></tr>
+                </table>
+                </div>
+
+                <div class="section">
+                <h3>RELATÓRIO TÉCNICO</h3>
+                <p><strong>Reclamação do Cliente:</strong><br>${dados.reclamacao || 'Não informado'}</p>
+                <p><strong>Análise da Falha:</strong><br>${dados.analise || 'Não informado'}</p>
+                <p><strong>Reparo Executado:</strong><br>${dados.reparo || 'Não informado'}</p>
+                </div>`;
+                            }
+
+                            // RODAPÉ
+                            conteudo += `
+                <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #bdc3c7; text-align: center; color: #7f8c8d; font-size: 10px;">
+                <p>Documento gerado automaticamente pelo Sistema Ventura Marine</p>
+                <p>Data/Hora: ${dataAtual}</p>
+                <p>Número do Protocolo: ${dados.numeroProtocolo || 'N/A'}</p>
+                </div>
+                </body>
+                </html>`;
+
+                return conteudo;
             }
-            
-            return 'status-default';
-        }
 
-        // Event Listener para filtro em tempo real
-        searchInput.addEventListener('input', filterCases);
+            // Validar tamanho dos arquivos
+            function validarTamanhoArquivos(input) {
+                const MAX_TAMANHO_MB = 25;
+                const MAX_TAMANHO_TOTAL_MB = 40;
+                
+                if (input.files.length === 0) {
+                    return true;
+                }
+                
+                const errorDiv = input.parentNode.querySelector('.anexo-error-message');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+                input.classList.remove('anexo-error');
+                
+                let tamanhoTotal = 0;
+                let arquivosGrandes = [];
+                
+                for (let i = 0; i < input.files.length; i++) {
+                    const arquivo = input.files[i];
+                    const tamanhoMB = arquivo.size / (1024 * 1024);
+                    tamanhoTotal += tamanhoMB;
+                    
+                    if (tamanhoMB > MAX_TAMANHO_MB) {
+                        arquivosGrandes.push({
+                            nome: arquivo.name,
+                            tamanho: tamanhoMB
+                        });
+                    }
+                }
+                
+                if (arquivosGrandes.length > 0) {
+                    const primeiroArquivo = arquivosGrandes[0];
+                    const mensagem = `"${primeiroArquivo.nome}" - ${primeiroArquivo.tamanho.toFixed(1)}MB (limite: ${MAX_TAMANHO_MB}MB)`;
+                    
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'anexo-error-message';
+                    errorDiv.textContent = mensagem;
+                    input.parentNode.appendChild(errorDiv);
+                    input.classList.add('anexo-error');
+                    
+                    setTimeout(() => {
+                        input.value = '';
+                    }, 100);
+                    
+                    return false;
+                }
+                
+                if (tamanhoTotal > MAX_TAMANHO_TOTAL_MB) {
+                    const mensagem = `Total: ${tamanhoTotal.toFixed(1)}MB (limite: ${MAX_TAMANHO_TOTAL_MB}MB)`;
+                    
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'anexo-error-message';
+                    errorDiv.textContent = mensagem;
+                    input.parentNode.appendChild(errorDiv);
+                    input.classList.add('anexo-error');
+                    
+                    setTimeout(() => {
+                        input.value = '';
+                    }, 100);
+                    
+                    return false;
+                }
+                
+                return true;
+            }
 
-        // Carregar dados ao iniciar
-        loadAllData();
-        
-        // Focar no campo de login
-        window.addEventListener('load', function() {
-            setTimeout(() => loginInput.focus(), 500);
-        });
-    </script>
-</body>
-</html>
+            // Função auxiliar: Remover mensagem de erro
+            function removerMensagemErroAnexo(input) {
+                const existingError = input.parentNode.querySelector('.anexo-error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                input.classList.remove('anexo-error');
+            }
+        </script>
+    </body>
+    </html>
