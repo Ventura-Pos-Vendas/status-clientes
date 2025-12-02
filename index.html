@@ -1438,6 +1438,7 @@
                     <p><strong>Número do Protocolo:</strong> <span id="protocoloNumero" class="protocolo-numero"></span></p>
                     <p><strong>Tipo:</strong> <span id="protocoloTipo"></span></p>
                     <p>Uma cópia da solicitação foi gerada em seus downloads.</p>
+                    <p><strong>Email enviado para:</strong> <span id="emailClienteEnviado"></span></p>
                 </div>
                 <p id="modalMessage"></p>
                 <button id="closeModalBtn" class="close-modal">Fechar</button>
@@ -1448,7 +1449,7 @@
             // ==================================================
             // CONFIGURAÇÃO DO GOOGLE APPS SCRIPT
             // ==================================================
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylMulCczr98m6OxHryS6bl7LDwNusRujN8If1Ssau_8NETvqrapOkaHQeprklZV2MLDA/exec';
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQLb91lHc6vdrAISrCkpX6WEmivNDbkzUcA8yjuKLRYbN97W9yxH0OVb9ERQxlLGIvMA/exec';
 
             // ==================================================
             // EMAILS DIFERENCIADOS POR TIPO
@@ -1463,26 +1464,39 @@
                 'bruno.beltrame@venturamarine.com.br'
             ];
 
-        // ==================================================
-// GERADOR DE NÚMEROS DE PROTOCOLO ÚNICOS - VERSÃO SIMPLES
-// ==================================================
-function gerarNumeroProtocoloUnico(tipo) {
-    // ✅ GERADOR SIMPLES E ÚNICO
-    const data = new Date();
-    const timestamp = Date.now().toString().substr(-9);
-    const aleatorio = Math.floor(Math.random() * 999).toString().padStart(3, '0');
-    
-    let prefixo = 'PRO';
-    if (tipo === 'garantia') prefixo = 'GAR';
-    if (tipo === 'encomenda') prefixo = 'ENC';
-    if (tipo === 'venda') prefixo = 'VEN';
-    
-    // DATA + TIMESTAMP + ALEATÓRIO = ÚNICO
-    const protocolo = `${prefixo}${data.getFullYear()}${(data.getMonth()+1).toString().padStart(2,'0')}${timestamp}${aleatorio}`;
-    
-    console.log('✅ Protocolo gerado:', protocolo);
-    return protocolo;
-}
+            // ==================================================
+            // GERADOR DE NÚMEROS DE PROTOCOLO ÚNICOS
+            // ==================================================
+            function gerarNumeroProtocoloUnico(tipo) {
+                const data = new Date();
+                const ano = data.getFullYear().toString().substr(-2);
+                const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+                const dia = data.getDate().toString().padStart(2, '0');
+                
+                // Gerar timestamp único
+                const timestamp = Date.now().toString().substr(-6);
+                
+                // Gerar parte aleatória para garantir unicidade
+                const aleatorio = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                
+                let prefixo = '';
+                switch(tipo) {
+                    case 'venda':
+                        prefixo = 'VEN';
+                        break;
+                    case 'garantia':
+                        prefixo = 'GAR';
+                        break;
+                    case 'encomenda':
+                        prefixo = 'ENC';
+                        break;
+                    default:
+                        prefixo = 'PRO';
+                }
+                
+                // Combinar para criar protocolo único
+                return `${prefixo}${ano}${mes}${dia}${timestamp}${aleatorio}`;
+            }
 
             // ==================================================
             // DADOS DAS PEÇAS
@@ -1534,6 +1548,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                 const encomendaRevenda = document.getElementById('encomendaRevenda');
                 const encomendaEmail = document.getElementById('encomendaEmail');
                 const encomendaCasoRelacionado = document.getElementById('encomendaCasoRelacionado');
+                const dealerEmail = document.getElementById('dealerEmail');
                 
                 // Elementos para ENCOMENDA
                 const encomendaSearchInput = document.getElementById('encomendaSearchInput');
@@ -1564,6 +1579,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                 const warrantyLoading = document.getElementById('warrantyLoading');
                 const invoiceAttachments = document.getElementById('invoiceAttachments');
                 const invoicesPreview = document.getElementById('invoicesPreview');
+                const warrantyDealerEmail = document.getElementById('warrantyDealerEmail');
                 warrantyQuantityInput.value = '';
 
                 // Elementos para CLIENTE FINAL
@@ -1577,6 +1593,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                 const protocoloInfo = document.getElementById('protocoloInfo');
                 const protocoloNumero = document.getElementById('protocoloNumero');
                 const protocoloTipo = document.getElementById('protocoloTipo');
+                const emailClienteEnviado = document.getElementById('emailClienteEnviado');
                 
                 // Elementos dos campos de endereço alternativo
                 const saleAddressOptions = document.querySelectorAll('input[name="saleAddressOption"]');
@@ -2009,7 +2026,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                 });
 
                 // ==================================================
-                // FUNÇÕES PRINCIPAIS DO SISTEMA
+                // FUNÇÕES PRINCIPAIS DO SISTEMA - CORRIGIDAS
                 // ==================================================
 
                 // Função para converter arquivo para base64
@@ -2102,7 +2119,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                     });
                 }
 
-                // Enviar para Google Apps Script
+                // ✅ CORREÇÃO: Enviar para Google Apps Script com email do cliente
                 async function enviarParaGoogle(dadosDocumento, anexos = []) {
                     return new Promise(async (resolve) => {
                         try {
@@ -2122,18 +2139,27 @@ function gerarNumeroProtocoloUnico(tipo) {
                             
                             dadosDocumento.numeroProtocolo = numeroProtocolo;
                             
+                            // ✅ CORREÇÃO: COLETAR EMAIL DO CLIENTE CORRETAMENTE
+                            let emailCliente = '';
+                            if (dadosDocumento.tipo === 'encomenda') {
+                                emailCliente = document.getElementById('encomendaEmail')?.value || dadosDocumento.email || '';
+                            } else if (dadosDocumento.tipo === 'venda') {
+                                emailCliente = document.getElementById('dealerEmail')?.value || dadosDocumento.email || '';
+                            } else if (dadosDocumento.tipo === 'garantia') {
+                                emailCliente = document.getElementById('warrantyDealerEmail')?.value || dadosDocumento.email || '';
+                            }
+                            
                             // COLETAR CEPs CORRETAMENTE
                             const ceps = coletarCEPs(dadosDocumento.tipo);
-                            dadosDocumento.cep = ceps.cep;
-                            dadosDocumento.cepEntrega = ceps.cepEntrega;
 
-                            // PREPARAR DADOS PRINCIPAIS
+                            // ✅ CORREÇÃO: PREPARAR DADOS COM EMAIL DO CLIENTE SEPARADO
                             const dadosParaEnvio = {
-                                numeroProtocolo: numeroProtocolo,
                                 tipo: dadosDocumento.tipo,
+                                numeroProtocolo: numeroProtocolo,
                                 revendedor: dadosDocumento.revendedor,
                                 cnpj: dadosDocumento.cnpj,
-                                email: dadosDocumento.email,
+                                email: dadosDocumento.email || emailCliente, // Email para o sistema
+                                emailCliente: emailCliente, // ✅ Email específico para o cliente
                                 telefone: dadosDocumento.telefone,
                                 endereco: dadosDocumento.endereco,
                                 enderecoEntrega: dadosDocumento.enderecoEntrega,
@@ -2141,9 +2167,8 @@ function gerarNumeroProtocoloUnico(tipo) {
                                 observacoesFrete: dadosDocumento.observacoesFrete,
                                 solicitante: dadosDocumento.solicitante,
                                 tipoSolicitacao: dadosDocumento.tipoSolicitacao,
-                                cep: dadosDocumento.cep,
-                                cepEntrega: dadosDocumento.cepEntrega,
-                                emailCliente: dadosDocumento.email
+                                cep: ceps.cep,
+                                cepEntrega: ceps.cepEntrega
                             };
 
                             // CAMPOS DE GARANTIA
@@ -2198,6 +2223,14 @@ function gerarNumeroProtocoloUnico(tipo) {
                                 dadosParaEnvio.anexos = anexosBase64;
                             }
 
+                            // ✅ LOG PARA DEBUG
+                            console.log('📤 Dados sendo enviados:', {
+                                tipo: dadosParaEnvio.tipo,
+                                numeroProtocolo: dadosParaEnvio.numeroProtocolo,
+                                emailCliente: dadosParaEnvio.emailCliente,
+                                emailSistema: dadosParaEnvio.email
+                            });
+
                             // ENVIAR VIA FETCH
                             const controller = new AbortController();
                             const timeoutId = setTimeout(() => controller.abort(), 90000);
@@ -2216,11 +2249,18 @@ function gerarNumeroProtocoloUnico(tipo) {
 
                                 if (response.ok) {
                                     const result = await response.json();
-                                    resolve(result);
+                                    resolve({
+                                        success: true,
+                                        message: result.message || 'Solicitação enviada!',
+                                        numeroProtocolo: dadosParaEnvio.numeroProtocolo,
+                                        emailCliente: dadosParaEnvio.emailCliente
+                                    });
                                 } else {
                                     resolve({
                                         success: true,
-                                        message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.'
+                                        message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.',
+                                        numeroProtocolo: dadosParaEnvio.numeroProtocolo,
+                                        emailCliente: dadosParaEnvio.emailCliente
                                     });
                                 }
 
@@ -2228,7 +2268,9 @@ function gerarNumeroProtocoloUnico(tipo) {
                                 clearTimeout(timeoutId);
                                 resolve({
                                     success: true,
-                                    message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.'
+                                    message: 'Solicitação enviada! Em caso de problema, verifique sua conexão.',
+                                    numeroProtocolo: dadosParaEnvio.numeroProtocolo,
+                                    emailCliente: dadosParaEnvio.emailCliente
                                 });
                             }
 
@@ -2242,7 +2284,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                     });
                 }
 
-                // Gerar documento de Venda
+                // ✅ CORREÇÃO: Gerar documento de Venda
                 async function generateSaleWord() {
                     if (!validateForm('saleSection')) return;
                     
@@ -2277,15 +2319,18 @@ function gerarNumeroProtocoloUnico(tipo) {
                     try {
                         let dadosVenda = {};
                         let tipo = 'venda';
+                        let emailCliente = '';
                         
                         if (tipoSolicitacao === 'encomenda') {
                             tipo = 'encomenda';
+                            emailCliente = encomendaEmail.value; // ✅ Email do cliente da encomenda
+                            
                             dadosVenda = {
                                 tipo: tipo,
                                 revendedor: encomendaRevenda.value,
-                                email: encomendaEmail.value,
+                                email: emailCliente, // Email para o sistema
                                 encomendaRevenda: encomendaRevenda.value,
-                                encomendaEmail: encomendaEmail.value,
+                                encomendaEmail: emailCliente,
                                 encomendaCasoRelacionado: encomendaCasoRelacionado.value,
                                 endereco: 'ENCOMENDA - RETIRADA NA FÁBRICA',
                                 enderecoEntrega: 'ENCOMENDA - RETIRADA NA FÁBRICA',
@@ -2298,6 +2343,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                         } else {
                             let enderecoFaturamento = '';
                             let enderecoEntrega = '';
+                            emailCliente = dealerEmail.value; // ✅ Email do cliente da venda
 
                             if (tipoSolicitacao === 'faturamento') {
                                 enderecoFaturamento = `${document.getElementById('dealerStreet').value}, ${document.getElementById('dealerNumber').value}, ${document.getElementById('dealerNeighborhood').value}, ${document.getElementById('dealerCity').value}/${document.getElementById('dealerState').value}`;
@@ -2324,7 +2370,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                                 cnpj: document.getElementById('dealerCnpj').value,
                                 endereco: enderecoFaturamento,
                                 telefone: document.getElementById('dealerPhone').value,
-                                email: document.getElementById('dealerEmail').value,
+                                email: emailCliente, // ✅ Email para o sistema
                                 pecas: selectedProducts,
                                 observacoesFrete: tipoSolicitacao === 'faturamento' ? document.getElementById('saleFreightObservations').value : '',
                                 enderecoEntrega: enderecoEntrega,
@@ -2343,10 +2389,11 @@ function gerarNumeroProtocoloUnico(tipo) {
                         const resultado = await enviarParaGoogle(dadosVenda);
 
                         if (resultado.success) {
-                            // Mostrar informações do protocolo no modal
+                            // ✅ CORREÇÃO: Mostrar informações completas no modal
                             protocoloInfo.style.display = 'block';
-                            protocoloNumero.textContent = dadosVenda.numeroProtocolo || 'N/A';
+                            protocoloNumero.textContent = resultado.numeroProtocolo || dadosVenda.numeroProtocolo || 'N/A';
                             protocoloTipo.textContent = dadosVenda.tipoSolicitacao || dadosVenda.tipo.toUpperCase();
+                            emailClienteEnviado.textContent = resultado.emailCliente || emailCliente || 'Não informado';
                             
                             if (tipoSolicitacao === 'consulta') {
                                 modalMessage.textContent = 'Sua solicitação de CONSULTA DE VALORES foi enviada.\n\nObs: Para faturamento, gere um novo pedido.';
@@ -2374,7 +2421,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                     }
                 }
 
-                // Gerar documento de Garantia
+                // ✅ CORREÇÃO: Gerar documento de Garantia
                 async function generateWarrantyWord() {
                     if (!validateForm('warrantySection')) return;
                     if (warrantySelectedProducts.length === 0) {
@@ -2417,6 +2464,9 @@ function gerarNumeroProtocoloUnico(tipo) {
 
                         // COLETAR CEPs CORRETAMENTE
                         const ceps = coletarCEPs('garantia');
+                        
+                        // ✅ CORREÇÃO: Obter email do cliente da garantia
+                        const emailCliente = warrantyDealerEmail.value;
 
                         const dadosGarantia = {
                             tipo: 'garantia',
@@ -2424,7 +2474,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                             cnpj: document.getElementById('warrantyDealerCnpj').value,
                             endereco: enderecoFaturamento,
                             telefone: document.getElementById('warrantyDealerPhone').value,
-                            email: document.getElementById('warrantyDealerEmail').value,
+                            email: emailCliente, // Email para o sistema
                             enderecoEntrega: enderecoEntrega,
                             cep: ceps.cep,
                             cepEntrega: ceps.cepEntrega,
@@ -2453,10 +2503,11 @@ function gerarNumeroProtocoloUnico(tipo) {
                         const resultado = await enviarParaGoogle(dadosGarantia, todosAnexos);
 
                         if (resultado.success) {
-                            // Mostrar informações do protocolo no modal
+                            // ✅ CORREÇÃO: Mostrar informações completas no modal
                             protocoloInfo.style.display = 'block';
-                            protocoloNumero.textContent = dadosGarantia.numeroProtocolo || 'N/A';
+                            protocoloNumero.textContent = resultado.numeroProtocolo || dadosGarantia.numeroProtocolo || 'N/A';
                             protocoloTipo.textContent = 'GARANTIA';
+                            emailClienteEnviado.textContent = resultado.emailCliente || emailCliente || 'Não informado';
                             modalMessage.textContent = 'Sua solicitação de garantia foi enviada com sucesso!';
                             
                             showModal();
@@ -3005,7 +3056,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                 });
             });
 
-            // GERAR CONTEÚDO HTML COMPLETO (COM VALORES E TOTAL)
+            // ✅ CORREÇÃO: GERAR CONTEÚDO HTML COMPLETO (COM NÚMERO DE PROTOCOLO EM DESTAQUE)
             function gerarConteudoHTMLCompleto(dados) {
                 const dataAtual = new Date().toLocaleString('pt-BR');
                 
@@ -3024,7 +3075,7 @@ function gerarNumeroProtocoloUnico(tipo) {
                     <html>
                     <head>
                     <meta charset="utf-8">
-                    <title>Ventura Marine - ${dados.tipo.toUpperCase()}</title>
+                    <title>Ventura Marine - ${dados.tipo.toUpperCase()} - ${dados.numeroProtocolo || ''}</title>
                     <style>
                     body { font-family: Arial, sans-serif; margin: 1.5cm 1.5cm 1.5cm 0.4cm; line-height: 1.4; font-size: 12px; }
                     h1 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 8px; font-size: 20px; }
@@ -3037,14 +3088,33 @@ function gerarNumeroProtocoloUnico(tipo) {
                     .section { margin-bottom: 20px; }
                     .total-row { font-weight: bold; background-color: #f8f9fa; }
                     .text-right { text-align: right; }
+                    .protocolo-header {
+                        background-color: #f0f7ff;
+                        border: 2px solid #007bff;
+                        padding: 15px;
+                        border-radius: 8px;
+                        margin-bottom: 25px;
+                        text-align: center;
+                    }
+                    .protocolo-numero-grande {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #007bff;
+                        margin: 10px 0;
+                    }
                     </style>
                     </head>
                     <body>
-                    <div style="text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; margin-bottom: 25px;">
-                    <h1 style="color: #2c3e50; margin: 0; font-size: 22px;">VENTURA MARINE</h1>
-                    <h2 style="color: #7f8c8d; margin: 8px 0; font-size: 16px;">${dados.tipo.toUpperCase()}</h2>
-                    <p style="color: #95a5a6; margin: 0; font-size: 12px;">Gerado em: ${dataAtual}</p>
-                    ${dados.numeroProtocolo ? `<p style="color: #2c3e50; margin: 5px 0; font-weight: bold; font-size: 14px;">Número do Protocolo: ${dados.numeroProtocolo}</p>` : ''}
+                    
+                    <!-- ✅ CABEÇALHO COM PROTOCOLO EM DESTAQUE -->
+                    <div class="protocolo-header">
+                        <h1 style="color: #2c3e50; margin: 0; font-size: 22px;">VENTURA MARINE</h1>
+                        <h2 style="color: #7f8c8d; margin: 8px 0; font-size: 18px;">${dados.tipo.toUpperCase()}</h2>
+                        ${dados.numeroProtocolo ? 
+                            `<div class="protocolo-numero-grande">PROTOCOLO: ${dados.numeroProtocolo}</div>` : 
+                            ''
+                        }
+                        <p style="color: #95a5a6; margin: 0; font-size: 12px;">Gerado em: ${dataAtual}</p>
                     </div>
 
                     <div class="header">
@@ -3155,12 +3225,13 @@ function gerarNumeroProtocoloUnico(tipo) {
                 </div>`;
                             }
 
-                            // RODAPÉ
+                            // ✅ RODAPÉ COM NÚMERO DE PROTOCOLO
                             conteudo += `
                 <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #bdc3c7; text-align: center; color: #7f8c8d; font-size: 10px;">
                 <p>Documento gerado automaticamente pelo Sistema Ventura Marine</p>
                 <p>Data/Hora: ${dataAtual}</p>
-                <p>Número do Protocolo: ${dados.numeroProtocolo || 'N/A'}</p>
+                <p style="font-weight: bold; color: #007bff; font-size: 11px;">Número do Protocolo: ${dados.numeroProtocolo || 'N/A'}</p>
+                <p style="font-size: 8px;">Para acompanhamento: https://ventura-pos-vendas.github.io/teste-status-clientes/</p>
                 </div>
                 </body>
                 </html>`;
@@ -3246,4 +3317,4 @@ function gerarNumeroProtocoloUnico(tipo) {
             }
         </script>
     </body>
-    </html>
+</html>
