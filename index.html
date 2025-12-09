@@ -27,7 +27,8 @@
             padding: 15px;
             color: #333;
             line-height: 1.6;
-            background-color: #424242;
+            /*background-color: #424242;*/
+            background: linear-gradient(135deg, #032403 0%, #043a0b 100%);
         }
         .logo-container {
             text-align: center;
@@ -134,10 +135,17 @@
             margin-right: 10px;
             color: var(--secondary);
         }
-        .form-grid {
+       .form-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
         }
         .form-group {
             margin-bottom: 15px;
@@ -471,9 +479,6 @@
             .section h2 {
                 font-size: 20px;
             }
-            .form-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
             .container {
                 flex-direction: row;
             }
@@ -514,11 +519,6 @@
             }
         }
         
-        @media (min-width: 992px) {
-            .form-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
-        }
         
         @media (max-width: 480px) {
             .service-type {
@@ -809,6 +809,11 @@
             padding: 12px !important;
         }
 
+        #vehicleColor {
+            height: 46px !important;
+            padding: 12px !important;
+        }
+
         .anexo-error {
             border: 2px solid var(--danger) !important;
             background-color: #fff8f8 !important;
@@ -853,10 +858,132 @@
             color: #007bff;
         }
 
+
+
+
+/* ============================================----------------------------------------------
+   BOLINHAS DE NEVE ANIMADAS - 30 UNIDADES
+   ============================================------------------------------------------- */
+body {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.snowflakes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.snowflake {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: fall linear infinite;
+    filter: blur(0.5px);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+/* Animação com movimento lateral (vento) */
+@keyframes fall {
+    0% {
+        transform: translateY(-10px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) translateX(var(--wind)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Gerar 30 bolinhas com propriedades diferentes */
+.snowflake:nth-child(1) { width: 4px; height: 4px; left: 2%; --wind: 20px; animation-duration: 18s; animation-delay: 0s; }
+.snowflake:nth-child(2) { width: 6px; height: 6px; left: 5%; --wind: -15px; animation-duration: 15s; animation-delay: 1s; }
+.snowflake:nth-child(3) { width: 3px; height: 3px; left: 8%; --wind: 30px; animation-duration: 22s; animation-delay: 2s; }
+.snowflake:nth-child(4) { width: 7px; height: 7px; left: 12%; --wind: -25px; animation-duration: 12s; animation-delay: 0.5s; }
+.snowflake:nth-child(5) { width: 5px; height: 5px; left: 15%; --wind: 15px; animation-duration: 19s; animation-delay: 3s; }
+.snowflake:nth-child(6) { width: 4px; height: 4px; left: 18%; --wind: -20px; animation-duration: 16s; animation-delay: 1.5s; }
+.snowflake:nth-child(7) { width: 6px; height: 6px; left: 22%; --wind: 25px; animation-duration: 14s; animation-delay: 2.5s; }
+.snowflake:nth-child(8) { width: 3px; height: 3px; left: 25%; --wind: -10px; animation-duration: 21s; animation-delay: 0.8s; }
+.snowflake:nth-child(9) { width: 8px; height: 8px; left: 28%; --wind: 18px; animation-duration: 11s; animation-delay: 3.5s; }
+.snowflake:nth-child(10) { width: 5px; height: 5px; left: 32%; --wind: -30px; animation-duration: 17s; animation-delay: 1.2s; }
+.snowflake:nth-child(11) { width: 4px; height: 4px; left: 35%; --wind: 12px; animation-duration: 20s; animation-delay: 2.8s; }
+.snowflake:nth-child(12) { width: 7px; height: 7px; left: 38%; --wind: -18px; animation-duration: 13s; animation-delay: 0.3s; }
+.snowflake:nth-child(13) { width: 6px; height: 6px; left: 42%; --wind: 22px; animation-duration: 16s; animation-delay: 3.2s; }
+.snowflake:nth-child(14) { width: 3px; height: 3px; left: 45%; --wind: -12px; animation-duration: 23s; animation-delay: 1.8s; }
+.snowflake:nth-child(15) { width: 5px; height: 5px; left: 48%; --wind: 28px; animation-duration: 14s; animation-delay: 0.7s; }
+.snowflake:nth-child(16) { width: 8px; height: 8px; left: 52%; --wind: -22px; animation-duration: 10s; animation-delay: 2.3s; }
+.snowflake:nth-child(17) { width: 4px; height: 4px; left: 55%; --wind: 16px; animation-duration: 19s; animation-delay: 3.8s; }
+.snowflake:nth-child(18) { width: 6px; height: 6px; left: 58%; --wind: -28px; animation-duration: 15s; animation-delay: 1.1s; }
+.snowflake:nth-child(19) { width: 3px; height: 3px; left: 62%; --wind: 14px; animation-duration: 24s; animation-delay: 0.4s; }
+.snowflake:nth-child(20) { width: 7px; height: 7px; left: 65%; --wind: -16px; animation-duration: 12s; animation-delay: 2.7s; }
+.snowflake:nth-child(21) { width: 5px; height: 5px; left: 68%; --wind: 24px; animation-duration: 18s; animation-delay: 1.9s; }
+.snowflake:nth-child(22) { width: 4px; height: 4px; left: 72%; --wind: -14px; animation-duration: 21s; animation-delay: 3.1s; }
+.snowflake:nth-child(23) { width: 6px; height: 6px; left: 75%; --wind: 20px; animation-duration: 13s; animation-delay: 0.9s; }
+.snowflake:nth-child(24) { width: 3px; height: 3px; left: 78%; --wind: -24px; animation-duration: 22s; animation-delay: 2.1s; }
+.snowflake:nth-child(25) { width: 8px; height: 8px; left: 82%; --wind: 10px; animation-duration: 11s; animation-delay: 3.6s; }
+.snowflake:nth-child(26) { width: 5px; height: 5px; left: 85%; --wind: -20px; animation-duration: 17s; animation-delay: 1.4s; }
+.snowflake:nth-child(27) { width: 4px; height: 4px; left: 88%; --wind: 26px; animation-duration: 20s; animation-delay: 0.6s; }
+.snowflake:nth-child(28) { width: 7px; height: 7px; left: 92%; --wind: -26px; animation-duration: 14s; animation-delay: 2.9s; }
+.snowflake:nth-child(29) { width: 6px; height: 6px; left: 95%; --wind: 8px; animation-duration: 16s; animation-delay: 3.4s; }
+.snowflake:nth-child(30) { width: 4px; height: 4px; left: 98%; --wind: -8px; animation-duration: 19s; animation-delay: 1.7s; }
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+
+
+<body>
+    <!-- Bolinhas de neve - 30 unidades--------------------------------------------------------- -->
+    <div class="snowflakes">
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+    </div>
+    
+    <!-- Resto do seu código----------------------------------------------------------------------------------------------------------- -->
+
+
+
     <div class="logo-container">
         <!-- Logo será carregada via JavaScript -->
     </div>
@@ -889,6 +1016,11 @@
         <div id="encomendaSection" class="conditional-field hidden">
             <h2><i class="fas fa-box"></i> Dados da Encomenda</h2>
             <div class="form-grid">
+                <div class="form-group">
+                    <label for="codigoe" class="required">Chave de Acesso</label>
+                    <input type="text" id="codigoe" placeholder="Digite a chave de acesso da sua revenda/oficina" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
                 <div class="form-group">
                     <label for="encomendaRevenda" class="required">Nome da Revenda</label>
                     <input type="text" id="encomendaRevenda" placeholder="Digite o nome da revenda">
@@ -952,7 +1084,12 @@
 
         <!-- Campos normais de venda -->
         <div id="saleNormalFields" class="conditional-field">
-            <div class="form-grid">
+                <div class="form-grid">
+                    <div class="form-group">
+                    <label for="codigov" class="required">Chave de Acesso</label>
+                    <input type="text" id="codigov" placeholder="Digite a chave de acesso da sua revenda/oficina" required>
+                    <div class="error-message">Este campo é obrigatório</div>
+                </div>
                 <div class="form-group">
                     <label for="dealerName" class="required">Nome do Revendedor/Oficina Autorizada</label>
                     <input type="text" id="dealerName" placeholder="Digite o nome do revendedor" required>
@@ -1075,6 +1212,26 @@
                 </div>
             </div>
 
+            <!-- ADICIONE ESTA SEÇÃO ANTES da seção de Observações do Frete -->
+            <div id="saleTransportadoraSection" class="conditional-field section-spacing">
+                <h2><i class="fas fa-shipping-fast"></i> Transportadora</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="required">Selecione a Transportadora:</label>
+                        <div class="address-option" style="margin-top: 10px;">
+                            <label style="display: block; margin-bottom: 10px;">
+                                <input type="radio" name="saleTransportadora" value="sedex">
+                                Via Sedex
+                            </label>
+                            <label style="display: block;">
+                                <input type="radio" name="saleTransportadora" value="rodonaves" checked>
+                                Via Rodonaves
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="saleObservationsSection" class="conditional-field">
                 <h2 class="section-spacing"><i class="fas fa-sticky-note"></i> Observações do Frete</h2>
                 <div class="form-grid">
@@ -1187,6 +1344,11 @@
         <h2><i class="fas fa-store"></i> Dados do Revendedor/Oficina Autorizada</h2>
         <div class="form-grid">
             <div class="form-group">
+                <label for="codigog" class="required">Chave de Acesso</label>
+                <input type="text" id="codigog" placeholder="Digite a chave de acesso da sua revenda/oficina" required>
+                <div class="error-message">Este campo é obrigatório</div>
+            </div>
+            <div class="form-group">
                 <label for="warrantyDealerName" class="required">Nome do Revendedor/Oficina Autorizada</label>
                 <input type="text" id="warrantyDealerName" placeholder="Digite o nome do revendedor" required>
                 <div class="error-message">Este campo é obrigatório</div>
@@ -1253,6 +1415,10 @@
                         <input type="radio" name="warrantyAddressOption" value="other">
                         Enviar para outro endereço
                     </label>
+                    <label>
+                        <input type="radio" name="warrantyAddressOption" value="factory">
+                        Retirada na Fábrica
+                    </label>
                 </div>
             </div>
             
@@ -1312,7 +1478,10 @@
                 </div>
                 <div class="form-group">
                     <label for="vehicleColor" class="required">Cor</label>
-                    <input type="text" id="vehicleColor" placeholder="Digite a cor do veículo" required>
+                    <select id="vehicleColor" class="normal-select" required>
+                        <option value="">Selecione a cor...</option>
+                        <option value="AZUL">AZUL</option>
+                    </select>
                     <div class="error-message">Este campo é obrigatório</div>
                 </div>
                 
@@ -1448,7 +1617,7 @@
             // ==================================================
             // CONFIGURAÇÃO DO GOOGLE APPS SCRIPT
             // ==================================================
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQLb91lHc6vdrAISrCkpX6WEmivNDbkzUcA8yjuKLRYbN97W9yxH0OVb9ERQxlLGIvMA/exec';
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7lq4uzyfRCztYti4fZX4T-dNQvjI0SxJAhXd9Yjh5-c9nmv4TL4CCKglhqUnylvq3/exec';
 
             // ==================================================
             // EMAILS DIFERENCIADOS POR TIPO
@@ -1497,6 +1666,44 @@
                 return `${prefixo}${ano}${mes}${dia}${timestamp}${aleatorio}`;
             }
 
+            // chave de acesso revendas
+            const revendedores = {
+                "ABC123": "Ventura Motos",
+                "XPT001": "Oficina Rápida SP",
+                "ZX900": "Bike Tech Curitiba",
+                "TESTE": "Revenda de Teste"
+            };
+
+            document.getElementById('codigov').addEventListener('input', function() {
+                const codigov = this.value.trim().toUpperCase();
+
+                if (revendedores[codigov]) {
+                    document.getElementById('dealerName').value = revendedores[codigov];
+                } else {
+                    document.getElementById('dealerName').value = "";
+                }
+            });
+
+            document.getElementById('codigog').addEventListener('input', function() {
+                const codigog = this.value.trim().toUpperCase();
+
+                if (revendedores[codigog]) {
+                    document.getElementById('warrantyDealerName').value = revendedores[codigog];
+                } else {
+                    document.getElementById('warrantyDealerName').value = "";
+                }
+            });
+
+            document.getElementById('codigoe').addEventListener('input', function() {
+                const codigoe = this.value.trim().toUpperCase();
+
+                if (revendedores[codigoe]) {
+                    document.getElementById('encomendaRevenda').value = revendedores[codigoe];
+                } else {
+                    document.getElementById('encomendaRevenda').value = "";
+                }
+            });
+
             // ==================================================
             // DADOS DAS PEÇAS
             // ==================================================
@@ -1527,8 +1734,9 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // Carrega a logo na página
                 const logoContainer = document.querySelector('.logo-container');
-                logoContainer.innerHTML = '<h1 style="color: white;">Ventura Marine - Sistema de Protocolos</h1>';
+                logoContainer.innerHTML = '<img src="https://raw.githubusercontent.com/Ventura-Pos-Vendas/teste-status-clientes/main/assets/logonatal.png" alt="Ventura Marine" style="max-width: 400px; height: auto;">';
 
+                const saleTransportadoraSection = document.getElementById('saleTransportadoraSection');
                 // Elementos da seção de VENDA
                 const saleBtn = document.getElementById('saleBtn');
                 const saleSection = document.getElementById('saleSection');
@@ -2002,19 +2210,29 @@
                     }
                 }
 
-                // Funções para gerenciar endereços alternativos
-                function toggleAlternateAddress(option, addressContainer) {
+                function toggleAlternateAddress(option, addressContainer, transportadoraSection = null) {
                     if (option.value === 'other') {
                         addressContainer.classList.add('active');
+                    } else if (option.value === 'factory') {
+                        addressContainer.classList.remove('active');
+                        // ✅ APENAS ESCONDER TRANSPORTADORA SE FOR "RETIRADA NA FÁBRICA"
+                        if (transportadoraSection && option.name === 'saleAddressOption') {
+                            transportadoraSection.classList.add('hidden');
+                        }
                     } else {
                         addressContainer.classList.remove('active');
+                        // ✅ MOSTRAR TRANSPORTADORA SE FOR "ENDEREÇO DE FATURAMENTO"
+                        if (transportadoraSection && option.name === 'saleAddressOption') {
+                            transportadoraSection.classList.remove('hidden');
+                        }
                     }
                 }
 
                 // Adicionar event listeners para os campos de endereço alternativo
+
                 saleAddressOptions.forEach(option => {
                     option.addEventListener('change', function() {
-                        toggleAlternateAddress(this, saleAlternateAddress);
+                        toggleAlternateAddress(this, saleAlternateAddress, saleTransportadoraSection);
                     });
                 });
 
@@ -2165,6 +2383,7 @@
                                 pecas: dadosDocumento.pecas,
                                 observacoesFrete: dadosDocumento.observacoesFrete,
                                 solicitante: dadosDocumento.solicitante,
+                                transportadora: dadosDocumento.transportadora,
                                 tipoSolicitacao: dadosDocumento.tipoSolicitacao,
                                 cep: ceps.cep,
                                 cepEntrega: ceps.cepEntrega
@@ -2372,6 +2591,8 @@
                                 email: emailCliente, // ✅ Email para o sistema
                                 pecas: selectedProducts,
                                 observacoesFrete: tipoSolicitacao === 'faturamento' ? document.getElementById('saleFreightObservations').value : '',
+                                transportadora: tipoSolicitacao === 'faturamento' && document.querySelector('input[name="saleAddressOption"]:checked').value !== 'factory' ? 
+    (document.querySelector('input[name="saleTransportadora"]:checked')?.value || 'rodonaves') : null,
                                 enderecoEntrega: enderecoEntrega,
                                 solicitante: document.getElementById('solicitanteName').value,
                                 tipoSolicitacao: tipoSolicitacao === 'consulta' ? 'CONSULTA DE VALORES' : 'SOLICITAÇÃO DE FATURAMENTO',
@@ -2474,9 +2695,9 @@
                             endereco: enderecoFaturamento,
                             telefone: document.getElementById('warrantyDealerPhone').value,
                             email: emailCliente, // Email para o sistema
-                            enderecoEntrega: enderecoEntrega,
+                            enderecoEntrega: addressOption === 'factory' ? 'RETIRADA NA FÁBRICA' : enderecoEntrega,
                             cep: ceps.cep,
-                            cepEntrega: ceps.cepEntrega,
+                            cepEntrega: addressOption === 'factory' ? 'RETIRADA NA FÁBRICA' : ceps.cepEntrega,
                             categoria: document.getElementById('warrantyCategory').options[document.getElementById('warrantyCategory').selectedIndex].text,
                             clienteFinal: warrantyCategory.value === 'cliente-final' ? document.getElementById('clientFinalName').value : null,
                             dadosRevisao: dadosRevisao,
@@ -3184,6 +3405,15 @@
                 <p>Este é um pedido de encomenda. As peças serão solicitadas separadamente.</p>
                 <p><strong>Protocolo Relacionado:</strong> ${dados.encomendaCasoRelacionado || 'Não informado'}</p>
                 </div>`;
+                            }
+
+                            if (dados.transportadora) {
+                                    const transportadoraNome = dados.transportadora === 'sedex' ? 'Sedex' : 'Rodonaves';
+                                    conteudo += `
+                                <div class="section">
+                                <h3>TRANSPORTADORA</h3>
+                                <p><strong>Transportadora selecionada:</strong> ${transportadoraNome}</p>
+                                </div>`;
                             }
 
                             // SEÇÃO DE OBSERVAÇÕES
