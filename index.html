@@ -858,6 +858,35 @@
             color: #007bff;
         }
 
+        input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        input[readonly]:focus {
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
+        .cnpj-valido {
+            border-color: var(--success) !important;
+            background-color: #f0fff4 !important;
+        }
+
+        .cnpj-invalido {
+            border-color: var(--danger) !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .cnpj-error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            font-weight: bold;
+        }
+
 
 
 
@@ -1023,7 +1052,7 @@ body {
                 </div>
                 <div class="form-group">
                     <label for="encomendaRevenda" class="required">Nome da Revenda</label>
-                    <input type="text" id="encomendaRevenda" placeholder="Digite o nome da revenda">
+                    <input type="text" id="encomendaRevenda" placeholder="Digite o nome da revenda" required readonly>
                     <div class="error-message">Este campo é obrigatório</div>
                 </div>
                 <div class="form-group">
@@ -1092,7 +1121,7 @@ body {
                 </div>
                 <div class="form-group">
                     <label for="dealerName" class="required">Nome do Revendedor/Oficina Autorizada</label>
-                    <input type="text" id="dealerName" placeholder="Digite o nome do revendedor" required>
+                    <input type="text" id="dealerName" placeholder="Digite o nome do revendedor" required readonly>
                     <div class="error-message">Este campo é obrigatório</div>
                 </div>
                 <div class="form-group">
@@ -1350,7 +1379,7 @@ body {
             </div>
             <div class="form-group">
                 <label for="warrantyDealerName" class="required">Nome do Revendedor/Oficina AutorizadaF</label>
-                <input type="text" id="warrantyDealerName" placeholder="Digite o nome do revendedor" required>
+                <input type="text" id="warrantyDealerName" placeholder="Digite o nome do revendedor" required readonly>
                 <div class="error-message">Este campo é obrigatório</div>
             </div>
             <div class="form-group">
@@ -1473,8 +1502,15 @@ body {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="vehicleSerial" class="required">Número de Série (CHASSI)</label>
-                    <input type="text" id="vehicleSerial" placeholder="Digite o número de série" required>
+                    <input type="text" 
+                        id="vehicleSerial" 
+                        placeholder="Digite o número de série" 
+                        required 
+                        maxlength="17"
+                        pattern="[A-Z0-9]{17}"
+                        oninput="this.value = this.value.toUpperCase()">
                     <div class="error-message">Este campo é obrigatório</div>
+                    <div class="chassi-error-message" style="display: none;"></div>
                 </div>
                 <div class="form-group">
                     <label for="vehicleColor" class="required">Cor</label>
@@ -1975,6 +2011,44 @@ body {
                     } else {
                         input.value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
                     }
+
+                     // Adiciona validação visual
+                    if (value.length === 14) {
+                        input.classList.remove('cnpj-invalido');
+                        input.classList.add('cnpj-valido');
+                    } else {
+                        input.classList.remove('cnpj-valido');
+                        input.classList.add('cnpj-invalido');
+                    }
+                }
+
+                forcarMaiusculasChassi();
+
+                // Função para validar CNPJ (14 dígitos)
+                function validarCNPJ(cnpj) {
+                    // Remove tudo que não é dígito
+                    cnpj = cnpj.replace(/\D/g, '');
+                    
+                    // Verifica se tem 14 dígitos
+                    if (cnpj.length !== 14) {
+                        return false;
+                    }
+                    
+                    // Verifica se não é uma sequência de dígitos repetidos
+                    if (/^(\d)\1+$/.test(cnpj)) {
+                        return false;
+                    }
+                    
+                    return true;
+                }
+
+                // Função para validar formato do CNPJ (com pontuação)
+                function validarFormatoCNPJ(cnpj) {
+                    // Verifica se tem o formato completo: 00.000.000/0000-00
+                    const formatoValido = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(cnpj);
+                    const apenasDigitos = cnpj.replace(/\D/g, '').length === 14;
+                    
+                    return formatoValido && apenasDigitos;
                 }
 
                 function formatPhone(input) {
@@ -2026,6 +2100,22 @@ body {
                             });
                         }
                     });
+
+                    // Validação ao perder o foco
+                    const blurHandler = function() {
+                        const value = this.value.replace(/\D/g, '');
+                        if (value.length > 0 && value.length < 14) {
+                            let errorMsg = this.parentNode.querySelector('.cnpj-error-message');
+                            if (!errorMsg) {
+                                errorMsg = document.createElement('div');
+                                errorMsg.className = 'cnpj-error-message';
+                                this.parentNode.appendChild(errorMsg);
+                            }
+                            errorMsg.textContent = 'CNPJ incompleto (14 dígitos necessários)';
+                            errorMsg.style.display = 'block';
+                            this.classList.add('cnpj-invalido');
+                        }
+                    };
 
                     // Campos Telefone
                     const phoneFields = [
@@ -2899,6 +2989,61 @@ body {
                             errorMessage.style.display = 'none';
                         }
                     });
+
+
+                    // VALIDAÇÃO ESPECÍFICA PARA CNPJ
+                    if (sectionId === 'saleSection' || sectionId === 'warrantySection') {
+                        let cnpjField;
+                        if (sectionId === 'saleSection') {
+                            cnpjField = document.getElementById('dealerCnpj');
+                        } else {
+                            cnpjField = document.getElementById('warrantyDealerCnpj');
+                        }
+                        
+                        if (cnpjField && cnpjField.value.trim()) {
+                            const cnpjValue = cnpjField.value.trim();
+                            const apenasDigitos = cnpjValue.replace(/\D/g, '');
+                            
+                            if (apenasDigitos.length !== 14) {
+                                isValid = false;
+                                emptyFields.push('CNPJ (deve ter 14 dígitos)');
+                                
+                                // Adiciona mensagem de erro específica
+                                let cnpjErrorMessage = cnpjField.parentNode.querySelector('.cnpj-error-message');
+                                if (!cnpjErrorMessage) {
+                                    cnpjErrorMessage = document.createElement('div');
+                                    cnpjErrorMessage.className = 'cnpj-error-message';
+                                    cnpjField.parentNode.appendChild(cnpjErrorMessage);
+                                }
+                                cnpjErrorMessage.textContent = 'CNPJ deve ter 14 dígitos (formato: 00.000.000/0000-00)';
+                                cnpjErrorMessage.style.display = 'block';
+                                
+                                cnpjField.classList.add('cnpj-invalido');
+                                cnpjField.focus();
+                            } else {
+                                // Remove mensagem de erro se existir
+                                let cnpjErrorMessage = cnpjField.parentNode.querySelector('.cnpj-error-message');
+                                if (cnpjErrorMessage) {
+                                    cnpjErrorMessage.style.display = 'none';
+                                }
+                                cnpjField.classList.remove('cnpj-invalido');
+                            }
+                        }
+                    } 
+
+                    // ============================================
+                    // VALIDAÇÃO ESPECÍFICA PARA CHASSI (apenas para garantia)
+                    // ============================================
+                    if (sectionId === 'warrantySection') {
+                        const chassiField = document.getElementById('vehicleSerial');
+                        if (chassiField && chassiField.value.trim()) {
+                            const chassiValido = validarChassiCompleto(chassiField);
+                            if (!chassiValido) {
+                                isValid = false;
+                                emptyFields.push('Número de Série (CHASSI) - deve ter 17 caracteres alfanuméricos');
+                            }
+                        }
+                    }
                     
                     // Validação especial para anexos de garantia
                     if (sectionId === 'warrantySection') {
@@ -2928,6 +3073,124 @@ body {
                     }
                     
                     return isValid;
+                }
+
+                // Função para forçar maiúsculas no chassi
+                function forcarMaiusculasChassi() {
+                    const chassiInput = document.getElementById('vehicleSerial');
+                    if (chassiInput) {
+                        chassiInput.addEventListener('input', function(e) {
+                            this.value = this.value.toUpperCase();
+                            
+                            // Validação em tempo real
+                            validarChassiEmTempoReal(this);
+                        });
+                        
+                        chassiInput.addEventListener('blur', function() {
+                            validarChassiCompleto(this);
+                        });
+                    }
+                }
+
+                // Validação em tempo real
+                function validarChassiEmTempoReal(input) {
+                    const value = input.value;
+                    const apenasLetrasNumeros = value.replace(/[^A-Z0-9]/g, '');
+                    
+                    // Remove caracteres inválidos
+                    if (value !== apenasLetrasNumeros) {
+                        input.value = apenasLetrasNumeros;
+                    }
+                    
+                    // Limita a 17 caracteres
+                    if (input.value.length > 17) {
+                        input.value = input.value.substring(0, 17);
+                    }
+                    
+                    // Atualiza contador (opcional)
+                    const counter = input.parentNode.querySelector('.chassi-counter');
+                    if (!counter) {
+                        const counterDiv = document.createElement('div');
+                        counterDiv.className = 'chassi-counter';
+                        counterDiv.style.fontSize = '11px';
+                        counterDiv.style.color = '#666';
+                        counterDiv.style.marginTop = '3px';
+                        input.parentNode.appendChild(counterDiv);
+                    }
+                    
+                    counter.textContent = `${input.value.length}/17 caracteres`;
+                    
+                    // Adiciona classe de validação visual
+                    if (input.value.length === 17) {
+                        input.classList.remove('chassi-incompleto');
+                        input.classList.add('chassi-completo');
+                    } else {
+                        input.classList.remove('chassi-completo');
+                        input.classList.add('chassi-incompleto');
+                    }
+                }
+
+                // Validação completa do chassi
+                function validarChassiCompleto(input) {
+                    const value = input.value.trim();
+                    const errorDiv = input.parentNode.querySelector('.chassi-error-message');
+                    
+                    // Remove mensagem de erro anterior
+                    if (errorDiv) {
+                        errorDiv.style.display = 'none';
+                        errorDiv.textContent = '';
+                    }
+                    
+                    // Verifica se está vazio
+                    if (!value) {
+                        return false;
+                    }
+                    
+                    // Verifica se tem 17 caracteres
+                    if (value.length !== 17) {
+                        if (!errorDiv) {
+                            const newErrorDiv = document.createElement('div');
+                            newErrorDiv.className = 'chassi-error-message';
+                            input.parentNode.appendChild(newErrorDiv);
+                        }
+                        const errorElement = input.parentNode.querySelector('.chassi-error-message');
+                        errorElement.textContent = 'O chassi deve ter exatamente 17 caracteres alfanuméricos';
+                        errorElement.style.display = 'block';
+                        errorElement.style.color = 'var(--danger)';
+                        errorElement.style.fontSize = '12px';
+                        errorElement.style.marginTop = '5px';
+                        
+                        input.classList.add('chassi-invalido');
+                        return false;
+                    }
+                    
+                    // Verifica se contém apenas letras maiúsculas e números
+                    if (!/^[A-Z0-9]{17}$/.test(value)) {
+                        if (!errorDiv) {
+                            const newErrorDiv = document.createElement('div');
+                            newErrorDiv.className = 'chassi-error-message';
+                            input.parentNode.appendChild(newErrorDiv);
+                        }
+                        const errorElement = input.parentNode.querySelector('.chassi-error-message');
+                        errorElement.textContent = 'O chassi deve conter apenas letras maiúsculas e números (sem caracteres especiais)';
+                        errorElement.style.display = 'block';
+                        errorElement.style.color = 'var(--danger)';
+                        errorElement.style.fontSize = '12px';
+                        errorElement.style.marginTop = '5px';
+                        
+                        input.classList.add('chassi-invalido');
+                        return false;
+                    }
+                    
+                    // Se chegou aqui, o chassi é válido
+                    input.classList.remove('chassi-invalido');
+                    input.classList.add('chassi-valido');
+                    
+                    if (errorDiv) {
+                        errorDiv.style.display = 'none';
+                    }
+                    
+                    return true;
                 }
 
                 // ==================================================
