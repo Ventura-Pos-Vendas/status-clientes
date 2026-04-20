@@ -1119,7 +1119,7 @@ footer {
             
             // Mostrar botões específicos para BO
             const statusUpper = caseData.status ? caseData.status.toUpperCase() : '';
-            if (statusUpper === 'BO') {
+            if (statusUpper === 'COTAÇÃO') {
                 boActions.style.display = 'flex';
                 solicitarCompraActions.style.display = 'none';
             } else if (statusUpper.includes('RECUSADO')) {
