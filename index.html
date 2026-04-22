@@ -12,8 +12,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1E1E1E 0%, #1E1E1E 100%);/*fundo da pagina de login*/
-    /*background: url('https://raw.githubusercontent.com/Ventura-Pos-Vendas/teste-status-clientes/main/assets/fundonatal2.png') center/cover no-repeat;/*fundo do login*/
+    background: linear-gradient(135deg, #1E1E1E 0%, #1E1E1E 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,7 +20,7 @@
 }
 
 .login-container {
-    background: linear-gradient(135deg, #272727 0%, #303030 100%);/*cor fundo container de login*/
+    background: linear-gradient(135deg, #272727 0%, #303030 100%);
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -57,7 +56,7 @@
 }
 
 .login-btn {
-    background: #a50000;/*cor do botão login*/
+    background: #a50000;
     color: white;
     border: none;
     padding: 15px 30px;
@@ -84,7 +83,6 @@
     display: none;
 }
 
-/* Estilos existentes do sistema */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -93,8 +91,7 @@
 }
 
 body {
-    /*background: url('https://raw.githubusercontent.com/Ventura-Pos-Vendas/teste-status-clientes/main/assets/fundonatal2.png') center/cover no-repeat;*/
-    background: linear-gradient(135deg, #1E1E1E 0%, #1E1E1E 100%);/*cor de fundo apos login*/
+    background: linear-gradient(135deg, #1E1E1E 0%, #1E1E1E 100%);
     color: #333;
     line-height: 1.6;
     padding: 20px;
@@ -115,7 +112,7 @@ body {
 }
 
 header {
-    background: #000000;/*cor da tab principal*/
+    background: #000000;
     color: white;
     padding: 25px;
     text-align: center;
@@ -137,7 +134,7 @@ h1 {
     flex: 1;
     padding: 15px;
     text-align: center;
-    background:  #292929;/*tab nao selecionada entra vendas e garantias*/
+    background: #292929;
     color: white;
     border: none;
     cursor: pointer;
@@ -151,7 +148,7 @@ h1 {
 }
 
 .tab.active {
-    background:#27ae60;/*cor da tab ativa*/
+    background: #27ae60;
 }
 
 .search-container {
@@ -217,6 +214,31 @@ h1 {
     background: #f8f9fa;
 }
 
+/* DESTAQUE SOMENTE PARA STATUS COTAÇÃO */
+.case-item.cotacao-destaque {
+    background: #fff3e0 !important;
+    border-left: 5px solid #fd7e14 !important;
+    position: relative;
+}
+
+.case-item.cotacao-destaque:hover {
+    background: #ffe0b2 !important;
+}
+
+.case-item.cotacao-destaque::after {
+    content: "⚠️ AGUARDA AÇÃO";
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: #fd7e14;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
 .case-info {
     flex: 1;
 }
@@ -257,56 +279,17 @@ h1 {
     font-weight: 600;
 }
 
-/* Status de cores */
-.status-bo {
-    background-color: #000000 !important;
-    color: white !important;
-}
-
-.status-faturado {
-    background-color: #28a745 !important;
-    color: white !important;
-}
-
-.status-encomendado {
-    background-color: #0400e7 !important;
-    color: white !important;
-}
-
-.status-faturado-encomendado {
-    background-color: #007bff !important;
-    color: white !important;
-}
-
-.status-em-processamento {
-    background-color: #ffc107 !important;
-    color: #212529 !important;
-}
-
-.status-em-analise {
-    background-color: #ffc107 !important;
-    color: #212529 !important;
-}
-
-.status-aprovado {
-    background-color: #28a745 !important;
-    color: white !important;
-}
-
-.status-recusado {
-    background-color: #dc3545 !important;
-    color: white !important;
-}
-
-.status-enviado {
-    background-color: #50289b !important;
-    color: white !important;
-}
-
-.status-default {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
-}
+.status-bo { background-color: #000000 !important; color: white !important; }
+.status-faturado { background-color: #28a745 !important; color: white !important; }
+.status-encomendado { background-color: #0400e7 !important; color: white !important; }
+.status-faturado-encomendado { background-color: #007bff !important; color: white !important; }
+.status-em-processamento { background-color: #ffc107 !important; color: #212529 !important; }
+.status-em-analise { background-color: #ffc107 !important; color: #212529 !important; }
+.status-aprovado { background-color: #28a745 !important; color: white !important; }
+.status-recusado { background-color: #dc3545 !important; color: white !important; }
+.status-enviado { background-color: #50289b !important; color: white !important; }
+.status-default { background-color: #fff3cd !important; color: #856404 !important; }
+.status-cotacao { background-color: #fd7e14 !important; color: white !important; }
 
 .loading {
     text-align: center;
@@ -331,6 +314,7 @@ h1 {
     font-style: italic;
 }
 
+/* Modal principal */
 .modal {
     display: none;
     position: fixed;
@@ -420,7 +404,7 @@ h1 {
     overflow-wrap: break-word;
 }
 
-/* Estilos para os botões de ação do BO */
+/* Botões de ação */
 .bo-actions {
     display: flex;
     flex-direction: column;
@@ -441,43 +425,714 @@ h1 {
     gap: 8px;
     transition: all 0.3s;
     width: 100%;
+    font-size: 14px;
 }
 
-.action-outro-site {
+.action-outro-site { background: #28a745; color: white; }
+.action-outro-site:hover { background: #218838; }
+.action-faturar-disponiveis { background: #007bff; color: white; }
+.action-faturar-disponiveis:hover { background: #0056b3; }
+.action-cancelar { background: #dc3545; color: white; }
+.action-cancelar:hover { background: #c82333; }
+.action-solicitar-compra { background: #ff9800; color: white; }
+.action-solicitar-compra:hover { background: #e68900; }
+
+/* MODAL DE CONFIRMAÇÃO */
+.confirm-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-modal-content {
+    background: white;
+    border-radius: 14px;
+    max-width: 480px;
+    width: 92%;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.confirm-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.confirm-modal-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.confirm-modal-icon.warning { background: #fff3cd; color: #856404; }
+.confirm-modal-icon.danger  { background: #f8d7da; color: #842029; }
+.confirm-modal-icon.success { background: #d1e7dd; color: #0f5132; }
+
+.confirm-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.confirm-modal-subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.confirm-modal-body {
+    padding: 20px 24px;
+}
+
+.confirm-summary {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    border-left: 4px solid #fd7e14;
+}
+
+.confirm-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.confirm-summary-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.confirm-summary-row label {
+    color: #6c757d;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.confirm-summary-row span {
+    color: #212529;
+    font-weight: 600;
+    text-align: right;
+}
+
+.confirm-decision-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    width: 100%;
+    justify-content: center;
+}
+
+.badge-encomendar { background: #28a745; color: white; }
+.badge-faturar    { background: #007bff; color: white; }
+.badge-cancelar   { background: #dc3545; color: white; }
+
+.confirm-warning-text {
+    font-size: 13px;
+    color: #6c757d;
+    text-align: center;
+    line-height: 1.5;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
+}
+
+.confirm-warning-text i {
+    color: #3498db;
+    margin-right: 4px;
+}
+
+.confirm-modal-footer {
+    padding: 16px 24px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.confirm-btn {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: all 0.2s;
+}
+
+.confirm-btn-cancel {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.confirm-btn-cancel:hover {
+    background: #dee2e6;
+}
+
+.confirm-btn-confirm {
     background: #28a745;
     color: white;
 }
 
-.action-outro-site:hover {
+.confirm-btn-confirm:hover {
     background: #218838;
 }
 
-.action-faturar-disponiveis {
+.confirm-btn-confirm.danger {
+    background: #dc3545;
+}
+
+.confirm-btn-confirm.danger:hover {
+    background: #c82333;
+}
+
+/* MODAL DE STATUS ATUALIZADO */
+.status-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-modal-content {
+    background: white;
+    border-radius: 14px;
+    max-width: 400px;
+    width: 90%;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: slideUp 0.25s ease;
+}
+
+.status-modal-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #d1e7dd;
+    color: #0f5132;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    margin: 0 auto 20px;
+}
+
+.status-modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+}
+
+.status-modal-text {
+    font-size: 16px;
+    color: #6c757d;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.status-modal-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.status-modal-btn:hover {
+    background: #218838;
+}
+
+/* NOVO MODAL EXCLUSIVO PARA ENCOMENDAR INDISPONÍVEIS */
+.encomenda-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 4000;
+    align-items: center;
+    justify-content: center;
+}
+
+.encomenda-modal-content {
+    background: white;
+    border-radius: 14px;
+    max-width: 500px;
+    width: 92%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: slideUp 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.encomenda-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.encomenda-modal-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff3cd;
+    color: #856404;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.encomenda-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.encomenda-modal-subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.encomenda-modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 180px);
+}
+
+/* Estilização da scrollbar */
+.encomenda-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.encomenda-modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.encomenda-modal-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.encomenda-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.encomenda-instrucoes {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    border-left: 4px solid #fd7e14;
+}
+
+.encomenda-instrucoes p {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.encomenda-instrucoes ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.encomenda-instrucoes li {
+    margin-bottom: 8px;
+}
+
+.encomenda-protocolo-display {
+    background: #e9ecef;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.encomenda-protocolo-display span {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    word-break: break-all;
+}
+
+.encomenda-copy-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.encomenda-copy-btn:hover {
+    background: #5a6268;
+}
+
+.encomenda-input-group {
+    margin-bottom: 18px;
+}
+
+.encomenda-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.encomenda-input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.encomenda-input-group input:focus {
+    border-color: #2980b9;
+}
+
+.encomenda-input-group input::placeholder {
+    color: #adb5bd;
+}
+
+.encomenda-modal-footer {
+    padding: 16px 24px 20px;
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    border-top: 1px solid #e9ecef;
+}
+
+.encomenda-btn {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: all 0.2s;
+}
+
+.encomenda-btn-cancel {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.encomenda-btn-cancel:hover {
+    background: #dee2e6;
+}
+
+.encomenda-btn-primary {
+    background: #28a745;
+    color: white;
+}
+
+.encomenda-btn-primary:hover {
+    background: #218838;
+}
+
+.encomenda-btn-primary:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.encomenda-btn-secondary {
     background: #007bff;
     color: white;
 }
 
-.action-faturar-disponiveis:hover {
+.encomenda-btn-secondary:hover {
     background: #0056b3;
 }
 
-.action-cancelar {
-    background: #dc3545;
+/* Responsividade para mobile */
+@media (max-width: 600px) {
+    .encomenda-modal-content {
+        max-height: 85vh;
+    }
+    
+    .encomenda-modal-body {
+        max-height: calc(85vh - 200px);
+    }
+    
+    .encomenda-modal-footer {
+        flex-direction: column;
+    }
+    
+    .encomenda-protocolo-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .encomenda-copy-btn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.encomenda-modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.encomenda-modal-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff3cd;
+    color: #856404;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.encomenda-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.encomenda-modal-subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.encomenda-modal-body {
+    padding: 20px 24px;
+}
+
+.encomenda-instrucoes {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    border-left: 4px solid #fd7e14;
+}
+
+.encomenda-instrucoes p {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.encomenda-instrucoes ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.encomenda-instrucoes li {
+    margin-bottom: 8px;
+}
+
+.encomenda-protocolo-display {
+    background: #e9ecef;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.encomenda-protocolo-display span {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    word-break: break-all;
+}
+
+.encomenda-copy-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.encomenda-copy-btn:hover {
+    background: #5a6268;
+}
+
+.encomenda-input-group {
+    margin-bottom: 18px;
+}
+
+.encomenda-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.encomenda-input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.encomenda-input-group input:focus {
+    border-color: #2980b9;
+}
+
+.encomenda-input-group input::placeholder {
+    color: #adb5bd;
+}
+
+.encomenda-modal-footer {
+    padding: 16px 24px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.encomenda-btn {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: all 0.2s;
+}
+
+.encomenda-btn-cancel {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.encomenda-btn-cancel:hover {
+    background: #dee2e6;
+}
+
+.encomenda-btn-primary {
+    background: #28a745;
     color: white;
 }
 
-.action-cancelar:hover {
-    background: #c82333;
+.encomenda-btn-primary:hover {
+    background: #218838;
 }
 
-/* Novo botão para solicitar compra */
-.action-solicitar-compra {
-    background: #ff9800;
+.encomenda-btn-primary:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.encomenda-btn-secondary {
+    background: #007bff;
     color: white;
 }
 
-.action-solicitar-compra:hover {
-    background: #e68900;
+.encomenda-btn-secondary:hover {
+    background: #0056b3;
 }
 
 footer {
@@ -501,75 +1156,58 @@ footer {
     margin-left: 10px;
 }
 
+.copy-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: #5a6268;
+}
+
 @media (max-width: 600px) {
-    .case-item {
+    .case-item { flex-direction: column; align-items: flex-start; }
+    .case-status { margin-top: 10px; align-self: flex-end; }
+    .case-details { flex-direction: column; gap: 8px; }
+    .search-box { flex-direction: column; }
+    .refresh-btn { margin-left: 0; margin-top: 10px; }
+    .modal-content { padding: 20px; margin: 20px; }
+    .modal-detail { flex-direction: column; gap: 5px; }
+    .modal-detail strong { width: auto; margin-right: 0; }
+    .modal-detail span { width: 100%; }
+    .bo-actions { flex-direction: column; }
+    .case-protocolo { margin-left: 0; margin-top: 5px; display: block; }
+    .confirm-modal-footer { flex-direction: column; }
+    .encomenda-modal-footer { flex-direction: column; }
+    .case-item.cotacao-destaque::after {
+        top: auto;
+        bottom: 5px;
+        right: 10px;
+        font-size: 9px;
+    }
+    .encomenda-protocolo-display {
         flex-direction: column;
         align-items: flex-start;
+        gap: 10px;
     }
-    
-    .case-status {
-        margin-top: 10px;
-        align-self: flex-end;
-    }
-    
-    .case-details {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .search-box {
-        flex-direction: column;
-    }
-    
-    .refresh-btn {
+    .encomenda-copy-btn {
         margin-left: 0;
-        margin-top: 10px;
-    }
-    
-    .modal-content {
-        padding: 20px;
-        margin: 20px;
-    }
-    
-    .modal-detail {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .modal-detail strong {
-        width: auto;
-        margin-right: 0;
-    }
-    
-    .modal-detail span {
         width: 100%;
+        justify-content: center;
     }
-    
-    .bo-actions {
-        flex-direction: column;
-    }
-    
-    .case-protocolo {
-        margin-left: 0;
-        margin-top: 5px;
-        display: block;
-    }
-
-    /* Spinner para botão Atualizar */
-    .fa-spin {
-        animation: fa-spin 1s infinite linear;
-    }
-
-    @keyframes fa-spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
 }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
     <!-- Tela de Login -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-container">
@@ -580,20 +1218,13 @@ footer {
             </div>
             <h2>Area do Dealer</h2>
             <p>Digite sua chave de acesso para acessar seus casos</p>
-            
             <input type="text" id="loginInput" class="login-input" placeholder="Digite sua chave de acesso" autocomplete="off">
-            
-            <button id="loginBtn" class="login-btn">
-                Acessar Meus Casos
-            </button>
-            
-            <div id="loginError" class="error-message">
-                Login não encontrado. Verifique se digitou corretamente.
-            </div>
+            <button id="loginBtn" class="login-btn">Acessar Meus Casos</button>
+            <div id="loginError" class="error-message">Login não encontrado. Verifique se digitou corretamente.</div>
         </div>
     </div>
 
-    <!-- Sistema Principal (inicialmente escondido) -->
+    <!-- Sistema Principal -->
     <div class="container" id="mainContainer" style="display: none;">
         <header>
             <h1 id="headerTitle">Meus Casos</h1>
@@ -612,17 +1243,13 @@ footer {
         </div>
         
         <div class="cases-container" id="casesContainer">
-            <div class="loading" id="loadingMessage">
-                Carregando dados...
-            </div>
+            <div class="loading" id="loadingMessage">Carregando dados...</div>
         </div>
         
-        <footer id="mainFooter">
-            Sistema de Gestão
-        </footer>
+        <footer id="mainFooter">Sistema de Gestão</footer>
     </div>
 
-    <!-- Modal para mostrar detalhes -->
+    <!-- Modal de detalhes do caso -->
     <div class="modal" id="caseModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -656,26 +1283,26 @@ footer {
             </div>
             <div>
                 <strong>Descrição:</strong>
-                <div class="modal-description" id="modalDescription">
-                    Carregando descrição...
-                </div>
+                <div class="modal-description" id="modalDescription">Carregando descrição...</div>
             </div>
-            <!-- Botões específicos para status BO -->
+
+            <!-- Botões COTAÇÃO -->
             <div class="bo-actions" id="boActions" style="display: none;">
-                <button class="bo-action-btn action-outro-site" onclick="openOtherSite()">
-                    <i class="fas fa-external-link-alt"></i>
-                    FATURAR DISPONÍVEIS / ENCOMENDAR NÃO DISPONÍVEIS
+                <button class="bo-action-btn action-outro-site" onclick="openEncomendaModal()">
+                    <i class="fas fa-shopping-cart"></i>
+                    ENCOMENDAR INDISPONÍVEIS / FATURAR DISPONÍVEIS
                 </button>
-                <button class="bo-action-btn action-faturar-disponiveis" onclick="handleBoAction('faturar-disponiveis')">
-                    <i class="fas fa-check"></i>
+                <button class="bo-action-btn action-faturar-disponiveis" onclick="openConfirmModal('faturar')">
+                    <i class="fas fa-check-circle"></i>
                     FATURAR SOMENTE DISPONÍVEIS
                 </button>
-                <button class="bo-action-btn action-cancelar" onclick="handleBoAction('cancelar')">
+                <button class="bo-action-btn action-cancelar" onclick="openConfirmModal('cancelar')">
                     <i class="fas fa-times-circle"></i>
                     CANCELAR PEDIDO
                 </button>
             </div>
-            <!-- Botão para solicitar compra (aparece quando status é RECUSADO) -->
+
+            <!-- Botão RECUSADO -->
             <div class="bo-actions" id="solicitarCompraActions" style="display: none; margin-top: 10px;">
                 <button class="bo-action-btn action-solicitar-compra" onclick="openOtherSite()">
                     <i class="fas fa-shopping-cart"></i>
@@ -685,95 +1312,208 @@ footer {
         </div>
     </div>
 
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <div class="confirm-modal-icon" id="confirmIcon">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+                <div>
+                    <div class="confirm-modal-title" id="confirmTitle">Confirmar decisão</div>
+                    <div class="confirm-modal-subtitle">Esta ação será registrada e enviada para nossa equipe</div>
+                </div>
+            </div>
+
+            <div class="confirm-modal-body">
+                <div class="confirm-decision-badge" id="confirmBadge">
+                    <i class="fas fa-check"></i>
+                    <span id="confirmBadgeText">Decisão</span>
+                </div>
+
+                <div class="confirm-summary">
+                    <div class="confirm-summary-row">
+                        <label><i class="fas fa-hashtag"></i> Caso</label>
+                        <span id="confirmCaso">—</span>
+                    </div>
+                    <div class="confirm-summary-row">
+                        <label><i class="fas fa-barcode"></i> Protocolo</label>
+                        <span id="confirmProtocolo">—</span>
+                    </div>
+                    <div class="confirm-summary-row">
+                        <label><i class="far fa-user"></i> Cliente</label>
+                        <span id="confirmNome">—</span>
+                    </div>
+                    <div class="confirm-summary-row">
+                        <label><i class="far fa-calendar"></i> Data</label>
+                        <span id="confirmData">—</span>
+                    </div>
+                </div>
+
+                <div class="confirm-warning-text">
+                    <i class="fas fa-info-circle"></i>
+                    Ao confirmar, sua decisão será registrada automaticamente.
+                </div>
+            </div>
+
+            <div class="confirm-modal-footer">
+                <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmModal()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <button class="confirm-btn confirm-btn-confirm" id="confirmActionBtn" onclick="executeConfirmAction()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE STATUS ATUALIZADO -->
+    <div class="status-modal" id="statusModal">
+        <div class="status-modal-content">
+            <div class="status-modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="status-modal-title">Confirmação enviada!</div>
+            <div class="status-modal-text">
+                O status será atualizado em breve.<br>
+                Nossa equipe já foi notificada.
+            </div>
+            <button class="status-modal-btn" onclick="closeStatusModal()">
+                <i class="fas fa-check"></i> OK
+            </button>
+        </div>
+    </div>
+
+    <!-- NOVO MODAL EXCLUSIVO PARA ENCOMENDAR INDISPONÍVEIS -->
+    <div class="encomenda-modal" id="encomendaModal">
+        <div class="encomenda-modal-content">
+            <div class="encomenda-modal-header">
+                <div class="encomenda-modal-icon">
+                    <i class="fas fa-cart-plus"></i>
+                </div>
+                <div>
+                    <div class="encomenda-modal-title">Encomendar Indisponíveis</div>
+                    <div class="encomenda-modal-subtitle">Siga as instruções para concluir</div>
+                </div>
+            </div>
+
+            <div class="encomenda-protocolo-display">
+                    <span id="encomendaProtocoloDisplay">
+                        <i class="fas fa-barcode"></i> 
+                        <span id="protocoloNumero">${currentCaseData?.protocolo || '—'}</span>
+                    </span>
+                    <button class="encomenda-copy-btn" onclick="copiarProtocoloEncomenda()">
+                        <i class="fas fa-copy"></i> Copiar protocolo
+                    </button>
+            </div>
+            
+            <div class="encomenda-modal-body">
+                <div class="encomenda-instrucoes">
+                    <p><strong><i class="fas fa-info-circle"></i> Instruções:</strong></p>
+                    <ol>
+                        <li>Copie o protocolo que está acima (EX: VEN000000000000000)</li>
+                        <li>Clique no botão "Encomendar" logo abaixo (Botão AZUL)</li>
+                        <li>Ao abrir a tela de encomendas cole o protocolo copiado e escolha as peças que deseja encomendar</li>
+                        <li>Após preenchido e enviado a encomenda, será gerado um novo protocolo (EX: ENC00000000000000)</li>
+                        <li>Copie o número do novo protocolo gerado</li>
+                        <li>Cole o novo protocolo no campo abaixo</li>
+                        <li>Clique no botão "Confirmar Encomenda"</li>
+                    </ol>
+                </div>
+
+
+                <button class="encomenda-btn encomenda-btn-secondary" onclick="abrirSiteEncomenda()" style="width: 100%; margin-bottom: 10px;">
+                    <i class="fas fa-external-link-alt"></i> Encomendar
+                </button>
+
+                <div class="encomenda-input-group">
+                    <label><i class="fas fa-paste"></i> Cole aqui o protocolo da encomenda:</label>
+                    <input type="text" id="protocoloEncomendaInput" placeholder="Digite ou cole o protocolo gerado" autocomplete="off">
+                </div>
+
+            </div>
+
+            <div class="encomenda-modal-footer">
+                <button class="encomenda-btn encomenda-btn-cancel" onclick="closeEncomendaModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="encomenda-btn encomenda-btn-primary" id="encomendaConfirmBtn" onclick="confirmarEncomenda()" disabled>
+                    <i class="fas fa-check"></i> Confirmar Encomenda
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Variáveis globais
+        // ─── Configurações ──────────────────────────────────────────────
+        const API_URL = "https://script.google.com/macros/s/AKfycbxjYvcr_KW-x0eioEZegM6IGjBAkZtYP_-2WKk24Aa7pIGMEH24bwD6QTap9ErZr85Y/exec";
+        const OTHER_SITE_URL = "https://ventura-pos-vendas.github.io/Ventura-Pos-Vendas/";
+        const ENCOMENDA_SITE_URL = "https://ventura-pos-vendas.github.io/Ventura-Pos-Vendas/?tipo=encomenda";
+
+        // Google Forms
+        const FORMS_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfTAyBDuvNcN-kdu3fq8hN6LJ67V09Up8TsE60m9VsPDntNTw/formResponse";
+        const FORM_FIELDS = {
+            caso:      "entry.261825813",
+            protocolo: "entry.22496119",
+            nome:      "entry.222340120",
+            login:     "entry.1520958593",
+            decisao:   "entry.321079784"
+        };
+
+        // ─── Estado global ───────────────────────────────────────────────
         let currentTab = 'vendas';
         let allData = { vendas: [], garantias: [], logins: [] };
         let currentCaseData = null;
+        let currentConfirmAction = null;
         let clienteLogado = null;
         let clienteKeys = [];
 
-        // Elementos
-        const loginOverlay = document.getElementById('loginOverlay');
-        const mainContainer = document.getElementById('mainContainer');
-        const loginInput = document.getElementById('loginInput');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
-        const headerTitle = document.getElementById('headerTitle');
-        const mainFooter = document.getElementById('mainFooter');
-        const searchInput = document.getElementById('searchInput');
-        const casesContainer = document.getElementById('casesContainer');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const tabs = document.querySelectorAll('.tab');
-        const caseModal = document.getElementById('caseModal');
-        const closeModal = document.getElementById('closeModal');
-        const boActions = document.getElementById('boActions');
+        // ─── Elementos ───────────────────────────────────────────────────
+        const loginOverlay    = document.getElementById('loginOverlay');
+        const mainContainer   = document.getElementById('mainContainer');
+        const loginInput      = document.getElementById('loginInput');
+        const loginBtn        = document.getElementById('loginBtn');
+        const loginError      = document.getElementById('loginError');
+        const headerTitle     = document.getElementById('headerTitle');
+        const mainFooter      = document.getElementById('mainFooter');
+        const searchInput     = document.getElementById('searchInput');
+        const casesContainer  = document.getElementById('casesContainer');
+        const loadingMessage  = document.getElementById('loadingMessage');
+        const refreshBtn      = document.getElementById('refreshBtn');
+        const tabs            = document.querySelectorAll('.tab');
+        const caseModal       = document.getElementById('caseModal');
+        const closeModal      = document.getElementById('closeModal');
+        const boActions       = document.getElementById('boActions');
         const solicitarCompraActions = document.getElementById('solicitarCompraActions');
-        
-        // Elementos para chassi e modelo (garantias)
-        const chassiDetail = document.getElementById('chassiDetail');
-        const modeloDetail = document.getElementById('modeloDetail');
-        const modalChassi = document.getElementById('modalChassi');
-        const modalModelo = document.getElementById('modalModelo');
-        const modalProtocolo = document.getElementById('modalProtocolo');
+        const chassiDetail    = document.getElementById('chassiDetail');
+        const modeloDetail    = document.getElementById('modeloDetail');
+        const modalChassi     = document.getElementById('modalChassi');
+        const modalModelo     = document.getElementById('modalModelo');
+        const modalProtocolo  = document.getElementById('modalProtocolo');
+        const confirmModal    = document.getElementById('confirmModal');
+        const statusModal     = document.getElementById('statusModal');
+        const encomendaModal  = document.getElementById('encomendaModal');
+        const protocoloEncomendaInput = document.getElementById('protocoloEncomendaInput');
+        const encomendaConfirmBtn = document.getElementById('encomendaConfirmBtn');
 
-        // URL do Google Apps Script
-        const API_URL = "https://script.google.com/macros/s/AKfycbxjYvcr_KW-x0eioEZegM6IGjBAkZtYP_-2WKk24Aa7pIGMEH24bwD6QTap9ErZr85Y/exec";
-        
-        // URL para o outro site (ALTERE AQUI COM SUA URL)
-        const OTHER_SITE_URL = "https://ventura-pos-vendas.github.io/Ventura-Pos-Vendas/";
-
-        // Event Listeners
+        // ─── Login ───────────────────────────────────────────────────────
         loginBtn.addEventListener('click', handleLogin);
-        
-        // Enter no campo de login
-        loginInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                handleLogin();
-            }
-        });
-        
-        // Focar no campo de login ao carregar a página
-        window.addEventListener('load', function() {
-            loginInput.focus();
-        });
+        loginInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); handleLogin(); } });
+        window.addEventListener('load', () => { loginInput.focus(); });
 
-        // Função de login
         function handleLogin() {
             const login = loginInput.value.trim();
-            
-            if (!login) {
-                showLoginError('Por favor, digite seu login');
-                loginInput.focus();
-                return;
-            }
-            
-            // Desabilitar botão durante o login
+            if (!login) { showLoginError('Por favor, digite seu login'); loginInput.focus(); return; }
             loginBtn.disabled = true;
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-            
-            // Verificar se os dados já foram carregados
-            if (allData.logins.length === 0) {
-                loadAllData(login);
-            } else {
-                verifyLogin(login);
-            }
+            if (allData.logins.length === 0) { loadAllData(login); }
+            else { verifyLogin(login); }
         }
 
-        // Função para verificar login APENAS na planilha de logins
         function verifyLogin(login) {
-            console.log('Verificando login:', login);
-            
-            // Buscar APENAS na planilha de logins
-            const loginData = allData.logins.find(item => 
-                item.login && item.login.toLowerCase() === login.toLowerCase()
-            );
-            
+            const loginData = allData.logins.find(item => item.login && item.login.toLowerCase() === login.toLowerCase());
             if (loginData && loginData.keys && loginData.keys.length > 0) {
                 clienteKeys = loginData.keys;
-                console.log('Login encontrado! Keys:', clienteKeys);
                 loginSuccess(login);
             } else {
                 showLoginError('Login não encontrado na base de dados.');
@@ -783,99 +1523,58 @@ footer {
             }
         }
 
-        // Login bem-sucedido
         function loginSuccess(login) {
             clienteLogado = login;
             loginOverlay.style.display = 'none';
             mainContainer.style.display = 'flex';
-            
-            // Deixar apenas "Meus Casos" no título
-            headerTitle.innerHTML = `Meus Casos`;
-            
-            // Atualizar rodapé
+            headerTitle.innerHTML = 'Meus Casos';
             mainFooter.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span>Logado como: <strong>${login}</strong></span>
-                    <button class="logout-btn" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Sair
-                    </button>
-                </div>
-            `;
-            
-            // Event listener para logout
+                    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                </div>`;
             document.getElementById('logoutBtn').addEventListener('click', function() {
                 if (confirm('Deseja realmente sair do sistema?')) {
-                    clienteLogado = null;
-                    clienteKeys = [];
+                    clienteLogado = null; clienteKeys = [];
                     mainContainer.style.display = 'none';
                     loginOverlay.style.display = 'flex';
-                    loginInput.value = '';
-                    loginError.style.display = 'none';
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'Acessar Meus Casos';
+                    loginInput.value = ''; loginError.style.display = 'none';
+                    loginBtn.disabled = false; loginBtn.innerHTML = 'Acessar Meus Casos';
                     loginInput.focus();
-                    
-                    // Limpar container de casos
                     casesContainer.innerHTML = '<div class="loading">Carregando dados...</div>';
                 }
             });
-            
-            // MOSTRAR CASOS IMEDIATAMENTE APÓS LOGIN
             displayCases(allData[currentTab]);
-            
-            // Focar no campo de busca após login
-            setTimeout(() => {
-                searchInput.focus();
-            }, 300);
+            setTimeout(() => { searchInput.focus(); }, 300);
         }
 
-        // Mostrar erro de login
         function showLoginError(message) {
             loginError.textContent = message;
             loginError.style.display = 'block';
-            
-            // Esconder erro após 5 segundos
-            setTimeout(() => {
-                loginError.style.display = 'none';
-            }, 5000);
+            setTimeout(() => { loginError.style.display = 'none'; }, 5000);
         }
 
-        // Função para carregar todos os dados usando JSONP
+        // ─── Carregar dados ───────────────────────────────────────────────
         function loadAllData(login = null) {
             loadingMessage.textContent = 'Carregando dados...';
             loadingMessage.style.display = 'block';
-            
             const timestamp = new Date().getTime();
             const callbackName = 'jsonpCallback_' + timestamp;
-            
             window[callbackName] = function(data) {
-                console.log('Dados recebidos:', data);
-                
-                allData.vendas = data.vendas || [];
+                allData.vendas    = data.vendas    || [];
                 allData.garantias = data.garantias || [];
-                allData.logins = data.logins || [];
-                
-                console.log('Logins carregados:', allData.logins.length);
-                console.log('Vendas carregadas:', allData.vendas.length);
-                console.log('Garantias carregadas:', allData.garantias.length);
-                
-                if (login) {
-                    // Se veio do login, verifica login
-                    verifyLogin(login);
-                } else {
-                    // Se veio do botão Atualizar, atualiza a exibição
+                allData.logins    = data.logins    || [];
+                if (login) { verifyLogin(login); }
+                else {
                     displayCases(allData[currentTab]);
                     loadingMessage.style.display = 'none';
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = 'Acessar Meus Casos';
-                    // REATIVAR botão Atualizar
                     refreshBtn.disabled = false;
                     refreshBtn.innerHTML = 'Atualizar';
                 }
-                
                 delete window[callbackName];
             };
-            
             const script = document.createElement('script');
             script.src = `${API_URL}?callback=${callbackName}&t=${timestamp}`;
             script.onerror = function() {
@@ -884,145 +1583,294 @@ footer {
                 loginBtn.innerHTML = 'Acessar Meus Casos';
                 delete window[callbackName];
             };
-            
             document.head.appendChild(script);
         }
 
-        // Event Listeners para as abas
+        // ─── Abas ─────────────────────────────────────────────────────────
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 tabs.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 currentTab = this.dataset.tab;
                 displayCases(allData[currentTab]);
-                
-                // Focar no campo de busca após trocar aba
                 searchInput.focus();
             });
         });
 
-        // Event Listener para atualizar
+        // ─── Atualizar ────────────────────────────────────────────────────
         refreshBtn.addEventListener('click', function() {
-            // Desabilitar botão e mostrar spinner
             this.disabled = true;
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
-            
             loadingMessage.textContent = 'Atualizando dados...';
             loadingMessage.style.display = 'block';
-            
             loadAllData();
         });
 
-        // Event Listeners para o modal
-        closeModal.addEventListener('click', function() {
-            caseModal.style.display = 'none';
-        });
-
-        caseModal.addEventListener('click', function(e) {
-            if (e.target === caseModal) {
-                caseModal.style.display = 'none';
-            }
-        });
-        
-        // Fechar modal com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && caseModal.style.display === 'flex') {
-                caseModal.style.display = 'none';
+        // ─── Modal de caso ────────────────────────────────────────────────
+        closeModal.addEventListener('click', () => { caseModal.style.display = 'none'; });
+        caseModal.addEventListener('click', e => { if (e.target === caseModal) caseModal.style.display = 'none'; });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (confirmModal.style.display === 'flex') closeConfirmModal();
+                else if (statusModal.style.display === 'flex') closeStatusModal();
+                else if (encomendaModal.style.display === 'flex') closeEncomendaModal();
+                else if (caseModal.style.display === 'flex') caseModal.style.display = 'none';
             }
         });
 
-        // Função para abrir outro site
-        function openOtherSite() {
-            window.open(OTHER_SITE_URL, '_blank');
+        // ─── Modal de Status ──────────────────────────────────────────────
+        function closeStatusModal() {
+            statusModal.style.display = 'none';
         }
 
-        // Função para lidar com outras ações do BO
-        function handleBoAction(action) {
+        statusModal.addEventListener('click', e => {
+            if (e.target === statusModal) closeStatusModal();
+        });
+
+        // ─── Modal de CONFIRMAÇÃO ─────────────────────────────────────────
+        const confirmConfig = {
+            faturar: {
+                title: 'Faturar Somente Disponíveis',
+                badgeClass: 'badge-faturar',
+                badgeIcon: 'fa-check-circle',
+                badgeText: 'FATURAR SOMENTE DISPONÍVEIS',
+                iconClass: 'success',
+                iconIcon: 'fa-check',
+                btnClass: 'confirm-btn-confirm',
+                decisaoTexto: 'Faturar somente disponíveis (cancelar indisponíveis)'
+            },
+            cancelar: {
+                title: 'Cancelar Pedido',
+                badgeClass: 'badge-cancelar',
+                badgeIcon: 'fa-times-circle',
+                badgeText: 'CANCELAR PEDIDO',
+                iconClass: 'danger',
+                iconIcon: 'fa-times',
+                btnClass: 'confirm-btn-confirm danger',
+                decisaoTexto: 'Cancelar pedido completo'
+            }
+        };
+
+        function openConfirmModal(action) {
             if (!currentCaseData) return;
-            
-            let message = '';
-            
-            switch(action) {
-                case 'faturar-disponiveis':
-                    message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
-                             `*Solicito:* FATURAR SOMENTE DISPONÍVEIS\n` +
-                             `Os itens indisponíveis devem ser cancelados.\n\n` +
-                             `*Detalhes do caso:*\n` +
-                             `Data: ${formatDate(currentCaseData.data)}\n` +
-                             `Nome: ${currentCaseData.nome || 'Não informado'}\n` +
-                             `Descrição: ${currentCaseData.descricao || 'Sem descrição'}`;
-                    break;
-                    
-                case 'cancelar':
-                    message = `Olá! Referente ao caso *${currentCaseData.caso}* que está com status BO.\n\n` +
-                             `*Solicito:* CANCELAR PEDIDO\n\n` +
-                             `*Detalhes do caso:*\n` +
-                             `Data: ${formatDate(currentCaseData.data)}\n` +
-                             `Nome: ${currentCaseData.nome || 'Não informado'}\n` +
-                             `Descrição: ${currentCaseData.descricao || 'Sem descrição'}`;
-                    break;
-            }
-            
-            const phoneNumber = "5516996174440";
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
+            currentConfirmAction = action;
+            const cfg = confirmConfig[action];
+
+            document.getElementById('confirmTitle').textContent = cfg.title;
+
+            const icon = document.getElementById('confirmIcon');
+            icon.className = `confirm-modal-icon ${cfg.iconClass}`;
+            icon.innerHTML = `<i class="fas ${cfg.iconIcon}"></i>`;
+
+            const badge = document.getElementById('confirmBadge');
+            badge.className = `confirm-decision-badge ${cfg.badgeClass}`;
+            badge.innerHTML = `<i class="fas ${cfg.badgeIcon}"></i><span>${cfg.badgeText}</span>`;
+
+            document.getElementById('confirmCaso').textContent      = currentCaseData.caso      || '—';
+            document.getElementById('confirmProtocolo').textContent = currentCaseData.protocolo || '—';
+            document.getElementById('confirmNome').textContent      = currentCaseData.nome       || '—';
+            document.getElementById('confirmData').textContent      = formatDate(currentCaseData.data);
+
+            const btn = document.getElementById('confirmActionBtn');
+            btn.className = `confirm-btn ${cfg.btnClass}`;
+            btn.innerHTML = `<i class="fas fa-check"></i> Confirmar`;
+
+            confirmModal.style.display = 'flex';
         }
 
-        // Função para obter casos do cliente baseado nas keys
-        function getClientCases(cases) {
-            if (!clienteKeys || clienteKeys.length === 0) return [];
-            
-            return cases.filter(item => {
-                const itemKey = item.key ? String(item.key).trim() : '';
-                if (!itemKey) return false;
-                
-                return clienteKeys.some(clientKey => 
-                    clientKey.toLowerCase() === itemKey.toLowerCase()
-                );
+        function closeConfirmModal() {
+            confirmModal.style.display = 'none';
+            currentConfirmAction = null;
+        }
+
+        function executeConfirmAction() {
+            if (!currentCaseData || !currentConfirmAction) return;
+
+            const cfg = confirmConfig[currentConfirmAction];
+            const btn = document.getElementById('confirmActionBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            const agora = new Date().toLocaleString('pt-BR');
+
+            // Enviar ao Google Forms
+            submitToForms(currentCaseData, cfg.decisaoTexto, agora);
+
+            setTimeout(() => {
+                confirmModal.style.display = 'none';
+                caseModal.style.display = 'none';
+                currentConfirmAction = null;
+
+                // Mostrar modal de status atualizado
+                statusModal.style.display = 'flex';
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Confirmar';
+            }, 800);
+        }
+
+        function submitToForms(caseData, decisao, agora) {
+            const formData = new FormData();
+            formData.append(FORM_FIELDS.caso,      caseData.caso      || '');
+            formData.append(FORM_FIELDS.protocolo, caseData.protocolo || '');
+            formData.append(FORM_FIELDS.nome,      caseData.nome      || '');
+            formData.append(FORM_FIELDS.login,     clienteLogado      || '');
+            formData.append(FORM_FIELDS.decisao,   `${decisao} — ${agora}`);
+
+            fetch(FORMS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            }).catch(err => {
+                console.log('Forms enviado:', err);
             });
         }
 
-        // Função para exibir os casos
+        // ─── NOVO MODAL EXCLUSIVO PARA ENCOMENDAR ────────────────────────
+        function openEncomendaModal() {
+            if (!currentCaseData) return;
+            
+            // Atualizar o protocolo exibido
+            document.getElementById('protocoloNumero').textContent = currentCaseData.protocolo || '—';
+            
+            // Limpar campo de input
+            protocoloEncomendaInput.value = '';
+            
+            // Desabilitar botão de confirmar
+            encomendaConfirmBtn.disabled = true;
+            
+            // Fechar modal de detalhes
+            caseModal.style.display = 'none';
+            
+            // Abrir modal de encomenda
+            encomendaModal.style.display = 'flex';
+            
+            // Focar no campo de input
+            setTimeout(() => protocoloEncomendaInput.focus(), 100);
+        }
+
+        function closeEncomendaModal() {
+            encomendaModal.style.display = 'none';
+            // Reabrir modal de detalhes
+            caseModal.style.display = 'flex';
+        }
+
+        function copiarProtocoloEncomenda() {
+            const protocolo = currentCaseData?.protocolo || '';
+            navigator.clipboard.writeText(protocolo)
+                .then(() => {
+                    const btn = document.querySelector('.encomenda-copy-btn');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copiar protocolo';
+                    }, 2000);
+                })
+                .catch(() => {
+                    const inp = document.createElement('input');
+                    inp.value = protocolo;
+                    document.body.appendChild(inp); inp.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(inp);
+                    const btn = document.querySelector('.encomenda-copy-btn');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copiar protocolo';
+                    }, 2000);
+                });
+        }
+
+        function abrirSiteEncomenda() {
+            window.open(ENCOMENDA_SITE_URL, '_blank');
+        }
+
+        function confirmarEncomenda() {
+            if (!currentCaseData) return;
+            
+            const protocoloInserido = protocoloEncomendaInput.value.trim();
+            if (!protocoloInserido) {
+                alert('Por favor, cole o protocolo da encomenda antes de confirmar.');
+                protocoloEncomendaInput.focus();
+                return;
+            }
+
+            const btn = encomendaConfirmBtn;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            const agora = new Date().toLocaleString('pt-BR');
+            const decisao = `Encomendar indisponíveis e faturar disponíveis (Protocolo encomenda: ${protocoloInserido})`;
+
+            // Enviar ao Google Forms
+            submitToForms(currentCaseData, decisao, agora);
+
+            setTimeout(() => {
+                encomendaModal.style.display = 'none';
+                currentConfirmAction = null;
+
+                // Mostrar modal de status atualizado
+                statusModal.style.display = 'flex';
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Confirmar Encomenda';
+            }, 800);
+        }
+
+        // Habilitar/desabilitar botão de confirmar baseado no input
+        protocoloEncomendaInput.addEventListener('input', function() {
+            encomendaConfirmBtn.disabled = this.value.trim() === '';
+        });
+
+        // Fechar modal de encomenda ao clicar fora
+        encomendaModal.addEventListener('click', e => {
+            if (e.target === encomendaModal) closeEncomendaModal();
+        });
+
+        function openOtherSite() { window.open(OTHER_SITE_URL, '_blank'); }
+
+        function getClientCases(cases) {
+            if (!clienteKeys || clienteKeys.length === 0) return [];
+            return cases.filter(item => {
+                const itemKey = item.key ? String(item.key).trim() : '';
+                if (!itemKey) return false;
+                return clienteKeys.some(k => k.toLowerCase() === itemKey.toLowerCase());
+            });
+        }
+
         function displayCases(cases) {
             loadingMessage.style.display = 'block';
-            
             setTimeout(() => {
                 if (!cases || cases.length === 0) {
                     casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado</div>';
                     loadingMessage.style.display = 'none';
                     return;
                 }
-                
-                // Filtrar casos baseado nas keys do cliente
-                let filteredCases = getClientCases(cases);
-                
-                if (filteredCases.length === 0) {
+                let filtered = getClientCases(cases);
+                if (filtered.length === 0) {
                     casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
                 } else {
-                    renderCases(filteredCases);
+                    renderCases(filtered);
                 }
-                
                 loadingMessage.style.display = 'none';
             }, 100);
         }
 
-        // Função para renderizar os casos na tela
         function renderCases(cases) {
-            let html = '';
-            
-            // Ordenar casos por data (mais recente primeiro)
-            const sortedCases = cases.sort((a, b) => {
-                const dateA = new Date(a.data) || new Date(0);
-                const dateB = new Date(b.data) || new Date(0);
-                return dateB - dateA;
+            const sorted = cases.sort((a, b) => {
+                const dA = new Date(a.data) || new Date(0);
+                const dB = new Date(b.data) || new Date(0);
+                return dB - dA;
             });
-            
-            sortedCases.forEach((item, index) => {
+
+            let html = '';
+            sorted.forEach((item, index) => {
                 const statusClass = getStatusClass(item.status);
+                const statusUpper = item.status ? item.status.toUpperCase() : '';
+                const isCotacao = (statusUpper === 'COTAÇÃO' || statusUpper === 'COTACAO');
+                const destaqueClass = isCotacao ? 'cotacao-destaque' : '';
                 
                 html += `
-                    <div class="case-item" data-index="${index}" title="Clique para ver detalhes">
+                    <div class="case-item ${destaqueClass}" data-index="${index}" title="Clique para ver detalhes">
                         <div class="case-info">
                             <div class="case-title">
                                 Caso: ${item.caso || 'Sem título'}
@@ -1031,95 +1879,61 @@ footer {
                             <div class="case-details">
                                 <span><i class="far fa-calendar"></i> ${formatDate(item.data)}</span>
                                 <span><i class="far fa-user"></i> ${item.nome || 'Não informado'}</span>
-                                ${currentTab === 'garantias' && item.chassi ? 
-                                    `<span><i class="fas fa-car"></i> ${item.chassi || 'Não informado'}</span>` : ''
-                                }
+                                ${currentTab === 'garantias' && item.chassi ? `<span><i class="fas fa-car"></i> ${item.chassi}</span>` : ''}
                             </div>
                         </div>
                         <div class="case-status ${statusClass}">
                             <i class="fas fa-circle"></i> ${item.status || 'Pendente'}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            
+
             casesContainer.innerHTML = html;
-            
-            // Adicionar event listeners aos casos
-            document.querySelectorAll('.case-item').forEach((item, index) => {
-                item.addEventListener('click', function() {
-                    showCaseDetails(sortedCases[index]);
-                });
-                
-                // Tornar os casos focáveis para acessibilidade
-                item.setAttribute('tabindex', '0');
+            document.querySelectorAll('.case-item').forEach((el, index) => {
+                el.addEventListener('click', () => showCaseDetails(sorted[index]));
+                el.setAttribute('tabindex', '0');
             });
         }
 
-        // Função para mostrar detalhes do caso
         function showCaseDetails(caseData) {
             currentCaseData = caseData;
-            
-            // Definir título com Caso e Protocolo
-            let modalTitleText = `Caso: ${caseData.caso || 'Sem título'}`;
+            document.getElementById('modalTitle').textContent = `Caso: ${caseData.caso || 'Sem título'}`;
 
-            document.getElementById('modalTitle').textContent = modalTitleText;
-            
-            // Mostrar protocolo separadamente também
             if (caseData.protocolo) {
-                modalProtocolo.innerHTML = `Protocolo: ${caseData.protocolo} 
-                    <button class="copy-btn" title="Copiar">
-                        📄<br>Copiar
-                    </button>`;
+                modalProtocolo.innerHTML = `Protocolo: ${caseData.protocolo} <button class="copy-btn" title="Copiar">📄 Copiar</button>`;
                 modalProtocolo.style.display = 'block';
-                
-                // Adicionar função de copiar
-                const copyBtn = modalProtocolo.querySelector('.copy-btn');
-                if (copyBtn) {
-                    copyBtn.onclick = function() {
-                        navigator.clipboard.writeText(caseData.protocolo)
-                            .then(() => {
-                                this.textContent = '✓';
-                                setTimeout(() => this.innerHTML = '📄<br>Copiar', 2000);
-                            })
-                            .catch(() => {
-                                // Fallback simples
-                                const input = document.createElement('input');
-                                input.value = caseData.protocolo;
-                                document.body.appendChild(input);
-                                input.select();
-                                document.execCommand('copy');
-                                document.body.removeChild(input);
-                                
-                                this.textContent = '✓';
-                                setTimeout(() => this.textContent = '📋', 2000);
-                            });
-                    };
-                }
+                modalProtocolo.querySelector('.copy-btn').onclick = function() {
+                    navigator.clipboard.writeText(caseData.protocolo)
+                        .then(() => { this.textContent = '✓'; setTimeout(() => this.innerHTML = '📄 Copiar', 2000); })
+                        .catch(() => {
+                            const inp = document.createElement('input');
+                            inp.value = caseData.protocolo;
+                            document.body.appendChild(inp); inp.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(inp);
+                            this.textContent = '✓'; setTimeout(() => this.innerHTML = '📄 Copiar', 2000);
+                        });
+                };
             } else {
                 modalProtocolo.style.display = 'none';
             }
-            
-            document.getElementById('modalDate').textContent = formatDate(caseData.data);
-            document.getElementById('modalName').textContent = caseData.nome || 'Não informado';
-            document.getElementById('modalStatus').textContent = caseData.status || 'Pendente';
-            document.getElementById('modalStatus').className = 'case-status ' + getStatusClass(caseData.status);
+
+            document.getElementById('modalDate').textContent        = formatDate(caseData.data);
+            document.getElementById('modalName').textContent        = caseData.nome   || 'Não informado';
+            document.getElementById('modalStatus').textContent      = caseData.status || 'Pendente';
+            document.getElementById('modalStatus').className        = 'case-status ' + getStatusClass(caseData.status);
             document.getElementById('modalDescription').textContent = caseData.descricao || 'Sem descrição';
-            
-            // Mostrar ou esconder chassi e modelo para garantias
+
             if (currentTab === 'garantias') {
-                chassiDetail.style.display = 'flex';
-                modeloDetail.style.display = 'flex';
+                chassiDetail.style.display = 'flex'; modeloDetail.style.display = 'flex';
                 modalChassi.textContent = caseData.chassi || 'Não informado';
                 modalModelo.textContent = caseData.modelo || 'Não informado';
             } else {
-                chassiDetail.style.display = 'none';
-                modeloDetail.style.display = 'none';
+                chassiDetail.style.display = 'none'; modeloDetail.style.display = 'none';
             }
-            
-            // Mostrar botões específicos para BO
+
             const statusUpper = caseData.status ? caseData.status.toUpperCase() : '';
-            if (statusUpper === 'COTAÇÃO') {
+            if (statusUpper === 'COTAÇÃO' || statusUpper === 'COTACAO') {
                 boActions.style.display = 'flex';
                 solicitarCompraActions.style.display = 'none';
             } else if (statusUpper.includes('RECUSADO')) {
@@ -1129,86 +1943,49 @@ footer {
                 boActions.style.display = 'none';
                 solicitarCompraActions.style.display = 'none';
             }
-            
+
             caseModal.style.display = 'flex';
-            
-            // Focar no botão de fechar modal para acessibilidade
-            setTimeout(() => {
-                closeModal.focus();
-            }, 100);
+            setTimeout(() => { closeModal.focus(); }, 100);
         }
 
-        // Função de filtro
         function filterCases() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (!searchTerm) {
-                displayCases(allData[currentTab]);
-                return;
-            }
-            
-            const allClientCases = getClientCases(allData[currentTab]);
-            
-            if (allClientCases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>';
-                return;
-            }
-            
-            const filteredCases = allClientCases.filter(item => {
-                const searchableFields = [
-                    item.caso || '',
-                    item.protocolo || '',
-                    item.nome || '',
-                    item.status || '',
-                    item.data ? formatDate(item.data) : '',
-                    item.descricao || '',
-                    ...(currentTab === 'garantias' ? [
-                        item.chassi || '',
-                        item.modelo || ''
-                    ] : [])
+            const term = searchInput.value.toLowerCase().trim();
+            if (!term) { displayCases(allData[currentTab]); return; }
+            const all = getClientCases(allData[currentTab]);
+            if (all.length === 0) { casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado para você</div>'; return; }
+            const filtered = all.filter(item => {
+                const fields = [
+                    item.caso || '', item.protocolo || '', item.nome || '', item.status || '',
+                    item.data ? formatDate(item.data) : '', item.descricao || '',
+                    ...(currentTab === 'garantias' ? [item.chassi || '', item.modelo || ''] : [])
                 ];
-                
-                return searchableFields.some(field => 
-                    field.toString().toLowerCase().includes(searchTerm)
-                );
+                return fields.some(f => f.toString().toLowerCase().includes(term));
             });
-            
-            if (filteredCases.length === 0) {
-                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado com esses critérios de busca</div>';
+            if (filtered.length === 0) {
+                casesContainer.innerHTML = '<div class="empty">Nenhum caso encontrado com esses critérios</div>';
             } else {
-                renderCases(filteredCases);
+                renderCases(filtered);
             }
         }
 
-        // Função para formatar data
         function formatDate(dateString) {
             if (!dateString) return 'Não informada';
-            
             if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
-            
             if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-                const [year, month, day] = dateString.split('-');
-                return `${day}/${month}/${year}`;
+                const [y, m, d] = dateString.split('-');
+                return `${d}/${m}/${y}`;
             }
-            
             try {
                 const date = new Date(dateString);
-                if (!isNaN(date.getTime())) {
-                    return date.toLocaleDateString('pt-BR');
-                }
-            } catch (e) {
-                console.log('Erro ao formatar data:', e);
-            }
-            
+                if (!isNaN(date.getTime())) return date.toLocaleDateString('pt-BR');
+            } catch(e) {}
             return dateString;
         }
 
-        // Função para obter a classe CSS baseada no status
         function getStatusClass(status) {
             if (!status) return 'status-default';
-            const statusUpper = status.toUpperCase();
-            
-            const statusMap = {
+            const s = status.toUpperCase();
+            const map = {
                 'BO': 'status-bo',
                 'FATURADO': 'status-faturado',
                 'ENCOMENDADO': 'status-encomendado',
@@ -1223,33 +2000,19 @@ footer {
                 'APROVADO': 'status-aprovado',
                 'RECUSADO': 'status-recusado',
                 'ENVIADO': 'status-enviado',
-                'AGUARDANDO': 'status-aguardando-envio'
+                'COTAÇÃO': 'status-cotacao',
+                'COTACAO': 'status-cotacao'
             };
-            
-            if (statusMap[statusUpper]) {
-                return statusMap[statusUpper];
+            if (map[s]) return map[s];
+            for (const [k, v] of Object.entries(map)) {
+                if (s.includes(k)) return v;
             }
-            
-            for (const [key, value] of Object.entries(statusMap)) {
-                if (statusUpper.includes(key)) {
-                    return value;
-                }
-            }
-            
             return 'status-default';
         }
 
-        // Event Listener para filtro em tempo real
         searchInput.addEventListener('input', filterCases);
-
-        // Carregar dados ao iniciar
         loadAllData();
-        
-        // Focar no campo de login
-        window.addEventListener('load', function() {
-            setTimeout(() => loginInput.focus(), 500);
-        });
+        window.addEventListener('load', () => { setTimeout(() => loginInput.focus(), 500); });
     </script>
-    
 </body>
 </html>
