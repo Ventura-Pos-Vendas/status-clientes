@@ -1262,17 +1262,58 @@ footer {
                 <div class="encomenda-instrucoes">
                     <p><strong><i class="fas fa-info-circle"></i> Instruções:<br> SIGA TODO O PASSO A PASSO</strong></p>
                     <ol>
-                        <li>Mantenha a ESTA TELA ABERTA durante todo o processo.</li>
-                        <li>Clique no botão "Encomendar" (Botão AZUL).</li>
-                        <li>Irá abrir uma NOVA tela de pedidos de encomendas.</li>
-                        <li>Preencha TODOS os campos e escolha as peças que deseja encomendar.</li>
-                        <li>Para o campo "Protocolo Relacionado" copie e cole o PROTOCOLO DO PEDIDO ORIGINAL, que já fica EXIBIDO ACIMA na tela<br>(Ex.: VEN00000000000000).</li>
-                        <li>Clique em "ENVIAR ENCOMENDA".</li>
-                        <li>Após o envio da encomenda, será gerado um NOVO PROTOCOLO<br>(Ex.: ENC00000000000000).</li>
-                        <li>Copie o número do NOVO PROTOCOLO gerado.</li>
-                        <li>Retorne para a ESTA TELA e cole o NOVO PROTOCOLO no campo abaixo.</li>
-                        <li>Clique no botão "Confirmar Encomenda".</li>
-                        <li>Aguarde a mensagem de confirmação do sistema antes de fechar a tela.</li>
+                        <li>
+                            Mantenha esta tela da <strong>ÁREA DE CONFIRMAÇÃO</strong> aberta durante todo o processo.
+                        </li>
+
+                        <li>
+                            Copie o <strong>PROTOCOLO DO PEDIDO ORIGINAL</strong>, que já fica exibido acima
+                            (Ex.: <strong>VEN00000000000000</strong>).
+                            <br><br>
+                            <small style="color: red;">
+                            Importante: esta tela, ÁREA DE CONFIRMAÇÃO, não pode ser fechada antes da vinculação
+                            do <strong>CÓDIGO DE ENCOMENDA</strong> nesta mesma tela, na parte inferior.
+                            </small>
+                        </li>
+
+                        <li>
+                            Clique no botão <strong>“ENCOMENDAR”</strong> abaixo (botão azul).
+                            Você irá abrir a tela de encomendas automaticamente, então cole no campo
+                            <strong>“PROTOCOLO DE PEDIDO ORIGINAL”</strong> o protocolo que já foi copiado,
+                            conforme item anterior.
+                        </li>
+
+                        <li>
+                            Preencha <strong>TODOS</strong> os campos e selecione as peças que deseja encomendar
+                            com suas respectivas quantidades.
+                        </li>
+
+                        <li>
+                            Clique em <strong>“ENVIAR ENCOMENDA”</strong>.
+                            Após clicar no botão, o sistema irá gerar automaticamente um
+                            <strong>CÓDIGO DE ENCOMENDA</strong>
+                            (Ex.: <strong>ENC00000000000000</strong>).
+                            <br><br>
+                            <small style="color: red;">
+                            Importante: depois de gerar esse código, a tela de encomendas pode ser fechada,
+                            e você deve retornar para a <strong>ÁREA DE CONFIRMAÇÃO</strong>.
+                            </small>
+                        </li>
+
+                        <li>
+                            Aqui na <strong>ÁREA DE CONFIRMAÇÃO</strong>, insira o
+                            <strong>CÓDIGO DE ENCOMENDA</strong> no campo correspondente,
+                            na parte inferior desta tela.
+                        </li>
+
+                        <li>
+                            Para concluir o processo, clique em <strong>“Confirmar Encomenda”</strong>.
+                            <br><br>
+                            <small style="color: red;">
+                            Após inserir o código, aguarde a mensagem de confirmação do sistema.
+                            Somente após essa confirmação a tela poderá ser fechada.
+                            </small>
+                        </li>
                     </ol>
                 </div>
 
@@ -1666,13 +1707,13 @@ footer {
 
             // Verifica se é igual ao protocolo original
             if (valorTrimmed.toLowerCase() === protocoloOriginal.toLowerCase()) {
-                setValidationError('Este é o protocolo do pedido original. Insira o protocolo de encomenda gerado.');
+                setValidationError('Este é o protocolo do pedido original. Insira o código de encomenda gerado.');
                 return;
             }
 
             // Verifica se começa com "ENC" (case-insensitive)
             if (!valorTrimmed.toUpperCase().startsWith('ENC')) {
-                setValidationError('O protocolo colado deve ser o de encomenda. Verifique e tente novamente.');
+                setValidationError('O código colado deve ser o de encomenda. Verifique e tente novamente.');
                 return;
             }
 
