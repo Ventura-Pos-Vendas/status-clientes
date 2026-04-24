@@ -810,6 +810,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
 }
 
 .encomenda-protocolo-display span {
@@ -866,8 +867,44 @@ h1 {
     border-color: #2980b9;
 }
 
+.encomenda-input-group input.input-error {
+    border-color: #dc3545;
+    background: #fff5f5;
+}
+
+.encomenda-input-group input.input-success {
+    border-color: #28a745;
+    background: #f0fff4;
+}
+
 .encomenda-input-group input::placeholder {
     color: #adb5bd;
+}
+
+/* Mensagem de validação do input de protocolo */
+.encomenda-validation-msg {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    align-items: center;
+    gap: 6px;
+}
+
+.encomenda-validation-msg.error {
+    display: flex;
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+.encomenda-validation-msg.success {
+    display: flex;
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
 }
 
 .encomenda-modal-footer {
@@ -950,189 +987,6 @@ h1 {
         width: 100%;
         justify-content: center;
     }
-}
-
-.encomenda-modal-header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.encomenda-modal-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #fff3cd;
-    color: #856404;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-}
-
-.encomenda-modal-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a2e;
-}
-
-.encomenda-modal-subtitle {
-    font-size: 13px;
-    color: #6c757d;
-    margin-top: 2px;
-}
-
-.encomenda-modal-body {
-    padding: 20px 24px;
-}
-
-.encomenda-instrucoes {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 18px;
-    border-left: 4px solid #fd7e14;
-}
-
-.encomenda-instrucoes p {
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #495057;
-}
-
-.encomenda-instrucoes ol {
-    margin-left: 20px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    color: #495057;
-}
-
-.encomenda-instrucoes li {
-    margin-bottom: 8px;
-}
-
-.encomenda-protocolo-display {
-    background: #e9ecef;
-    border-radius: 8px;
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.encomenda-protocolo-display span {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    word-break: break-all;
-}
-
-.encomenda-copy-btn {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background 0.2s;
-    flex-shrink: 0;
-    margin-left: 10px;
-}
-
-.encomenda-copy-btn:hover {
-    background: #5a6268;
-}
-
-.encomenda-input-group {
-    margin-bottom: 18px;
-}
-
-.encomenda-input-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #495057;
-}
-
-.encomenda-input-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.encomenda-input-group input:focus {
-    border-color: #2980b9;
-}
-
-.encomenda-input-group input::placeholder {
-    color: #adb5bd;
-}
-
-.encomenda-modal-footer {
-    padding: 16px 24px 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.encomenda-btn {
-    flex: 1;
-    padding: 13px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    transition: all 0.2s;
-}
-
-.encomenda-btn-cancel {
-    background: #f1f3f5;
-    color: #495057;
-}
-
-.encomenda-btn-cancel:hover {
-    background: #dee2e6;
-}
-
-.encomenda-btn-primary {
-    background: #28a745;
-    color: white;
-}
-
-.encomenda-btn-primary:hover {
-    background: #218838;
-}
-
-.encomenda-btn-primary:disabled {
-    background: #95a5a6;
-    cursor: not-allowed;
-}
-
-.encomenda-btn-secondary {
-    background: #007bff;
-    color: white;
-}
-
-.encomenda-btn-secondary:hover {
-    background: #0056b3;
 }
 
 footer {
@@ -1398,43 +1252,42 @@ footer {
             </div>
 
             <div class="encomenda-protocolo-display">
-                    <span id="encomendaProtocoloDisplay">
-                        <i class="fas fa-barcode"></i> 
-                        <span id="protocoloNumero">${currentCaseData?.protocolo || '—'}</span>
-                    </span>
-                    <!--<button class="encomenda-copy-btn" onclick="copiarProtocoloEncomenda()">
-                        <i class="fas fa-copy"></i> Copiar protocolo
-                    </button>-->
+                <span id="encomendaProtocoloDisplay">
+                    <i class="fas fa-barcode"></i>
+                    <span id="protocoloNumero">—</span>
+                </span>
             </div>
-            
-            <div class="encomenda-modal-body">
+
+            <div class="encomenda-modal-body" id="encomendaModalBody">
                 <div class="encomenda-instrucoes">
                     <p><strong><i class="fas fa-info-circle"></i> Instruções:<br> SIGA TODO O PASSO A PASSO</strong></p>
                     <ol>
                         <li>Mantenha a ESTA TELA ABERTA durante todo o processo.</li>
-                        <li>Clique no botão “Encomendar” (Botão AZUL).</li>
+                        <li>Clique no botão "Encomendar" (Botão AZUL).</li>
                         <li>Irá abrir uma NOVA tela de pedidos de encomendas.</li>
                         <li>Preencha TODOS os campos e escolha as peças que deseja encomendar.</li>
                         <li>Para o campo "Protocolo Relacionado" copie e cole o PROTOCOLO DO PEDIDO ORIGINAL, que já fica EXIBIDO ACIMA na tela<br>(Ex.: VEN00000000000000).</li>
-                        <li>Clique em “ENVIAR ENCOMENDA”.</li>
+                        <li>Clique em "ENVIAR ENCOMENDA".</li>
                         <li>Após o envio da encomenda, será gerado um NOVO PROTOCOLO<br>(Ex.: ENC00000000000000).</li>
                         <li>Copie o número do NOVO PROTOCOLO gerado.</li>
                         <li>Retorne para a ESTA TELA e cole o NOVO PROTOCOLO no campo abaixo.</li>
-                        <li>Clique no botão “Confirmar Encomenda”.</li>
+                        <li>Clique no botão "Confirmar Encomenda".</li>
                         <li>Aguarde a mensagem de confirmação do sistema antes de fechar a tela.</li>
                     </ol>
                 </div>
 
-
-                <button class="encomenda-btn encomenda-btn-secondary" onclick="abrirSiteEncomenda()" style="width: 100%; margin-bottom: 10px;">
+                <button class="encomenda-btn encomenda-btn-secondary" onclick="abrirSiteEncomenda()" style="width: 100%; margin-bottom: 18px;">
                     <i class="fas fa-external-link-alt"></i> Encomendar
                 </button>
 
                 <div class="encomenda-input-group">
                     <label><i class="fas fa-paste"></i> Cole aqui o protocolo da encomenda:</label>
-                    <input type="text" id="protocoloEncomendaInput" placeholder="Digite ou cole o protocolo gerado" autocomplete="off">
+                    <input type="text" id="protocoloEncomendaInput" placeholder="Digite ou cole o protocolo gerado (Ex.: ENC00000000000000)" autocomplete="off">
+                    <div class="encomenda-validation-msg" id="encomendaValidationMsg">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="encomendaValidationText"></span>
+                    </div>
                 </div>
-
             </div>
 
             <div class="encomenda-modal-footer">
@@ -1499,6 +1352,9 @@ footer {
         const encomendaModal  = document.getElementById('encomendaModal');
         const protocoloEncomendaInput = document.getElementById('protocoloEncomendaInput');
         const encomendaConfirmBtn = document.getElementById('encomendaConfirmBtn');
+        const encomendaValidationMsg = document.getElementById('encomendaValidationMsg');
+        const encomendaValidationText = document.getElementById('encomendaValidationText');
+        const encomendaModalBody = document.getElementById('encomendaModalBody');
 
         // ─── Login ───────────────────────────────────────────────────────
         loginBtn.addEventListener('click', handleLogin);
@@ -1734,24 +1590,30 @@ footer {
         // ─── NOVO MODAL EXCLUSIVO PARA ENCOMENDAR ────────────────────────
         function openEncomendaModal() {
             if (!currentCaseData) return;
-            
+
             // Atualizar o protocolo exibido
             document.getElementById('protocoloNumero').textContent = currentCaseData.protocolo || '—';
-            
-            // Limpar campo de input
+
+            // Limpar campo de input e validações
             protocoloEncomendaInput.value = '';
-            
+            protocoloEncomendaInput.className = '';
+            encomendaValidationMsg.className = 'encomenda-validation-msg';
+            encomendaValidationText.textContent = '';
+
             // Desabilitar botão de confirmar
             encomendaConfirmBtn.disabled = true;
-            
+
             // Fechar modal de detalhes
             caseModal.style.display = 'none';
-            
+
             // Abrir modal de encomenda
             encomendaModal.style.display = 'flex';
-            
-            // Focar no campo de input
-            setTimeout(() => protocoloEncomendaInput.focus(), 100);
+
+            // ── FIX 1: Rolar o body do modal para o topo ──────────────────
+            setTimeout(() => {
+                encomendaModalBody.scrollTop = 0;
+                protocoloEncomendaInput.focus();
+            }, 50);
         }
 
         function closeEncomendaModal() {
@@ -1788,12 +1650,77 @@ footer {
             window.open(ENCOMENDA_SITE_URL, '_blank');
         }
 
+        // ── FIX 2 & 3: Validação do protocolo de encomenda ───────────────
+        function validarProtocoloEncomenda(valor) {
+            const protocoloOriginal = (currentCaseData?.protocolo || '').trim();
+            const valorTrimmed = valor.trim();
+
+            // Campo vazio — apenas desabilitar, sem mensagem
+            if (!valorTrimmed) {
+                protocoloEncomendaInput.className = '';
+                encomendaValidationMsg.className = 'encomenda-validation-msg';
+                encomendaValidationText.textContent = '';
+                encomendaConfirmBtn.disabled = true;
+                return;
+            }
+
+            // Verifica se é igual ao protocolo original
+            if (valorTrimmed.toLowerCase() === protocoloOriginal.toLowerCase()) {
+                setValidationError('Este é o protocolo do pedido original. Insira o protocolo de encomenda gerado.');
+                return;
+            }
+
+            // Verifica se começa com "ENC" (case-insensitive)
+            if (!valorTrimmed.toUpperCase().startsWith('ENC')) {
+                setValidationError('O protocolo colado deve ser o de encomenda. Verifique e tente novamente.');
+                return;
+            }
+
+            // Tudo válido
+            setValidationSuccess('Protocolo de encomenda válido!');
+        }
+
+        function setValidationError(mensagem) {
+            protocoloEncomendaInput.className = 'input-error';
+            encomendaValidationMsg.className = 'encomenda-validation-msg error';
+            encomendaValidationMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${mensagem}</span>`;
+            encomendaConfirmBtn.disabled = true;
+        }
+
+        function setValidationSuccess(mensagem) {
+            protocoloEncomendaInput.className = 'input-success';
+            encomendaValidationMsg.className = 'encomenda-validation-msg success';
+            encomendaValidationMsg.innerHTML = `<i class="fas fa-check-circle"></i><span>${mensagem}</span>`;
+            encomendaConfirmBtn.disabled = false;
+        }
+
+        // Substituir o listener antigo por um que chama a validação completa
+        protocoloEncomendaInput.addEventListener('input', function() {
+            validarProtocoloEncomenda(this.value);
+        });
+
         function confirmarEncomenda() {
             if (!currentCaseData) return;
-            
+
             const protocoloInserido = protocoloEncomendaInput.value.trim();
+
+            // Dupla checagem de segurança antes de enviar
             if (!protocoloInserido) {
-                alert('Por favor, cole o protocolo da encomenda antes de confirmar.');
+                setValidationError('Por favor, cole o protocolo da encomenda antes de confirmar.');
+                protocoloEncomendaInput.focus();
+                return;
+            }
+
+            const protocoloOriginal = (currentCaseData?.protocolo || '').trim();
+
+            if (protocoloInserido.toLowerCase() === protocoloOriginal.toLowerCase()) {
+                setValidationError('Este é o protocolo do pedido original. Insira o protocolo de encomenda gerado (iniciado por "ENC").');
+                protocoloEncomendaInput.focus();
+                return;
+            }
+
+            if (!protocoloInserido.toUpperCase().startsWith('ENC')) {
+                setValidationError('O protocolo de encomenda deve começar com "ENC". Verifique e tente novamente.');
                 protocoloEncomendaInput.focus();
                 return;
             }
@@ -1819,11 +1746,6 @@ footer {
                 btn.innerHTML = '<i class="fas fa-check"></i> Confirmar Encomenda';
             }, 800);
         }
-
-        // Habilitar/desabilitar botão de confirmar baseado no input
-        protocoloEncomendaInput.addEventListener('input', function() {
-            encomendaConfirmBtn.disabled = this.value.trim() === '';
-        });
 
         // Fechar modal de encomenda ao clicar fora
         encomendaModal.addEventListener('click', e => {
@@ -1872,7 +1794,7 @@ footer {
                 const statusUpper = item.status ? item.status.toUpperCase() : '';
                 const isCotacao = (statusUpper === 'COTAÇÃO' || statusUpper === 'COTACAO');
                 const destaqueClass = isCotacao ? 'cotacao-destaque' : '';
-                
+
                 html += `
                     <div class="case-item ${destaqueClass}" data-index="${index}" title="Clique para ver detalhes">
                         <div class="case-info">
