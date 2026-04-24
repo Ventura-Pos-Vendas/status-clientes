@@ -1747,7 +1747,7 @@ footer {
 
             // Dupla checagem de segurança antes de enviar
             if (!protocoloInserido) {
-                setValidationError('Por favor, cole o protocolo da encomenda antes de confirmar.');
+                setValidationError('Por favor, cole o código da encomenda antes de confirmar.');
                 protocoloEncomendaInput.focus();
                 return;
             }
@@ -1755,13 +1755,13 @@ footer {
             const protocoloOriginal = (currentCaseData?.protocolo || '').trim();
 
             if (protocoloInserido.toLowerCase() === protocoloOriginal.toLowerCase()) {
-                setValidationError('Este é o protocolo do pedido original. Insira o protocolo de encomenda gerado (iniciado por "ENC").');
+                setValidationError('Este é o protocolo do pedido original. Insira o código da encomenda gerada.');
                 protocoloEncomendaInput.focus();
                 return;
             }
 
             if (!protocoloInserido.toUpperCase().startsWith('ENC')) {
-                setValidationError('O protocolo de encomenda deve começar com "ENC". Verifique e tente novamente.');
+                setValidationError('Deve ser inserido o código da encomenda. Verifique e tente novamente.');
                 protocoloEncomendaInput.focus();
                 return;
             }
